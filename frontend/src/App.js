@@ -2,10 +2,10 @@ import logo from "./logo.svg";
 import "./App.css";
 import Layout from "./Components/Layout/Layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./Components/Home/Home";
-import Login from "./Components/Login/Login";
-import Register from "./Components/Register/Register";
-import NotFound from "./Components/NotFound/NotFound";
+import Home from "./Pages/Home/Home";
+import Login from "./Pages/Login/Login";
+import Register from "./Pages/Register/Register";
+import NotFound from "./Pages/NotFound/NotFound";
 
 let routers = createBrowserRouter([
   {
