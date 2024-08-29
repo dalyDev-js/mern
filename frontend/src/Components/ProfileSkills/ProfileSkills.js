@@ -2,9 +2,11 @@ import React from 'react'
 import { FaPen } from 'react-icons/fa'
 
 function ProfileSkills() {
+    const skills = ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'MongoDB']
+
   return (
     <div>
-        {/* <div className="p-4 border-t border-gray-300 bg-white">
+        <div className="p-4 border-t border-gray-300 bg-white">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Skills</h2>
                 <button className="text-green-500 border border-green-500 rounded-full p-1">
@@ -21,7 +23,7 @@ function ProfileSkills() {
                     </span>
                 ))}
             </div>
-        </div> */}
+        </div>
     </div>
   )
 }
