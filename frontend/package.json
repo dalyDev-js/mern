@@ -3,16 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+<<<<<<< HEAD
     "flowbite": "^2.5.1",
     "flowbite-react": "^0.10.1",
+=======
+    "axios": "^1.7.5",
+    "formik": "^2.4.6",
+>>>>>>> cc324346c9975643d30f81468a42c85b037ac1c7
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,6 +48,11 @@
     ]
   },
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+>>>>>>> cc324346c9975643d30f81468a42c85b037ac1c7
     "tailwindcss": "^3.4.10"
   }
 }

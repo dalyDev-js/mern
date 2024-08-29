@@ -1,13 +1,27 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Sidebar from "./Components/Sidebar/Sidebar";
+import Layout from "./Components/Layout/Layout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./Pages/Home/Home";
+
+import NotFound from "./Pages/NotFound/NotFound";
+import SignIn from "./Pages/SignIn/SignIn";
+import SignUp from "./Pages/SignUp/SignUp";
+
+let routers = createBrowserRouter([
+  {
+    path: "",
+    element: <Layout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "login", element: <SignIn /> },
+      { path: "/register", element: <SignUp /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <Sidebar />
-    </div>
-  );
+  return <RouterProvider router={routers}></RouterProvider>;
 }
 
 export default App;
