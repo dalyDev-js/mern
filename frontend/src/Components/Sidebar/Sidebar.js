@@ -29,20 +29,19 @@ function Sidebar() {
     <>
       {expanded && (
         <>
-          <div class=" w-72 p-4  bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
+          <div class=" w-full p-4  bg-white   rounded-lg   dark:bg-gray-800 dark:border-gray-700 ">
             <div class="p-4  bg-gray-100   rounded-lg  dark:bg-gray-800 dark:border-gray-700 mb-6 ">
               <div class="flex flex-col  mb-6 ">
                 <div class="flex justify-start gap-3 mb-1">
                   <img
                     className=" w-16 h-16 mb-2 rounded-full shadow-lg"
                     src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                    alt="image"
+                    alt="imaage"
                   />
                   <div class="flex flex-col  mb-6 ">
                     <a
                       href="#"
-                      class="mb-1 text-xl font-medium underline text-gray-900 dark:text-white"
-                    >
+                      class="mb-1 text-xl font-medium underline text-gray-900 dark:text-white">
                       Bonnie Green
                     </a>
                     <span class="text-sm text-gray-500 dark:text-gray-400">
@@ -52,8 +51,7 @@ function Sidebar() {
                 </div>
                 <a
                   href="#"
-                  class="text-xs text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                >
+                  class="text-xs text-blue-600 underline dark:text-blue-500 hover:no-underline">
                   Complete your profile
                 </a>
                 <div className="text-xs text-right text-blue-700  dark:text-white">
@@ -62,8 +60,7 @@ function Sidebar() {
                 <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                   <div
                     class="bg-blue-600 h-2.5 rounded-full"
-                    style={{ width: "45%" }}
-                  ></div>
+                    style={{ width: "45%" }}></div>
                 </div>
               </div>
             </div>
@@ -81,8 +78,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -90,8 +86,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -108,8 +103,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -117,8 +111,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -142,15 +135,13 @@ function Sidebar() {
                     <span className="flex gap-2 ">
                       <a
                         href="https://flowbite.com/figma/"
-                        className="text-xs text-blue-600 underline dark:text-blue-500"
-                      >
+                        className="text-xs text-blue-600 underline dark:text-blue-500">
                         View details
                       </a>
                       <span>|</span>
                       <a
                         href="https://flowbite.com/figma/"
-                        className="text-xs text-blue-600 underline dark:text-blue-500"
-                      >
+                        className="text-xs text-blue-600 underline dark:text-blue-500">
                         Buy Connects
                       </a>
                     </span>
@@ -166,8 +157,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -175,8 +165,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -194,8 +183,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -203,8 +191,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -223,8 +210,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -232,8 +218,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -252,8 +237,7 @@ function Sidebar() {
                       </p>
                       <a
                         href="#"
-                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                      >
+                        class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                         <svg
                           class="w-4 h-4 text-blue-600 underline dark:text-blue-500 hover:no-underline"
                           aria-hidden="true"
@@ -261,8 +245,7 @@ function Sidebar() {
                           width="24"
                           height="24"
                           fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path
                             stroke="currentColor"
                             stroke-linecap="round"
@@ -277,8 +260,7 @@ function Sidebar() {
                       <li>
                         <a
                           href="#"
-                          className="text-xs text-blue-600 underline dark:text-blue-500"
-                        >
+                          className="text-xs text-blue-600 underline dark:text-blue-500">
                           Web & Mobile Design
                         </a>
                       </li>
@@ -286,8 +268,7 @@ function Sidebar() {
                         <a
                           href="#"
                           rel="nofollow"
-                          className="text-xs text-blue-600 underline dark:text-blue-500"
-                        >
+                          className="text-xs text-blue-600 underline dark:text-blue-500">
                           Web Development
                         </a>
                       </li>
@@ -301,8 +282,7 @@ function Sidebar() {
                   <Accordion.Content>
                     <a
                       href="https://flowbite.com/figma/"
-                      className="text-xs text-blue-600 underline dark:text-blue-500"
-                    >
+                      className="text-xs text-blue-600 underline dark:text-blue-500">
                       My Proposals
                     </a>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
@@ -320,15 +300,13 @@ function Sidebar() {
                   <Accordion.Content>
                     <a
                       href="https://flowbite.com/figma/"
-                      className="text-xs text-blue-600 underline dark:text-blue-500"
-                    >
+                      className="text-xs text-blue-600 underline dark:text-blue-500">
                       My Project Dashboard
                     </a>
                     <p className="mb-2 text-xs  text-gray-500 dark:text-gray-400">
                       <a
                         href="https://flowbite.com/figma/"
-                        className="text-xs  text-blue-600 underline dark:text-blue-500"
-                      >
+                        className="text-xs  text-blue-600 underline dark:text-blue-500">
                         Create a Catalog project
                       </a>
                       for clients to purchase instantly
@@ -346,8 +324,7 @@ function Sidebar() {
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                  viewBox="0 0 20 20">
                   <path
                     fill="currentColor"
                     d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
@@ -363,8 +340,7 @@ function Sidebar() {
                   Stand out with an Upwork Certification!
                   <a
                     href="#"
-                    class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-                  >
+                    class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline">
                     Get Started
                   </a>
                 </p>
@@ -375,8 +351,7 @@ function Sidebar() {
             <div class="p-4  bg-gray-100 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6 ">
               <a
                 href="#"
-                className="text-sm text-blue-600 underline flex items-center"
-              >
+                className="text-sm text-blue-600 underline flex items-center">
                 Upwork Academy
                 <span className="ml-1" aria-hidden="true">
                   {/* icon */}
@@ -387,8 +362,7 @@ function Sidebar() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
@@ -401,8 +375,7 @@ function Sidebar() {
               </a>
               <a
                 href="#"
-                className="text-sm text-blue-600 underline flex items-center"
-              >
+                className="text-sm text-blue-600 underline flex items-center">
                 Direct Contracts
                 <span className="ml-1" aria-hidden="true">
                   {/* icon */}
@@ -413,8 +386,7 @@ function Sidebar() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
@@ -427,8 +399,7 @@ function Sidebar() {
               </a>
               <a
                 href="#"
-                className="text-sm text-blue-600 underline flex items-center"
-              >
+                className="text-sm text-blue-600 underline flex items-center">
                 Get Paid
                 <span className="ml-1" aria-hidden="true">
                   {/* icon */}
@@ -439,8 +410,7 @@ function Sidebar() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
@@ -453,8 +423,7 @@ function Sidebar() {
               </a>
               <a
                 href="#"
-                className="text-sm text-blue-600 underline flex items-center"
-              >
+                className="text-sm text-blue-600 underline flex items-center">
                 Community & Forums
                 <span className="ml-1" aria-hidden="true">
                   {/* icon */}
@@ -465,8 +434,7 @@ function Sidebar() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
@@ -479,8 +447,7 @@ function Sidebar() {
               </a>
               <a
                 href="#"
-                className="text-sm text-blue-600 underline flex items-center"
-              >
+                className="text-sm text-blue-600 underline flex items-center">
                 Help Center
                 <span className="ml-1" aria-hidden="true">
                   {/* icon */}
@@ -491,8 +458,7 @@ function Sidebar() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
