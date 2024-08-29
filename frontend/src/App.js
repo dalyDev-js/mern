@@ -18,9 +18,6 @@ let routers = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "/profile", element: <ProfileHeader /> }, // Add this line to add a profile header to the profile route.
-      { path: "/summary", element: <ProfileSummary/>},
-      { path: "/skills", element: <ProfileSkills/>},
       { path: "*", element: <NotFound /> },
     ],
   },
