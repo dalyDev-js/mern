@@ -6,6 +6,9 @@ import Home from "./Components/Home/Home";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import NotFound from "./Components/NotFound/NotFound";
+import ProfileHeader from "./Components/ProfileHeader/ProfileHeader";
+import ProfileSummary from "./Components/ProfileSummary/ProfileSummary";
+import ProfileSkills from "./Components/ProfileSkills/ProfileSkills";
 
 let routers = createBrowserRouter([
   {
@@ -15,6 +18,9 @@ let routers = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "/register", element: <Register /> },
+      { path: "/profile", element: <ProfileHeader /> }, // Add this line to add a profile header to the profile route.
+      { path: "/summary", element: <ProfileSummary/>},
+      { path: "/skills", element: <ProfileSkills/>},
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -22,6 +28,7 @@ let routers = createBrowserRouter([
 
 function App() {
   return <RouterProvider router={routers}></RouterProvider>;
+  
 }
 
 export default App;
