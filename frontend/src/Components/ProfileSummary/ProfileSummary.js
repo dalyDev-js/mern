@@ -10,26 +10,26 @@ function ProfileSummary() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">View profile</h2>
                     <div className="flex space-x-2">
-                        <button className="text-green-500 border border-green-500 rounded-full p-1">
+                        <button className="text-amber-500 border border-green-500 rounded-full p-1">
                             <FaPlus />
                         </button>
-                        <button className="text-green-500 border border-green-500 rounded-full p-1">
+                        <button className="text-amber-500 border border-green-500 rounded-full p-1">
                             <FaPen />
                         </button>
                     </div>
                 </div>
                 <div className="flex items-center mt-2">
-                    <span className="bg-blue-600 text-white text-sm rounded-full px-2 py-1">DRAFT</span>
+                    <span className="bg-amber-500 text-white text-sm rounded-full px-2 py-1">DRAFT</span>
                     <span className="ml-2 text-gray-600">Full Stack Development</span>
                 </div>
-                <a href="#" className="text-green-500 mt-2">All work</a>
+                <a href="#" className="text-amber-500 mt-2">All work</a>
             </div>
 
             {/* Middle Section */}
             <div className="flex flex-col w-1/3">
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">MERN Stack Developer</h2>
-                    <button className="text-green-500 border border-green-500 rounded-full p-1">
+                    <button className="text-amber-500 border border-green-500 rounded-full p-1">
                         <FaPen />
                     </button>
                 </div>
@@ -38,14 +38,13 @@ function ProfileSummary() {
                 </p>
             </div>
 
-            {/* Right Section */}
             <div className="flex flex-col w-1/4 items-end">
                 <div className="flex items-center space-x-2">
                     <h2 className="text-lg font-semibold">$10.00/hr</h2>
-                    <button className="text-green-500 border border-green-500 rounded-full p-1">
+                    <button className="text-amber-500 border border-green-500 rounded-full p-1">
                         <FaPen />
                     </button>
-                    <button className="text-green-500 border border-green-500 rounded-full p-1">
+                    <button className="text-amber-500 border border-green-500 rounded-full p-1">
                         <FaLink />
                     </button>
                 </div>

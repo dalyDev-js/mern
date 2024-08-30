@@ -9,7 +9,7 @@ function ProfileSkills() {
         <div className="p-4 border-t border-gray-300 bg-white">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Skills</h2>
-                <button className="text-green-500 border border-green-500 rounded-full p-1">
+                <button className="text-amber-500 border border-green-500 rounded-full p-1">
                     <FaPen />
                 </button>
             </div>

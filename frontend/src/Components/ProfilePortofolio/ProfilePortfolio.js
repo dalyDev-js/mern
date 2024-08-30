@@ -15,8 +15,8 @@ function ProfilePortfolio() {
     <div>
          <div className="p-4 border rounded-lg bg-white">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold">Portfolio</h2>
-                <button className="text-green-500 border border-green-500 rounded-full p-1">
+                <h2 className="text-2xl font-semibold ">Portfolio</h2>
+                <button className="text-amber-500 border border-green-500 rounded-full p-1">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
@@ -25,13 +25,13 @@ function ProfilePortfolio() {
 
             <div className="flex border-b border-gray-200 mb-4">
                 <button
-                    className={`mr-4 pb-2 ${activeTab === 'published' ? 'border-b-2 border-green-500 text-green-500' : 'text-gray-500'}`}
+                    className={`mr-4 pb-2 ${activeTab === 'published' ? 'border-b-2 border-green-500 text-amber-500' : 'text-gray-500'}`}
                     onClick={() => setActiveTab('published')}
                 >
                     Published
                 </button>
                 <button
-                    className={`pb-2 ${activeTab === 'drafts' ? 'border-b-2 border-green-500 text-green-500' : 'text-gray-500'}`}
+                    className={`pb-2 ${activeTab === 'drafts' ? 'border-b-2 border-green-500 text-amber-500' : 'text-gray-500'}`}
                     onClick={() => setActiveTab('drafts')}
                 >
                     Drafts
