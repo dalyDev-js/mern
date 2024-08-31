@@ -39,12 +39,4 @@ const serviceSchema = mongoose.Schema(
 );
 
 const Service = mongoose.model("Service", serviceSchema);
-Service.create({
-  title: "Web Design",
-  description: "Designing a responsive and modern website.",
-  budget: 500,
-  skills: ["HTML", "CSS", "JavaScript"],
-  level: "intermediate", // Must be 'entry', 'intermediate', or 'expert'
-  status: "in-progress", // Optional, default is 'pending' });
-});
 export default Service;
