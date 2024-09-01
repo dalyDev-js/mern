@@ -6,7 +6,7 @@ import Home from "./Pages/Home/Home";
 import NotFound from "./Pages/NotFound/NotFound";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
-import JobSearch from "./Pages/Jobs/Jobs";
+import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 
 let routers = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ let routers = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <SignIn /> },
       { path: "/register", element: <SignUp /> },
-      { path: "/jobs", element: <JobSearch /> },
+      { path: "/profile", element: <ProfilePage/> },
       { path: "*", element: <NotFound /> },
     ],
   },
