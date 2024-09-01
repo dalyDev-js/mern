@@ -16,7 +16,7 @@ export default function SignUp() {
         password: Yup.string()
             .required('Password is required')
             .min(5, 'Password must be at least 5 characters')
-            .max(10, 'You cannot enter more than 10 characters'),
+            .max(10, 'You cannot enter more than 10characters'),
         rePassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Password must match')
             .required('Enter your repassword')
@@ -62,6 +62,7 @@ export default function SignUp() {
                             value={formik.values.name}
                             onBlur={formik.handleBlur}
                             name="name"
+                            onInput={(e) => e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, '')}
                             placeholder="Enter your Name"
                             className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
                         />
@@ -78,6 +79,7 @@ export default function SignUp() {
                         <input
                             type="tel"
                             name="phone"
+                            onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
                             onChange={formik.handleChange}
                             value={formik.values.phone}
                             onBlur={formik.handleBlur}
