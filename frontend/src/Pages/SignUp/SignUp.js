@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function SignUp() {
-    const [apiResponse, setApiResponse] = useState();
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
+  const [apiResponse, setApiResponse] = useState();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Name is required')
         .min(4, "Name must be at least 4 characters")
@@ -32,20 +31,23 @@ export default function SignUp() {
 
     });
 
-    async function handleSignup(formValues) {
-        setLoading(true);
-        try {
-            const response = await axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signup`, formValues);
-            console.log(response?.data.token);
-            localStorage.setItem('Token', response?.data.token);
-            navigate('/');
-        } catch (err) {
-            console.log(err, "error");
-            setApiResponse(err?.response?.data?.message);
-        } finally {
-            setLoading(false);
-        }
+  async function handleSignup(formValues) {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `https://ecommerce.routemisr.com/api/v1/auth/signup`,
+        formValues
+      );
+      console.log(response?.data.token);
+      localStorage.setItem("Token", response?.data.token);
+      navigate("/");
+    } catch (err) {
+      console.log(err, "error");
+      setApiResponse(err?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
+  }
 
     const formik = useFormik({
         initialValues: {
@@ -105,43 +107,43 @@ export default function SignUp() {
                         <div className="text-red-800 text-sm">{formik.errors.phone}</div>
                     )}
 
-                    {/* Email Field */}
-                    <div className="flex items-center border-b-2 border-gray-300">
-                        <input
-                            type="email"
-                            name="email"
-                            onChange={formik.handleChange}
-                            value={formik.values.email}
-                            onBlur={formik.handleBlur}
-                            placeholder="Enter your Email"
-                            className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
-                        />
-                        <div className="flex-none w-8 flex items-center justify-center">
-                            <i className="fa-solid fa-envelope text-xl"></i>
-                        </div>
-                    </div>
-                    {formik.touched.email && formik.errors.email && (
-                        <div className="text-red-800 text-sm">{formik.errors.email}</div>
-                    )}
+          {/* Phone Field */}
+          <div className="flex items-center border-b-2 border-gray-300">
+            <input
+              type="tel"
+              name="phone"
+              onChange={formik.handleChange}
+              value={formik.values.phone}
+              onBlur={formik.handleBlur}
+              placeholder="Enter your Phone"
+              className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
+            />
+            <div className="flex-none w-8 flex items-center justify-center">
+              <i className="fa-solid fa-phone"></i>
+            </div>
+          </div>
+          {formik.touched.phone && formik.errors.phone && (
+            <div className="text-red-800 text-sm">{formik.errors.phone}</div>
+          )}
 
-                    {/* Password Field */}
-                    <div className="flex items-center border-b-2 border-gray-300">
-                        <input
-                            type="password"
-                            name="password"
-                            onChange={formik.handleChange}
-                            value={formik.values.password}
-                            onBlur={formik.handleBlur}
-                            placeholder="Enter a strong Password"
-                            className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
-                        />
-                        <div className="flex-none w-8 flex items-center justify-center">
-                            <i className="fa-solid fa-lock text-xl"></i>
-                        </div>
-                    </div>
-                    {formik.touched.password && formik.errors.password && (
-                        <div className="text-red-800 text-sm">{formik.errors.password}</div>
-                    )}
+          {/* Email Field */}
+          <div className="flex items-center border-b-2 border-gray-300">
+            <input
+              type="email"
+              name="email"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              onBlur={formik.handleBlur}
+              placeholder="Enter your Email"
+              className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
+            />
+            <div className="flex-none w-8 flex items-center justify-center">
+              <i className="fa-solid fa-envelope text-xl"></i>
+            </div>
+          </div>
+          {formik.touched.email && formik.errors.email && (
+            <div className="text-red-800 text-sm">{formik.errors.email}</div>
+          )}
 
                     {/* Re-Password Field */}
                     <div className="flex items-center border-b-2 border-gray-300">
@@ -201,7 +203,32 @@ export default function SignUp() {
                         </Link>
                     </div>
                 </form>
+
             </div>
-        </div>
-    );
+          )}
+
+          {/* Submit Button */}
+          <div className="flex flex-col items-center">
+            <button
+              type="submit"
+              className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200">
+              {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign Up"}
+            </button>
+            {apiResponse && (
+              <div className="p-2 text-sm text-red-800 rounded-lg bg-red-50 mt-2">
+                <span className="font-medium">{apiResponse}</span>
+              </div>
+            )}
+          </div>
+          <div className="text-center">
+            <Link
+              to="/login"
+              className="text-sm text-green-500 hover:underline">
+              Already have an account?
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
