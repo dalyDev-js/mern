@@ -10,18 +10,28 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    phone: Yup.number().required("Phone is required"),
+    name: Yup.string()
+      .required("Name is required")
+      .min(4, "Name must be at least 4 characters")
+      .max(20, "you cannot enter more than 20 characters"),
+    phone: Yup.string()
+      .required("Phone is required")
+      .matches(
+        /^(010|011|012)\d{8}$/,
+        "Enter a vaild number,enter number start with 010,011,012"
+      ),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
     password: Yup.string()
       .required("Password is required")
       .min(5, "Password must be at least 5 characters")
-      .max(10, "You cannot enter more than 10 characters"),
+      .max(20, "You cannot enter more than 20 characters"),
     rePassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Password must match")
-      .required("Enter your repassword"),
+      .required("Enter your re-password"),
+
+    idCard: Yup.string().required("Enter your idCard"),
   });
 
   async function handleSignup(formValues) {
@@ -49,6 +59,7 @@ export default function SignUp() {
       email: "",
       password: "",
       rePassword: "",
+      idCard: "",
     },
     validationSchema,
     onSubmit: handleSignup,
@@ -69,6 +80,9 @@ export default function SignUp() {
               value={formik.values.name}
               onBlur={formik.handleBlur}
               name="name"
+              onInput={(e) =>
+                (e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, ""))
+              }
               placeholder="Enter your Name"
               className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
             />
@@ -85,6 +99,9 @@ export default function SignUp() {
             <input
               type="tel"
               name="phone"
+              onInput={(e) =>
+                (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+              }
               onChange={formik.handleChange}
               value={formik.values.phone}
               onBlur={formik.handleBlur}
@@ -145,7 +162,7 @@ export default function SignUp() {
               onChange={formik.handleChange}
               value={formik.values.rePassword}
               onBlur={formik.handleBlur}
-              placeholder="Enter your erpassword"
+              placeholder="Enter your er-password"
               className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
             />
             <div className="flex-none w-8 flex items-center justify-center">
@@ -158,11 +175,30 @@ export default function SignUp() {
             </div>
           )}
 
+          <div className="flex items-center border-b-2 border-gray-300">
+            <input
+              type="file"
+              onChange={formik.handleChange}
+              value={formik.values.idCard}
+              onBlur={formik.handleBlur}
+              name="idCard"
+              placeholder="Enter your idCard"
+              className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
+            />
+            <div className="flex-none w-8 flex items-center justify-center">
+              <i className="fa-solid fa-user text-xl"></i>
+            </div>
+          </div>
+          {formik.touched.idCard && formik.errors.idCard && (
+            <div className="text-red-800 text-sm">{formik.errors.idCard}</div>
+          )}
+
           {/* Submit Button */}
           <div className="flex flex-col items-center">
             <button
               type="submit"
-              className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200">
+              className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200"
+            >
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign Up"}
             </button>
             {apiResponse && (
@@ -174,7 +210,8 @@ export default function SignUp() {
           <div className="text-center">
             <Link
               to="/login"
-              className="text-sm text-green-500 hover:underline">
+              className="text-sm text-green-500 hover:underline"
+            >
               Already have an account?
             </Link>
           </div>
