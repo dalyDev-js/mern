@@ -2,11 +2,11 @@ import "./App.css";
 import Layout from "./Components/Layout/Layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home/Home";
-
 import NotFound from "./Pages/NotFound/NotFound";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import JobSearch from "./Pages/Jobs/Jobs";
+import Client from "./Pages/Client/Client";
 
 let routers = createBrowserRouter([
   {
@@ -17,6 +17,8 @@ let routers = createBrowserRouter([
       { path: "login", element: <SignIn /> },
       { path: "/register", element: <SignUp /> },
       { path: "/jobs", element: <JobSearch /> },
+      { path: "/client", element: <Client /> },
+
       { path: "*", element: <NotFound /> },
     ],
   },
