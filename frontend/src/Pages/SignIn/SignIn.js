@@ -98,7 +98,8 @@ export default function SignIn() {
           <div className="flex flex-col items-center">
             <button
               type="submit"
-              className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200">
+              className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200"
+            >
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
             {apiResponse && (
@@ -110,7 +111,8 @@ export default function SignIn() {
           <div className="text-center">
             <Link
               to="/Register"
-              className="text-sm text-green-500 hover:underline">
+              className="text-sm text-green-500 hover:underline"
+            >
               I don't have an account?
             </Link>
           </div>
