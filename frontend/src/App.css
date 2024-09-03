@@ -1,1 +1,31 @@
 /* .sidebar-container {} */
+* {
+  cursor: none;
+}
+
+.cursor,
+.cursorDot {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.cursor {
+  height: 50px;
+  width: 50px;
+  border: 2px solid rgb(191, 184, 184);
+  border-radius: 50%;
+  box-sizing: border-box;
+  backdrop-filter: grayscale(1);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.25s ease;
+}
+
+.cursorDot {
+  height: 12px;
+  width: 12px;
+  background: rgb(174, 169, 169);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.25s ease;
+}
