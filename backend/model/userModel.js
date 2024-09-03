@@ -1,42 +1,50 @@
 import mongoose from "mongoose";
-const userSchema = new mongoose.Schema({
+import validator from "validator";
+
+const userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    trim: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  dob: {
-    type: Date,
-    required: true,
+    required: [true, "You must add your name!"],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Please Prodive your email!"],
     unique: true,
     lowercase: true,
-    trim: true,
+    validate: [validator.isEmail, "Please Provide a valid email"],
+  },
+  photo: String,
+  role: {
+    type: String,
+    enum: ["client", "engineer", "admin"],
+    default: "user",
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Please Provide Password"],
     minlength: 8,
+    select: false,
   },
-  role: {
+  passwordConfirm: {
     type: String,
-    required: true,
-    enum: ["engineer", "client"],
+    required: [true, "please Confirm your password"],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: "passwords are not the same!!!",
+    },
   },
-  phone: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-    trim: true,
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
   },
 });
+
+const User = mongoose.model("User", userSchema);
+
+export default User;
