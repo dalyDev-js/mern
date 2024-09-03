@@ -1,6 +1,5 @@
 // import React from "react";
 
-import Cursor from "../../Components/Cursor/Cursor";
 import GetStarted from "../../Components/GetStarted";
 import TrustedBy from "../../Components/TrustedBy";
 import SectionMain from "../../Components/houseBanner/SectionMain";
@@ -10,7 +9,6 @@ import Support from "../../Components/Support";
 const Home = () => {
   return (
     <>
-      <Cursor />
       <GetStarted />
       <TrustedBy />
       <SectionMain />
