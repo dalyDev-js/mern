@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { FaCheckCircle, FaMapMarkerAlt, FaPen, FaShareAlt } from 'react-icons/fa';
+import { FaCheckCircle, FaPen, FaShareAlt } from 'react-icons/fa';
+import avatar from "../../assets/Profile_avatar_placeholder_large.png";
+
 
 function ProfileHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +16,7 @@ function ProfileHeader() {
         <div className="flex items-center">
           <div className="relative">
             <img
-              src="path-to-your-profile-picture.jpg"
+              src={avatar}
               alt="Profile"
               className="w-16 h-16 rounded-full"
             />
