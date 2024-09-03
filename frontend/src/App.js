@@ -7,6 +7,7 @@ import NotFound from "./Pages/NotFound/NotFound";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import JobSearch from "./Pages/Jobs/Jobs";
+import GetStarted from "./Pages/GetStarted/GetStarted";
 
 let routers = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ let routers = createBrowserRouter([
       { path: "login", element: <SignIn /> },
       { path: "/register", element: <SignUp /> },
       { path: "/jobs", element: <JobSearch /> },
+      { path: "/started", element: <GetStarted /> },
       { path: "*", element: <NotFound /> },
     ],
   },
