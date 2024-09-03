@@ -22,28 +22,28 @@ export default function Footer() {
 
               <div className="px-4 my-4 w-full sm:w-auto">
                 <div>
-                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-600">
+                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-amber-600">
                     Company
                   </h2>
                 </div>
                 <ul className="leading-8">
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       About Us
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       Terms &amp; Conditions
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       Privacy Policy
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       Contact Us
                     </a>
                   </li>
@@ -51,33 +51,33 @@ export default function Footer() {
               </div>
               <div className="px-4 my-4 w-full sm:w-auto">
                 <div>
-                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-600">
+                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-amber-600">
                     Blog
                   </h2>
                 </div>
                 <ul className="leading-8">
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       Getting Started With HTML and CSS
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       What Is Flex And When to Use It?
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       How TailwindCSS Can Help Your Productivity?
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       5 Tips to Make Responsive Website
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <a href="#" className="hover:text-amber-400">
                       See More
                     </a>
                   </li>
@@ -85,13 +85,13 @@ export default function Footer() {
               </div>
               <div className="px-4 my-4 w-full sm:w-auto xl:w-1/5">
                 <div>
-                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-600">
+                  <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-amber-600">
                     Connect With Us
                   </h2>
                 </div>
                 <a
                   href="#"
-                  className="inline-flex items-center justify-center h-8 w-8 border border-gray-100 rounded-full mr-1 hover:text-blue-400 hover:border-blue-400"
+                  className="inline-flex items-center justify-center h-8 w-8 border border-gray-100 rounded-full mr-1 hover:text-amber-400 hover:border-blue-400"
                 >
                   <svg
                     className="w-4 h-4 fill-current"

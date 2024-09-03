@@ -9,7 +9,7 @@
   font-weight: 400;
   font-style: normal;
 }
-.navbar {
+.navbar-2 {
   background: rgb(245, 176, 25);
   background: linear-gradient(
     320deg,
@@ -19,13 +19,9 @@
   );
 }
 .footer {
-  background: rgb(245, 176, 25);
-  background: linear-gradient(
-    320deg,
-    rgba(245, 176, 25, 1) 0%,
-    rgba(249, 201, 75, 1) 53%,
-    rgba(251, 226, 141, 1) 100%
-  );
+  border-top: 2px solid rgb(227, 122, 29);
+ background-color: white;
+  color: rgb(213, 176, 25);
 }
 .dropbtn {
   border: none;

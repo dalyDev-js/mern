@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function GetStarted() {
   return (
     <div className="get-started px-6 md:px-16 lg:px-24">
@@ -13,12 +15,17 @@ function GetStarted() {
               Forget the old rules. You can have the best people. Right now.
               Right here.
             </p>
-            <button
-              type="button"
-              className="focus:outline-none text-lg my-5 md:my-7 lg:my-8 text-white bg-amber-500 hover:bg-yellow-500 focus:ring-amber-400 font-medium rounded-lg px-7 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-            >
-              Get started
-            </button>
+            <Link to={"/started"}>
+
+
+
+              <button
+                type="button"
+                className="focus:outline-none text-lg my-5 md:my-7 lg:my-8 text-white bg-amber-500 hover:bg-yellow-500 focus:ring-amber-400 font-medium rounded-lg px-7 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
+              >
+                Get started
+              </button>
+            </Link>
           </div>
         </div>
         <div className="right-side w-full md:w-1/2 flex justify-center md:justify-end mb-8 md:mb-0">

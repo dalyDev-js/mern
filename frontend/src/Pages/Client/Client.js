@@ -12,8 +12,8 @@ export default function Client() {
   return (
     <>
       <div className="client w-5/6 mt-16 mx-auto ">
-        <div className="hiring-required lg:flex w-full mb-11 ">
-          <div className="steps w-2/3 ">
+        <div className="hiring-required flex  w-full mb-11 ">
+          <div className="steps block   w-2/3 ">
             <p className="text-4xl font-semibold">Your Jobs</p>
             <p className="text-3xl mt-3">
               Complete these steps to stand out and hire fast

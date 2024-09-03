@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../../assets/logo.png";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const [subNavContent, setSubNavContent] = useState("");
@@ -33,10 +34,10 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar w-full">
+      <div className="bg-white w-full ">
         <nav className="border-red-600 border-b  py-2.5 dark:bg-gray-900">
           <div className="flex flex-wrap items-center justify-between px-4 mx-auto">
-            <a href="#" className="flex items-center">
+            <Link to={""} className="flex items-center">
               <img
                 src={logo}
                 className="h-12 w-12 mr-3"
@@ -45,16 +46,18 @@ export default function Navbar() {
               <span className="pacifico-regular self-center text-xl font-semibold whitespace-nowrap dark:text-white">
                 Handas
               </span>
-            </a>
+            </Link>
             <div className="flex items-center lg:order-2">
               <div className="flex gap-2 justify-center items-center">
-                <a className="cursor-pointer text-lg">Login</a>
-                <a
-                  href="https://themesberg.com/product/tailwind-css/landing-page"
+                <NavLink to={"/login"} className="cursor-pointer text-lg">
+                  Login
+                </NavLink>
+                <Link
+                  to={"/register"}
                   className="text-white bg-amber-700 hover:bg-amber-600 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-3 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
                 >
                   Register
-                </a>
+                </Link>
               </div>
 
               <button
@@ -146,12 +149,12 @@ export default function Navbar() {
               </ul> */}
               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 <li>
-                  <a
-                    href="#"
+                  <NavLink
+                    to={""}
                     className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Home
-                  </a>
+                  </NavLink>
                 </li>
                 <li
                   onMouseEnter={() =>
@@ -367,7 +370,7 @@ export default function Navbar() {
           </div>
         </nav>
         <div
-          className={`sub-nav   bg-amber-100 w-full p-10 md:fixed transition-opacity duration-300 ${
+          className={`sub-nav   bg-white text-amber-700 border-b-2 border-amber-600 w-full p-10 md:fixed transition-opacity duration-300 ${
             isSubNavVisible ? "opacity-100" : "opacity-0 hidden"
           }`}
           onMouseEnter={handleMouseEnterSubNav}
