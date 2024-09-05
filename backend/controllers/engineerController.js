@@ -5,17 +5,7 @@ import { Engineer } from "../model/engineerModel.js";
 //     res.status(200).json({message:"Success",engineers})
 // })
 
-const addPortofolio = async (req, res, next) => {
-  let engineerId = req.user.id; //user id from token
-  let engineerPortfolio = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { portfolio: req.body.portfolio },
-    { new: true }
-  );
-  res
-    .status(200)
-    .json({ message: "Portfolio added successfully", engineerPortfolio });
-};
+
 
 const addEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
@@ -62,4 +52,4 @@ const addCertificate = async (req, res, next) => {
     .json({ message: "Certificate added successfully", engineerCertificate });
 };
 
-export { addPortofolio, addEducation, addTitle, addSkill, addCertificate };
+export {  addEducation, addTitle, addSkill, addCertificate };
