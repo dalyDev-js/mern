@@ -19,9 +19,9 @@
   );
 }
 .footer {
-  border-top: 2px solid rgb(227, 122, 29);
- background-color: white;
-  color: rgb(213, 176, 25);
+  border-top: 2px solid #fcd34d;
+  background-color: white;
+  color: black;
 }
 .dropbtn {
   border: none;

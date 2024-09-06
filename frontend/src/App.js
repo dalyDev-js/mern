@@ -10,6 +10,7 @@ import GetStarted from "./Pages/GetStarted/GetStarted";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import JobDetail from "./Pages/JobDetails/JobDetails";
 import Client from "./Pages/Client/Client";
+import Profile from "./Pages/HireEngineer/Profile";
 
 let routers = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ let routers = createBrowserRouter([
       { path: "/started", element: <GetStarted /> },
       { path: "/profile", element: <ProfilePage /> },
       { path: "/job-details", element: <JobDetail /> },
+      { path: "/hire-engineer", element: <Profile /> },
       { path: "/client", element: <Client /> },
 
       { path: "*", element: <NotFound /> },
@@ -32,7 +34,6 @@ let routers = createBrowserRouter([
 
 function App() {
   return <RouterProvider router={routers}></RouterProvider>;
-  
 }
 
 export default App;
