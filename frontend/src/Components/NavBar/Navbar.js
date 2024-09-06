@@ -52,7 +52,7 @@ export default function Navbar() {
             </div>
             <div className="flex items-center lg:order-2">
               <div className="flex gap-10 justify-center items-center">
-                <div className="search-bar rounded-2xl lg:w-80 md:w-52 flex justify-center items-center bg-white border border-gray-400">
+                <div className="search-bar rounded-2xl lg:w-80 md:w-52 md:flex justify-center items-center bg-white border hidden border-gray-400">
                   <input
                     className="h-7 p-2 w-3/4 text-sm  rounded-l-2xl border-e focus:outline-none focus:border-gray-500 focus:border focus:ring-0 border-transparent bg-white bg-opacity-50"
                     type="search"

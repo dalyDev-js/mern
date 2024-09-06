@@ -292,12 +292,17 @@ function JobDetail() {
           Buy Connects to apply
         </button>
 
+<<<<<<< HEAD
         {/* <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded w-full mb-4">
           Save Job
         </button> */}
 
         <button class="flex group   items-center w-full justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
           <span class="  items-center flex justify-center  w-full px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+=======
+        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
+          <span class="relative flex px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+>>>>>>> c016bbf1762a29555cec3fa142696ca19a4be618
             {/*  */}
             {/* hover:text-white القلب مش بيبقي ابيض  */}
             {/*  */}
@@ -317,7 +322,7 @@ function JobDetail() {
                 d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
               />
             </svg>
-            Save Job 2
+            Save Job
           </span>
         </button>
         <br></br>
