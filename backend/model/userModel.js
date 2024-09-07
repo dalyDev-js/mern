@@ -1,10 +1,17 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcryptjs";
+import AppError from "../utils/appError.js";
 
 const userSchema = mongoose.Schema({
-  name: {
+  fullName: {
     type: String,
-    required: [true, "You must add your name!"],
+    required: [true, "Please Prodive your Fullname!"],
+  },
+  username: {
+    type: String,
+    required: [true, "Please Prodive your username!"],
+    unique: true,
   },
   email: {
     type: String,
@@ -13,7 +20,15 @@ const userSchema = mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please Provide a valid email"],
   },
-  photo: String,
+  gender: {
+    type: String,
+    required: [true, "Please Prodive your gender!"],
+    enum: ["male", "female", "gay"],
+  },
+  profilePic: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     enum: ["client", "engineer", "admin"],
@@ -44,6 +59,20 @@ const userSchema = mongoose.Schema({
     select: false,
   },
 });
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined;
+  next();
+});
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  uesrPassword
+) {
+  return await bcrypt.compare(candidatePassword, uesrPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 

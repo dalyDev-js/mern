@@ -37,3 +37,5 @@ const engineerSchema = new mongoose.Schema({
     default: false,
   },
 });
+
+export const Engineer = mongoose.model("Engineer", engineerSchema);
