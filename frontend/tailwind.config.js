@@ -8,9 +8,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-<<<<<<< HEAD
-  plugins: [require("flowbite/plugin")],
-=======
   plugins: [require("flowbite/plugin"), daisyui],
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
 };
