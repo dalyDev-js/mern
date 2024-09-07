@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-export default function Home() {
-  return <div>Home</div>;
-}
-=======
 // import React from "react";
 
 import GetStarted from "../../Components/GetStarted";
@@ -27,4 +20,3 @@ const Home = () => {
 };
 
 export default Home;
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
