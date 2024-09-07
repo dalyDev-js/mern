@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from "daisyui";
 module.exports = {
   content: [
     "node_modules/flowbite-react/lib/esm/**/*.js",
@@ -7,5 +8,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [require("flowbite/plugin"), daisyui],
 };

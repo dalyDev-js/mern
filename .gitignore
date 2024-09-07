@@ -29,3 +29,6 @@ Thumbs.db
 *.opensdf
 *.vscode/
 *.history/
+
+#storage
+backend/tmp/my-uploads
