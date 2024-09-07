@@ -25,7 +25,7 @@ const jobsData = [
 
 function JobList() {
   return (
-    <div className="flex flex-col gap-5 w-4/5">
+    <div className="flex flex-col gap-5 w-full">
       {jobsData.map((job, index) => (
         <JobCard key={index} {...job} />
       ))}
