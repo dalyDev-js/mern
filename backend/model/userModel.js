@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import AppError from "../utils/appError.js";
+import crypto from "crypto";
 
 const userSchema = mongoose.Schema({
   fullName: {
@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema({
   role: {
     type: String,
     enum: ["client", "engineer", "admin"],
-    default: "user",
+    default: "client",
   },
   password: {
     type: String,
@@ -72,6 +72,31 @@ userSchema.methods.correctPassword = async function (
   uesrPassword
 ) {
   return await bcrypt.compare(candidatePassword, uesrPassword);
+};
+
+// for protected Route
+userSchema.methods.passwordChangedAfterTokenIssued = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const User = mongoose.model("User", userSchema);

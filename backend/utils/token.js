@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { promisify } from "util";
 
 export const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -14,4 +15,10 @@ export const setTokenInCookie = (token, res) => {
     sameSite: "strict", // prevent CSRF
     secure: process.env.NODE_ENV === "production",
   });
+};
+
+export const verifyToken = async (token, secret) => {
+  //  "jwt.verify" => this will retun callBack Function , so i promisify it because i like to work with promise
+  const verifyToken = promisify(jwt.verify);
+  return await verifyToken(token, secret);
 };
