@@ -14,7 +14,7 @@ const addPortofolio = catchAsync(async (req, res, next) => {
     title,
     description,
     image: req.file.filename,
-    url,
+    url
   });
 
   res.status(200).json({ message: "Portfolio added successfully" });
@@ -44,4 +44,4 @@ const deletePortfolio = catchAsync(async (req, res, next) => {
   res.json({ message: "Portfolio deleted successfully" });
 });
 
-export { addPortofolio, updatePortfolio , deletePortfolio };
+export { addPortofolio, updatePortfolio, deletePortfolio };

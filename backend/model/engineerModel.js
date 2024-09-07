@@ -15,8 +15,18 @@ const engineerSchema = new mongoose.Schema({
     },
   ],
   education: {
-    type: String,
-    required: true,
+    title: {
+      type: String,
+      required: true,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    }
   },
   specialization: {
     type: [String],

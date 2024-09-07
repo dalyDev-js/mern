@@ -8,22 +8,22 @@ import { validation } from "../middleware/validation.js";
 import portfolioSchema from "../validation/portfolio/addPortfolioValidation.js";
 import portfolioUpload from "../middleware/uploads/portfolioUpload.js";
 
-const portfolioRouters = express.Router();
+const portfolioRouter = express.Router();
 
-portfolioRouters.post(
+portfolioRouter.post(
   "/",
   portfolioUpload.single("image"),
   validation(portfolioSchema, "body"),
   addPortofolio
 );
 
-portfolioRouters.put(
+portfolioRouter.put(
   "/:id",
   portfolioUpload.single("image"),
   validation(portfolioSchema, "body"),
   updatePortfolio
 );
 
-portfolioRouters.delete("/:id", deletePortfolio);
+portfolioRouter.delete("/:id", deletePortfolio);
 
-export default portfolioRouters;
+export default portfolioRouter;
