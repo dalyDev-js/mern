@@ -1,41 +1,67 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function GetStarted() {
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg sm:p-12 md:p-16 lg:p-20">
-        <h1 className="text-2xl font-semibold text-center mb-6 sm:text-3xl md:text-4xl lg:text-5xl">
-          Join as a client or freelancer
-        </h1>
-        <div className="flex mb-4 flex-col md:flex-row">
-          <label className="flex-grow w-full sm:w-1/2 mx-2 mb-4 sm:mb-0">
-            <input type="radio" name="role" className="hidden" />
-            <div className="p-4 border rounded-lg text-center cursor-pointer hover:border-green-500 transition-colors duration-300 h-full">
-              <div className="text-4xl mb-2">👤</div>
-              <div className="font-medium">I'm a client, hiring for a project</div>
+    const [isFreelancer, setIsFreelancer] = useState(true);
+    const navigate = useNavigate(); 
+
+    const handleFreelancerClick = () => {
+        setIsFreelancer(true);
+    };
+
+    const handleClientClick = () => {
+        setIsFreelancer(false);
+    };
+
+    const handleSignup = () => {
+        if (isFreelancer) {
+            navigate('/signup?role=freelancer');
+        } else {
+            navigate('/signup?role=client');
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-8 md:px-16 lg:px-24">
+            <div className="bg-white p-6 md:p-8 lg:p-12 rounded-lg shadow-lg text-center">
+                <h2 className="text-2xl font-bold mb-6">Join as a client or freelancer</h2>
+                <div className="flex flex-col sm:flex-row justify-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button
+                        className={`py-4 px-6 rounded-lg w-full sm:w-48 font-semibold border ${
+                            !isFreelancer
+                                ? 'bg-green-50 border-black-600 text-green-600'
+                                : 'bg-white border-gray-300 text-gray-700'
+                        }`}
+                        onClick={handleClientClick}
+                    >
+                        I'm a client, hiring for a project
+                    </button>
+                    <button
+                        className={`py-4 px-6 rounded-lg w-full sm:w-48 font-semibold border ${
+                            isFreelancer
+                                ? 'bg-green-50 border-yellow-300 text-black-600'
+                                : 'bg-white border-gray-300 text-gray-700'
+                        }`}
+                        onClick={handleFreelancerClick}
+                    >
+                        I'm a freelancer, looking for work
+                    </button>
+                </div>
+
+                <button
+                    className="bg-yellow-300 text-white py-3 px-8 rounded-lg w-full sm:w-auto"
+                    onClick={handleSignup}
+                >
+                    {isFreelancer ? 'Apply as a Freelancer' : 'Apply as a Client'}
+                </button>
+
+                <p className="mt-4">
+                    Already have an account?{' '}
+                    <Link to="/signin" className="text-blue-500 hover:underline">
+                        Log In
+                    </Link>
+                </p>
             </div>
-          </label>
-          <label className="flex-grow w-full sm:w-1/2 mx-2">
-            <input type="radio" name="role" className="hidden" />
-            <div className="p-4 border rounded-lg text-center cursor-pointer hover:border-green-500 transition-colors duration-300 h-full">
-              <div className="text-4xl mb-2">👤</div>
-              <div className="font-medium">I'm a freelancer, looking for work</div>
-            </div>
-          </label>
         </div>
-        <Link to="/signup">
-          <button className="bg-gray-300 text-gray-700 py-3 px-6 rounded-lg w-full cursor-pointer hover:bg-gray-400 transition-colors duration-300 sm:py-4 md:py-5 lg:py-6">
-            Create Account
-          </button>
-        </Link>
-        <div className="text-center mt-4 sm:text-lg md:text-xl lg:text-2xl">
-          Already have an account?{' '}
-          <Link to="/signin" className="text-green-500 hover:underline">
-            Log in
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

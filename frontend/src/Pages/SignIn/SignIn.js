@@ -59,9 +59,6 @@ export default function SignIn() {
                             placeholder="Enter your Email"
                             className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
                         />
-                        <div className="flex-none w-8 flex items-center justify-center">
-                            <i className="fa-solid fa-envelope text-xl"></i>
-                        </div>
                     </div>
                     {formik.touched.email && formik.errors.email && (
                         <div className="text-red-800 text-sm">{formik.errors.email}</div>
@@ -78,9 +75,6 @@ export default function SignIn() {
                             placeholder="Enter a strong Password"
                             className="flex-grow p-2 bg-transparent outline-none placeholder-gray-400"
                         />
-                        <div className="flex-none w-8 flex items-center justify-center">
-                            <i className="fa-solid fa-lock text-xl"></i>
-                        </div>
                     </div>
                     {formik.touched.password && formik.errors.password && (
                         <div className="text-red-800 text-sm">{formik.errors.password}</div>
@@ -89,7 +83,7 @@ export default function SignIn() {
                     <div className="flex flex-col items-center">
                         <button
                             type="submit"
-                            className="bg-green-500 w-full py-3 rounded-lg text-white hover:bg-green-600 transition duration-200"
+                            className="bg-yellow-300 w-full py-3 rounded-lg text-white hover:bg-black-200 transition duration-200"
 
                         >
                             {loading ? <i className="fa fa-spin fa-spinner"></i> : 'Sign In'}
@@ -101,7 +95,7 @@ export default function SignIn() {
                         )}
                     </div>
                     <div className='text-center'>
-                        <Link to='/Register' className='text-sm text-green-500 hover:underline'>I don't have an account?</Link>
+                        <Link to='/Register' className='text-sm text-black-500  hover:underline'>I don't have an account?</Link>
                     </div>
                 </form>
             </div>
