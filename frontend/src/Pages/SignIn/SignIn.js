@@ -1,48 +1,55 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useFormik } from 'formik';
-import axios from 'axios';
-import * as Yup from 'yup';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import axios from "axios";
+import * as Yup from "yup";
 
 export default function SignIn() {
-    const [apiResponse, setApiResponse] = useState();
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+  const [apiResponse, setApiResponse] = useState();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Invalid email address').required('Email is required'),
-        password: Yup.string()
-            .required('Password is required')
-            .min(5, 'Password must be at least 5 characters')
-            .max(15, 'You cannot enter more than 15 characters')
-    });
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(5, "Password must be at least 5 characters")
+      .max(15, "You cannot enter more than 15 characters"),
+  });
 
-    const handleLogin = async (formValues) => {
-        setLoading(true);
-        try {
-            const response = await axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signin`, formValues);
-            const { token, user } = response.data;
-            if (token) {
-                localStorage.setItem('Token', token);
-                localStorage.setItem('User', JSON.stringify(user));
-                navigate('/');
-            }
-        } catch (error) {
-            console.error(error);
-            setApiResponse(error?.response?.data?.message || 'An error occurred. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleLogin = async (formValues) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `https://ecommerce.routemisr.com/api/v1/auth/signin`,
+        formValues
+      );
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem("Token", token);
+        localStorage.setItem("User", JSON.stringify(user));
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+      setApiResponse(
+        error?.response?.data?.message || "An error occurred. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: '',
-        },
-        validationSchema,
-        onSubmit: handleLogin
-    });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: handleLogin,
+  });
 
     return (
         <div className="w-full h-screen flex items-center justify-center bg-gray-100">
