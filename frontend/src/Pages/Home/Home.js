@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <GetStarted />
-      <TrustedBy />
+
       <SectionMain />
       <Slider />
       <Category />

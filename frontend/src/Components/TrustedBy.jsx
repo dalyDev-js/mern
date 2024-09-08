@@ -1,6 +1,6 @@
 function TrustedBy() {
   return (
-    <div className="trusted-by px-6 md:px-16 lg:px-24">
+    <div className="trusted-by    ">
       <div className="container mx-auto px-4 py-8 flex flex-col items-center md:items-start">
         <h1 className="text-lg md:text-xl mb-4 font-medium">Trusted by</h1>
         <div className="trusted-by-logo flex flex-wrap justify-center gap-4 sm:gap-6">

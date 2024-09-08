@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { FaCheckCircle, FaPen, FaShareAlt } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaCheckCircle, FaPen, FaShareAlt } from "react-icons/fa";
 import avatar from "../../assets/Profile_avatar_placeholder_large.png";
-
 
 function ProfileHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,8 +21,7 @@ function ProfileHeader() {
             />
             <div
               className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 cursor-pointer"
-              onClick={toggleModal} 
-            >
+              onClick={toggleModal}>
               <FaPen className="text-sm text-amber-500" />
             </div>
           </div>
@@ -32,7 +30,6 @@ function ProfileHeader() {
               Your Name
               <FaCheckCircle className="text-blue-500 ml-2" />
             </h1>
-
           </div>
         </div>
         <div className="flex items-center space-x-4">
@@ -50,7 +47,9 @@ function ProfileHeader() {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Upload Profile Picture</h2>
-            <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="file_input">
+            <label
+              className="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="file_input">
               Upload file
             </label>
             <input
@@ -65,8 +64,7 @@ function ProfileHeader() {
             <div className="flex justify-end mt-4">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                onClick={toggleModal}
-              >
+                onClick={toggleModal}>
                 Cancel
               </button>
               <button className="bg-amber-500 text-white px-4 py-2 rounded">
