@@ -355,26 +355,6 @@ export default function Navbar() {
                     Contact
                   </a>
                 </li>
-                <div className="search-bar rounded-2xl lg:w-80 md:w-52 flex justify-center items-center bg-white border border-gray-400">
-                  <input
-                    className="h-7 p-2 w-3/4 text-sm rounded-s-2xl border-e border-gray-500 bg-white bg-opacity-50"
-                    type="search"
-                    placeholder="Search ..."></input>
-                  <div className="search-dropdown w-1/4">
-                    <button className="dropbtn w-full rounded-e-2xl py-1 h-full flex justify-center items-center gap-1 bg-white text-amber-900 text-sm px-2">
-                      for{" "}
-                      <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-                    </button>
-                    <div className="dropdown-content">
-                      <a href="#">
-                        <i className="fa-solid fa-user-check"></i> Talent
-                      </a>
-                      <a href="#">
-                        <i className="fa-solid fa-briefcase"></i> Jobs
-                      </a>
-                    </div>
-                  </div>
-                </div>
               </ul>
             </div>
           </div>
