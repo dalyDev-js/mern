@@ -106,3 +106,19 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   setTokenInCookie(token, res);
   sendResponse(res, 201, token, user);
 });
+
+export const updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  if (!user.correctPassword(user.password, req.body.currentPassword)) {
+    return next(new AppError("your current Password is wrong!", 401));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+
+  const token = generateToken(user._id);
+  setTokenInCookie(token, res);
+  sendResponse(res, 200, token, user);
+});
