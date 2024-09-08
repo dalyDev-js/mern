@@ -1,8 +1,10 @@
 import express from "express";
-import { getAllusers } from "../controllers/userController.js";
+import { deleteMe, updateMe } from "../controllers/userController.js";
+import { protect } from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllusers);
+router.patch("/updateMe", protect, updateMe);
+router.delete("/deleteMe", protect, deleteMe);
 
 export default router;
