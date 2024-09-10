@@ -225,7 +225,7 @@ function JobDetail() {
             when submitting proposals to jobs like these.
             <a
               href="#"
-              className="text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
+              className="text-base text-amber-400 underline dark:text-amber-500 hover:no-underline"
             >
               Create a specialized profile.
             </a>
@@ -239,7 +239,7 @@ function JobDetail() {
         </p>
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Budget:</span>
-          <span className="text-blue-600">$60.00</span>
+          <span className="text-amber-400">$60.00</span>
         </div>
         {/* hr */}
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
@@ -264,7 +264,7 @@ function JobDetail() {
         <div className="mb-6">
           <span className="flex gap-2">
             <svg
-              className="w-6 h-6 text-gray-800 dark:text-white"
+              className="w-8 h-8 text-gray-800 dark:text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -284,7 +284,7 @@ function JobDetail() {
               clients you’re serious.
               <a
                 href="#"
-                className="text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
+                className="text-base text-amber-400 underline dark:text-amber-500 hover:no-underline"
               >
                 Learn more
               </a>
@@ -292,15 +292,12 @@ function JobDetail() {
           </span>
         </div>
         {/* buttons */}
-        <button className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4 hover:bg-blue-600">
+        <button className="bg-amber-300 text-white px-4 py-2 rounded w-full mb-4 hover:bg-amber-400">
           Buy Connects to apply
         </button>
 
-        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
+        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-amber-400 to-amber-400 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
           <span class="relative flex px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-            {/*  */}
-            {/* hover:text-white القلب مش بيبقي ابيض  */}
-            {/*  */}
             <svg
               class="w-6 h-5 pr-2 text-gray-800 hover:text-white dark:text-white"
               aria-hidden="true"
@@ -325,7 +322,7 @@ function JobDetail() {
         {/* div flag */}
         <div className="flex items-center gap-2 mb-6 mt-4">
           <svg
-            className="w-6 h-6 text-blue-600 dark:text-blue-500 hover:text-blue-500 "
+            className="w-6 h-6 text-amber-400 dark:text-amber-400 hover:text-amber-400 "
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -344,7 +341,7 @@ function JobDetail() {
 
           <a
             href="#"
-            className="text-base text-blue-600 dark:text-blue-500 hover:text-blue-500"
+            className="text-base text-amber-400 dark:text-amber-300 hover:text-amber-400"
           >
             Flag as inappropriate
           </a>
@@ -355,7 +352,7 @@ function JobDetail() {
           {/* icon */}
           <span className="flex gap-2">
             <svg
-              class=" mb-1 w-6 h-6 text-blue-600 dark:text-white"
+              class=" mb-1 w-6 h-6 text-amber-400 dark:text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -389,7 +386,7 @@ function JobDetail() {
           {/* icon */}
           <span className="flex gap-2">
             <svg
-              class=" mb-1 w-4 h-4 text-blue-600 dark:text-white"
+              class=" mb-1 w-4 h-4 text-amber-400 dark:text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -427,7 +424,7 @@ function JobDetail() {
 
             <a
               href="#"
-              className="text-base text-blue-600 dark:text-blue-500 hover:text-blue-500"
+              className="text-base text-amber-400 dark:text-amber-400 hover:text-amber-400"
             >
               4.96
             </a>
