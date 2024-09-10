@@ -143,7 +143,11 @@ export default function Navbar() {
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Find Work{" "}
+<<<<<<< HEAD
+                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
+=======
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
+>>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
                   </a>
                 </li>
                 <li>
@@ -343,6 +347,7 @@ export default function Navbar() {
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
                   </a>
                 </li>
+
                 <li>
                   <a
                     href="#"
