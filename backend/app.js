@@ -8,6 +8,7 @@ import portfolioRouter from "./routes/portfolioRoute.js";
 import certificateRouter from "./routes/certificateRoute.js";
 import experienceRouter from "./routes/experienceRoute.js";
 import cookieParser from "cookie-parser";
+import proposalRouter from "./routes/proposalRoute.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use("/api/v1/services", servicesRouter);
 app.use("/api/v1/portfolios", portfolioRouter);
 app.use("/api/v1/certificates", certificateRouter);
 app.use("/api/v1/experiences", experienceRouter);
+app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
 
 app.all("*", (req, res, next) => {
