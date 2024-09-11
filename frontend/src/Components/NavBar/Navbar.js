@@ -34,13 +34,8 @@ export default function Navbar() {
 
   return (
     <>
-<<<<<<< HEAD
-      <div className="navbar w-full">
-        <nav className="border-red-600 border-b  py-2.5 dark:bg-gray-900">
-=======
       <div className="bg-white w-full ">
         <nav className="border-amber-300  border-b-2   px-10 py-2.5 datext-black">
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
           <div className="flex flex-wrap items-center justify-between px-4 mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -56,16 +51,6 @@ export default function Navbar() {
               </div>
             </div>
             <div className="flex items-center lg:order-2">
-<<<<<<< HEAD
-              <div className="flex gap-2 justify-center items-center">
-                <a className="cursor-pointer text-lg">Login</a>
-                <a
-                  href="https://themesberg.com/product/tailwind-css/landing-page"
-                  className="text-white bg-amber-700 hover:bg-amber-600 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-3 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
-                >
-                  Register
-                </a>
-=======
               <div className="flex gap-10 justify-center items-center">
                 <div className="search-bar rounded-2xl lg:w-80 md:w-52 md:flex justify-center items-center bg-white border hidden border-gray-400">
                   <input
@@ -97,7 +82,6 @@ export default function Navbar() {
                   className="text-whitetext-black hover:bg-amber-400 bg-amber-300 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-6 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:text-black focus:outline-none dark:focus:ring-purple-800">
                   Sign up
                 </Link>
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
               </div>
 
               <button
@@ -134,12 +118,7 @@ export default function Navbar() {
               className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${
                 isOpen ? "block" : "hidden"
               }`}
-<<<<<<< HEAD
-              id="mobile-menu-2"
-            >
-=======
               id="mobile-menu-2">
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
               {/* <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 <li>
                   <a
@@ -155,11 +134,7 @@ export default function Navbar() {
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Find Talent{" "}
-<<<<<<< HEAD
-                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-=======
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
                   </a>
                 </li>
                 <li>
@@ -181,9 +156,6 @@ export default function Navbar() {
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Why Handas{" "}
-<<<<<<< HEAD
-                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-=======
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
                   </a>
                 </li>
@@ -373,217 +345,13 @@ export default function Navbar() {
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
                     Why Handas{" "}
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
                   </a>
                 </li>
 
                 <li>
                   <a
                     href="#"
-<<<<<<< HEAD
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-                    Contact
-                  </a>
-                </li>
-              </ul> */}
-              <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li
-                  onMouseEnter={() =>
-                    handleMouseEnterLi(
-                      <>
-                        <div className="md:flex gap-2">
-                          <div className="options border-r border-gray-400 md:w-1/4">
-                            <div className="option rounded-lg hover:bg-yellow-50 mr-4 p-4">
-                              <p className=" my-2 font-medium text-sm text-amber-900">
-                                Post job and hire Engineer{" "}
-                              </p>
-                              <p className="font-medium text-sm text-gray-500">
-                                Engineers Catalog
-                              </p>
-                            </div>
-                          </div>
-                          <div className="selected-option p-3 md:w-1/3">
-                            <p className=" my-2 text-amber-800 font-bold">
-                              At Handas
-                            </p>
-                            <p className=" my-2 font-medium text-amber-700">
-                              you can find the right engineer for your job{" "}
-                            </p>
-                            <p className=" text-sm leading-7 my-2 font-medium">
-                              <span className="text-amber-800 font-bold">
-                                Specialized Expertise:
-                              </span>{" "}
-                              With access to a wide range of engineers, you can
-                              find individuals with specific expertise that
-                              perfectly matches your project requirements.
-                            </p>
-                            <p className=" text-sm leading-7 my-2 font-medium">
-                              <span className="text-amber-800 font-bold">
-                                Diverse Perspectives:
-                              </span>{" "}
-                              Engineers from different backgrounds bring unique
-                              approaches to problem-solving, leading to more
-                              innovative solutions.
-                            </p>
-
-                            <p className="text-amber-600 underline text-sm font-bold">
-                              Browse all Engineers{" "}
-                              <i class="fa-solid fa-arrow-right"></i>{" "}
-                            </p>
-                          </div>
-                          <div className="eng-types p-3 ms-3">
-                            <p className="my-2 font-semibold text-gray-800">
-                              1. Civil Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              2. Software Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              3. Industrial Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              4. Mechanical Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              5. Electrical Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              6. Systems Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              7. Petroleum Engineers
-                            </p>
-                            <p className="my-2 font-semibold text-gray-800">
-                              8. Materials Engineers
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    )
-                  }
-                  onMouseLeave={handleMouseLeaveLi}
-                >
-                  <a
-                    href="#"
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-                    Find Talent{" "}
-                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-                  </a>
-                </li>
-                <li
-                  onMouseEnter={() =>
-                    handleMouseEnterLi(
-                      <>
-                        <div className="find-work md:flex">
-                          <div className="md:w-1/4 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              Ways to Earn
-                            </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Learn why Handas is the best for you
-                            </p>
-                          </div>
-                          <div className="md:w-1/3 ms-3 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              Find work for your Skills{" "}
-                            </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Explore the kind of work that will be available in
-                              tour field{" "}
-                            </p>
-                          </div>{" "}
-                          <div className="md:w-1/3 ms-3 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              Gain work by Ads{" "}
-                            </p>
-                            <p className=" text-gray-700 text-sm  w-1/2">
-                              Get Notified with all job is available for you{" "}
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    )
-                  }
-                  onMouseLeave={handleMouseLeaveLi}
-                >
-                  <a
-                    href="#"
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-                    Find Work{" "}
-                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-                  </a>
-                </li>
-                <li
-                  onMouseEnter={() =>
-                    handleMouseEnterLi(
-                      <>
-                        <div className="find-work md:flex">
-                          <div className="md:w-1/4 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              Success Stories
-                            </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Discover how team work stratigicaly and grow
-                              together{" "}
-                            </p>
-                          </div>
-                          <div className="md:w-1/4 ms-3 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">Reviews </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Explore all the good and bad reviews for every
-                              client or engineer{" "}
-                            </p>
-                          </div>{" "}
-                          <div className="md:w-1/4 ms-3 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              How to hire{" "}
-                            </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Learn the best ways to find the right hire{" "}
-                            </p>
-                          </div>
-                          <div className="md:w-1/4 ms-3 border-r border-gray-600">
-                            <p className="text-amber-800 font-bold">
-                              How to find work{" "}
-                            </p>
-                            <p className=" text-gray-700 text-sm  md:w-1/2">
-                              Learn the best ways to find the available work
-                              based in your type{" "}
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    )
-                  }
-                  onMouseLeave={handleMouseLeaveLi}
-                >
-                  <a
-                    href="#"
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-                    Why Handas{" "}
-                    <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 pl-3 pr-4 text-amber-900 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
-                  >
-=======
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
                     Contact
                   </a>
                 </li>
@@ -591,8 +359,7 @@ export default function Navbar() {
                   <input
                     className="h-7 p-2 w-3/4 text-sm rounded-s-2xl border-e border-gray-500 bg-white bg-opacity-50"
                     type="search"
-                    placeholder="Search ..."
-                  ></input>
+                    placeholder="Search ..."></input>
                   <div className="search-dropdown w-1/4">
                     <button className="dropbtn w-full rounded-e-2xl py-1 h-full flex justify-center items-center gap-1 bg-white text-amber-900 text-sm px-2">
                       for{" "}
@@ -613,20 +380,11 @@ export default function Navbar() {
           </div>
         </nav>
         <div
-<<<<<<< HEAD
-          className={`sub-nav   bg-amber-100 w-full p-10 md:fixed transition-opacity duration-300 ${
-            isSubNavVisible ? "opacity-100" : "opacity-0 hidden"
-          }`}
-          onMouseEnter={handleMouseEnterSubNav}
-          onMouseLeave={handleMouseLeaveSubNav}
-        >
-=======
           className={`sub-nav   bg-white ttext-black border-b-2 border-amber-300 w-full p-10 md:fixed transition-opacity duration-300 ${
             isSubNavVisible ? "opacity-100" : "opacity-0 hidden"
           }`}
           onMouseEnter={handleMouseEnterSubNav}
           onMouseLeave={handleMouseLeaveSubNav}>
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
           {subNavContent}
         </div>
         <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>

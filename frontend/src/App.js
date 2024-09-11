@@ -11,6 +11,7 @@ import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import JobDetail from "./Pages/JobDetails/JobDetails";
 import Client from "./Pages/Client/Client";
 import Profile from "./Pages/HireEngineer/Profile";
+import HiringProcess from "./Pages/HiringProcess/HiringProcess";
 
 let routers = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ let routers = createBrowserRouter([
       { path: "/profile", element: <ProfilePage /> },
       { path: "/job-details", element: <JobDetail /> },
       { path: "/hire-engineer", element: <Profile /> },
+      { path: "/hiring", element: <HiringProcess /> },
       { path: "/client", element: <Client /> },
 
       { path: "*", element: <NotFound /> },
