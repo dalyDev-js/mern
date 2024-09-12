@@ -21,13 +21,13 @@ let routers = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <SignIn /> },
       { path: "/register", element: <SignUp /> },
-      { path: "/jobs", element: <JobSearch /> },
-      { path: "/started", element: <GetStarted /> },
-      { path: "/profile", element: <ProfilePage /> },
-      { path: "/job-details", element: <JobDetail /> },
-      { path: "/hire-engineer", element: <Profile /> },
-      { path: "/hiring", element: <HiringProcess /> },
-      { path: "/client", element: <Client /> },
+      { path: "/jobs", element: <JobSearch /> }, //engineer view to jobs
+      { path: "/started", element: <GetStarted /> }, //join as an engineer or client
+      { path: "/profile", element: <ProfilePage /> }, //update engineer profile engineer view
+      { path: "/job-details", element: <JobDetail /> }, // job details engineer view
+      { path: "/hire-engineer", element: <Profile /> }, //engineer details client view
+      { path: "/hiring", element: <HiringProcess /> }, //proposal engineer view
+      { path: "/client", element: <Client /> }, // job posting client view
 
       { path: "*", element: <NotFound /> },
     ],
