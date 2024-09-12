@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function EngineersList() {
   const engineers = [
@@ -235,7 +236,7 @@ function EngineersList() {
 
             {/* See More Button */}
             <button className="text-xs mt-4 bg-amber-300 text-white px-3 py-1 rounded-md hover:bg-amber-400">
-              See more
+              <Link to={"/engineer-details"}>See more</Link>
             </button>
           </div>
         ))}

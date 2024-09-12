@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Accordion } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 // //////////////////////////////////////////  VALID PAYMANT //////////////////////////////////
 
@@ -128,7 +129,7 @@ function Payment() {
                 type="button"
                 className=" w-32 h-12 mb-5 text-black border-2 border-amber-400 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5"
               >
-                Cancel
+                <Link to={"/client"}>Cancel</Link>
               </button>
             </div>
             <p className="text-gray-500 mb-4">

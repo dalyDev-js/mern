@@ -151,11 +151,8 @@ export default function Navbar() {
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Find Work{" "}
-<<<<<<< HEAD
                     <i className="text-amber-700 fa-solid fa-chevron-down"></i>
-=======
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
->>>>>>> adc2119ca6e787470a7169eb263d2166e8317f7b
                   </a>
                 </li>
                 <li>
@@ -228,7 +225,9 @@ export default function Navbar() {
                             </p>
 
                             <p className="text-amber-600 underline text-sm font-bold">
-                              Browse all Engineers{" "}
+                              <Link to={"/engineers-list"}>
+                                Browse all Engineers{" "}
+                              </Link>
                               <i class="fa-solid fa-arrow-right"></i>{" "}
                             </p>
                           </div>
@@ -323,7 +322,7 @@ export default function Navbar() {
                         <div className="find-work md:flex">
                           <div className="md:w-1/4 border-r border-gray-600">
                             <p className="text-black font-bold">
-                              Success Stories
+                              <Link to={"/about"}>Success Stories</Link>
                             </p>
                             <p className=" text-black text-sm  md:w-1/2">
                               Discover how team work stratigicaly and grow
@@ -368,19 +367,19 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <NavLink
+                    to={"/contact"}
                     className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
                   >
                     Contact
-                  </a>
+                  </NavLink>
                 </li>
               </ul>
             </div>
           </div>
         </nav>
         <div
-          className={`sub-nav   bg-white ttext-black border-b-2 border-amber-300 w-full p-10 md:fixed transition-opacity duration-300 ${
+          className={`sub-nav z-20  bg-white ttext-black border-b-2 border-amber-300 w-full p-10 md:fixed transition-opacity duration-300 ${
             isSubNavVisible ? "opacity-100" : "opacity-0 hidden"
           }`}
           onMouseEnter={handleMouseEnterSubNav}

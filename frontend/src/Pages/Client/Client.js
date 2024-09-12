@@ -7,6 +7,7 @@ import start from "../../assets/start.png";
 import card from "../../assets/card.png";
 import card2 from "../../assets/card2.png";
 import network from "../../assets/network.png";
+import { Link } from "react-router-dom";
 
 export default function Client() {
   return (
@@ -28,7 +29,7 @@ export default function Client() {
                     <p className="text-xl font-thin">
                       <span className="font-semibold underline me-1">
                         {" "}
-                        Add a Billing Method.
+                        <Link to={"/payment"}>Add a Billing Method.</Link>
                       </span>
                       you could start hiring 3X faster
                     </p>

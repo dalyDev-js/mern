@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   return (
@@ -21,7 +22,7 @@ const Profile = () => {
             <span className="text-xl">...</span>
           </button> */}
           <button className="px-10 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded-md">
-            Hire
+            <Link to={"/hiring"}>Hire</Link>
           </button>
           <button className="px-4 py-2 text-amber-300 border hover:text-amber-400 hover:border-amber-400 border-amber-300 rounded-md">
             <i className="fas fa-heart"></i>
