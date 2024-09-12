@@ -36,6 +36,7 @@ let routers = createBrowserRouter([
 
 function App() {
   return <RouterProvider router={routers}></RouterProvider>;
+  return <RouterProvider router={routers}></RouterProvider>;
 }
 
 export default App;
