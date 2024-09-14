@@ -25,6 +25,8 @@ import ProfileSideBar from "./Components/ProfileSideBar/ProfileSideBar";
 import AboutUs from "./Pages/About_Us/AboutUs";
 import EngineersList from "./Pages/Engineers_List/EngineersList";
 import SaveJobs from "./Pages/SaveJobs/SaveJobs";
+import MyJobsPosts from "./Pages/MyJobsPosts/MyJobsPosts";
+import JobProposals from "./Pages/JobProposals/JobProposals";
 
 let routers = createBrowserRouter([
   {
@@ -47,6 +49,8 @@ let routers = createBrowserRouter([
       { path: "/about", element: <AboutUs /> }, // job posting client view
       { path: "/engineers-list", element: <EngineersList /> }, // job posting client view
       { path: "/saved-jobs", element: <SaveJobs /> }, // job posting client view
+      { path: "/recent-posts", element: <MyJobsPosts /> }, // jobs already posted client view
+      { path: "/job-proposals", element: <JobProposals /> }, // job posting
 
       { path: "*", element: <NotFound /> },
     ],
