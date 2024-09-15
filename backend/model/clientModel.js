@@ -1,30 +1,39 @@
-const clientSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  verifiedStatus: {
-    type: Boolean,
-    default: false,
-  },
-  postedProjects: [
-    {
+import mongoose from "mongoose";
+
+const clientSchema = new mongoose.Schema(
+  {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
+      ref: "User",
+      required: true,
     },
-  ],
-  companyName: {
-    type: String,
-    required: true,
+    verifiedStatus: {
+      type: Boolean,
+      default: false,
+    },
+    postedProjects: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+      },
+    ],
+    companyName: {
+      type: String,
+      required: true,
+    },
+    clientId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    reviewDate: {
+      type: Date,
+      required: true,
+    },
   },
-  clientId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  reviewDate: {
-    type: Date,
-    required: true,
-  },
-});
+  {
+    timestamps: true, 
+  }
+);
+
+export const ClientModel = mongoose.model("Client", clientSchema);

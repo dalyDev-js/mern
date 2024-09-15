@@ -7,12 +7,13 @@ import AppError from "../utils/appError.js";
 import sendEmail from "../utils/email.js";
 import crypto from "crypto";
 
-export const signup = catchAsync(async (req, res, next) => {
-  const newUser = await createUser(req.body);
+export const signup = async (req, res, next) => {
+  console.log(req.body);
+  const newUser = await User.create(req.body);
   const token = generateToken(newUser._id);
   setTokenInCookie(token, res);
   sendResponse(res, 201, token, newUser);
-});
+};
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -94,7 +95,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.rePassword = req.body.rePassword;
 
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
@@ -115,7 +116,7 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.rePassword= req.body.rePassword;
   await user.save();
 
   const token = generateToken(user._id);

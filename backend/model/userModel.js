@@ -22,11 +22,12 @@ const userSchema = mongoose.Schema({
   },
   gender: {
     type: String,
-    required: [true, "Please Prodive your gender!"],
-    enum: ["male", "female", "gay"],
+    required: [true, "Please Provide your gender!"],
+    enum: ["male", "female", "others"],
   },
   profilePic: {
     type: String,
+    required: [true, "Please provide your profile picture"],
     default: "",
   },
   role: {
@@ -113,3 +114,5 @@ userSchema.methods.createPasswordResetToken = function () {
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+
