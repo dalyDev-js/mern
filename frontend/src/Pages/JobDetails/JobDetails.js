@@ -1,207 +1,85 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 function JobDetail() {
   const params = useParams(); //--> func
+  const location = useLocation();
+  const { title, description, budget } = location.state || {};
   console.log(params.id);
   const [job, setJobs] = useState({});
-  //   return (
-  //     // <div className="p-6">
-  //     //   {/* {job.title} */}
-  //     //   <h1 className="text-3xl font-bold mb-4">job.title</h1>
-  //     //   {/* {job.description} */}
-  //     //   <p className="mb-2">job.description</p>
-  //     //   {/* {job.budget} */}
-  //     //   <p className="text-gray-500 mb-2">Budget: job.budget</p>
-  //     //   {/* {job.level} */}
-  //     //   <p className="text-gray-500 mb-4">Level: job.level</p>
-  //     //   <button className="bg-blue-500 text-white px-4 py-2 rounded">
-  //     //     Apply Now
-  //     //   </button>
-  //     // </div>
+  const [showForm, setShowForm] = useState(false);
+  const handleSendProposal = () => setShowForm(true);
+  const handleCancelProposal = () => setShowForm(false);
 
-  //     <div className="flex h-screen">
-  //       {/* Sidebar */}
-  //       <div className="w-1/4 bg-gray-100 p-4 border-l border-gray-300">
-  //         <div class="p-4  bg-gray-100  border-gray-200  shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
-  //           {/* icon */}
-  //           <span className="flex gap-2">
-  //             <svg
-  //               class=" mb-1 w-6 h-6 text-gray-800 dark:text-white"
-  //               aria-hidden="true"
-  //               xmlns="http://www.w3.org/2000/svg"
-  //               fill="currentColor"
-  //               viewBox="0 0 20 20"
-  //             >
-  //               <path
-  //                 fill="currentColor"
-  //                 d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
-  //               />
-  //               <path
-  //                 fill="#fff"
-  //                 d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"
-  //               />
-  //             </svg>
-  //             {/* text */}
-
-  //             <p class="text-gray-500 dark:text-gray-400">
-  //               You’ll need Connects to bid. They’re like credits that show
-  //               clients you’re serious.
-  //               <a
-  //                 href="#"
-  //                 class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-  //               >
-  //                 Learn more
-  //               </a>
-  //             </p>
-  //           </span>
-  //         </div>
-  //         <button className="bg-blue-600 text-white px-4 py-2 rounded w-full mb-4">
-  //           Buy Connects to apply
-  //         </button>
-  //         <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded w-full mb-4">
-  //           Save Job
-  //         </button>
-
-  //         <a
-  //           href="#"
-  //           class=" text-base text-blue-600 dark:text-blue-500 hover:text-blue-500 mb-6"
-  //         >
-  //           Flag as inappropriate
-  //         </a>
-  //         <div class="p-4  bg-gray-100   shadow dark:bg-gray-800  mb-6">
-  //           {/* icon */}
-  //           <span className="flex gap-2">
-  //             <svg
-  //               class=" mb-1 w-6 h-6 text-gray-800 dark:text-white"
-  //               aria-hidden="true"
-  //               xmlns="http://www.w3.org/2000/svg"
-  //               fill="currentColor"
-  //               viewBox="0 0 20 20"
-  //             >
-  //               <path
-  //                 fill="currentColor"
-  //                 d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
-  //               />
-  //               <path
-  //                 fill="#fff"
-  //                 d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"
-  //               />
-  //             </svg>
-  //             {/* text */}
-
-  //             <p class="text-gray-500 dark:text-gray-400">
-  //               Required Connects to submit a proposal: 13
-  //               <br />
-  //               Available Connects: 0
-  //             </p>
-  //           </span>
-  //         </div>
-  //         {/*  */}
-  //         <div className="mt-6">
-  //           <h2 className="font-bold text-lg">About the client</h2>
-  //           <p className="mt-2">Payment method verified</p>
-  //           <p className="text-gray-600">4.96 ★★★★★</p>
-  //         </div>
-  //         {/* about clint */}
-  //         <div class="p-4  bg-gray-100  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
-  //           {/* icon */}
-  //           <span className="flex gap-2">
-  //             <svg
-  //               class=" mb-1 w-3 h-3 text-blue-600 dark:text-white"
-  //               aria-hidden="true"
-  //               xmlns="http://www.w3.org/2000/svg"
-  //               fill="currentColor"
-  //               viewBox="0 0 20 20"
-  //             >
-  //               <path
-  //                 fill="currentColor"
-  //                 d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
-  //               />
-  //               <path
-  //                 fill="#fff"
-  //                 d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"
-  //               />
-  //             </svg>
-  //             {/* text */}
-
-  //             <p class="text-gray-500 dark:text-gray-400">
-  //               Payment method verified
-  //             </p>
-  //           </span>
-  //         </div>
-  //         <p className="text-gray-600">4.96 ★★★★★</p>
-  //       </div>
-
-  //       {/* Main Content */}
-  //       <div className="w-3/4 p-8">
-  //         <h1 className="text-2xl font-bold mb-4">
-  //           Turn figma to vercel one page
-  //         </h1>
-  //         <p className="text-gray-600">Posted 8 minutes ago</p>
-  //         {/*  */}
-  //         <span className="flex gap-2">
-  //           <svg
-  //             class=" mb-1 w-6 h-6 text-gray-800 dark:text-white"
-  //             aria-hidden="true"
-  //             xmlns="http://www.w3.org/2000/svg"
-  //             fill="currentColor"
-  //             viewBox="0 0 20 20"
-  //           >
-  //             <path
-  //               fill="currentColor"
-  //               d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
-  //             />
-  //             <path
-  //               fill="#fff"
-  //               d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"
-  //             />
-  //           </svg>
-  //           {/* text */}
-
-  //           <p class="text-gray-500 dark:text-gray-400">
-  //             Specialized profiles can help you better highlight your expertise
-  //             when submitting proposals to jobs like these.
-  //             <a
-  //               href="#"
-  //               class=" text-base text-blue-600 underline dark:text-blue-500 hover:no-underline"
-  //             >
-  //               Create a specialized profile.
-  //             </a>
-  //           </p>
-  //         </span>
-  //         <p className="mb-4">
-  //           i have a figma one page design want to turn it to a vercel single page
-  //           thank you.
-  //         </p>
-
-  //         <div className="flex items-center mb-4">
-  //           <span className="font-bold mr-2">Budget:</span>
-  //           <span className="text-green-500">$60.00</span>
-  //         </div>
-  //         <div className="flex items-center mb-4">
-  //           <span className="font-bold mr-2">Experience Level:</span>
-  //           <span>Intermediate</span>
-  //         </div>
-  //         <div className="flex items-center">
-  //           <span className="font-bold mr-2">Project Type:</span>
-  //           <span>One-time project</span>
-  //         </div>
-  //         <div className="mt-8">
-  //           <h2 className="font-bold text-lg">Skills and Expertise</h2>
-  //           <p className="mt-2">JavaScript</p>
-  //         </div>
-  //       </div>
-  //     </div>
-
-  //   );
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 m-16">
-      {/* Main Content */}
+    <div className="grid bg-slate-50 rounded-lg grid-cols-1 sm:grid-cols-3 gap-6 m-16">
+      {/* Proposal Form */}
+      {showForm && (
+        <div className="propsal-form flex justify-center items-center z-20 fixed inset-0 bg-black bg-opacity-30">
+          <div className="form w-1/2 h-4/5 shadow-md drop-shadow shadow-amber-700 border border-amber-500 bg-slate-50 rounded-lg p-10">
+            <div className="proposal-ad w-full bg-slate-100  p-4">
+              Trust in your abilities, stay confident, and show them why you're
+              the perfect fit.{" "}
+              <span className="text-amber-500">Best of luck!</span>
+            </div>
+            <div className="client-engineer-budget mt-4 flex justify-between">
+              <p className="text-sm text-gray-600">
+                Your Profile Rate: $5.00/hr
+              </p>
+              <p className="text-sm text-gray-600">
+                Client budget: {budget}/hr
+              </p>
+            </div>
+            <div className="engineer-job-hourly-rate mt-4 flex justify-between">
+              <div className="rate-desscription">
+                <p className="font-medium text-lg">Hourly Rate</p>
+                <p className="text-[0.8rem] font-medium text-gray-500">
+                  The total amount that the client will see in your proposal
+                </p>
+              </div>
+              <div className="engineer-amount">
+                <input
+                  className="border border-gray-400 bg-slate-100 rounded-lg"
+                  type="text"
+                  placeholder="$10/hr"
+                />{" "}
+                /hr
+              </div>
+            </div>
+            <div className="platform-fees mt-4 mb-2 flex justify-between">
+              <p className="text-lg font-medium">10% Handsly Service Fee</p>
+              <p className="text-lg ">
+                <span className="text-gray-400 text-sm me-2">-$2.00</span>/hr
+              </p>
+            </div>
+            <hr />
+            <div className="cover-letter mt-4">
+              <p className="text-lg mb-2 font-medium">Cover Letter</p>
+              <textarea
+                rows={6}
+                className="w-full bg-slate-100 rounded-md"
+              ></textarea>
+            </div>
+            <div className="proposal-action flex justify-between mt-4">
+              <button
+                onClick={handleCancelProposal}
+                className="p-1 px-7 bg-gray-800 hover:bg-gray-600 text-lg text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="col-span-2 p-8">
-        <h1 className="text-2xl font-bold mb-4">
-          Turn figma to vercel one page
+        <h1 className="job-title text-2xl text-amber-600 font-bold mb-4">
+          {title}
         </h1>
+
         <p className="text-gray-600">Posted 8 minutes ago</p>
         <span className="flex gap-2 mb-4">
           <svg
@@ -235,13 +113,11 @@ function JobDetail() {
         </span>
         {/* hr */}
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <p className="mb-4">
-          i have a figma one page design want to turn it to a vercel single page
-          thank you.
-        </p>
+        <p className="job-description mb-4">{description}</p>
+
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Budget:</span>
-          <span className="text-amber-400">$60.00</span>
+          <span className="job-budget text-amber-400">{budget}</span>
         </div>
         {/* hr */}
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
@@ -295,8 +171,11 @@ function JobDetail() {
           </span>
         </div>
         {/* buttons */}
-        <button className="bg-amber-300 text-white px-4 py-2 rounded w-full mb-4 hover:bg-amber-400">
-          Buy Connects to apply
+        <button
+          onClick={handleSendProposal}
+          className="bg-amber-300 text-white px-4 py-2 rounded w-full mb-4 hover:bg-amber-400"
+        >
+          Send Proposal
         </button>
 
         <button class="relative w-full  inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-amber-300 to-amber-400 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
@@ -387,8 +266,6 @@ function JobDetail() {
         </div>
 
         <div class="p-2  bg-gray-100  border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 mb-6">
-          {/* <div class="p-4  bg-gray-100  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6"> */}
-          {/* icon */}
           <span className="flex gap-2">
             <svg
               class=" mb-1 w-4 h-4 text-amber-400 dark:text-white"
