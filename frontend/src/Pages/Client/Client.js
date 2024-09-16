@@ -67,8 +67,7 @@ export default function Client() {
                 <div className="proposal-action flex justify-between mt-4">
                   <button
                     className="p-1 px-7 bg-gray-800 hover:bg-gray-600 text-lg text-white rounded-md"
-                    onClick={handleCancelClick}
-                  >
+                    onClick={handleCancelClick}>
                     Cancel
                   </button>
                   <button className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md">
@@ -124,8 +123,7 @@ export default function Client() {
             <div className="post-job w-1/3  flex justify-end">
               <button
                 onClick={handlePostJobClick}
-                className="post-job-button bg-amber-500 h-fit p-2 px-5 rounded-lg text-lg font-medium text-white "
-              >
+                className="post-job-button bg-amber-500 h-fit p-2 px-5 rounded-lg text-lg font-medium text-white ">
                 <i class="fa-solid fa-plus"></i> Post a job
               </button>
             </div>
@@ -144,8 +142,7 @@ export default function Client() {
               <div className="second-bottom mx-6">
                 <button
                   onClick={handlePostJobClick}
-                  className="p-2 w-full font-medium text-amber-600 border-2 border-amber-400 rounded-lg "
-                >
+                  className="p-2 w-full font-medium text-amber-600 border-2 border-amber-400 rounded-lg ">
                   Post a new job{" "}
                 </button>
               </div>
