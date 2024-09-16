@@ -2,7 +2,7 @@ import React from "react";
 
 function SearchBar() {
   return (
-    <form className="flex gap-2.5 mb-5 w-4/5">
+    <form className="flex gap-2.5 mb-5 w-full">
       <label htmlFor="jobSearch" className="sr-only">
         Search for jobs
       </label>
@@ -16,7 +16,7 @@ function SearchBar() {
         <option>Best Matches</option>
         <option>Most Recent</option>
       </select>
-      <button className="px-5 py-2.5 text-white bg-green-700 rounded border-white border-[none] font-[bold]">
+      <button className="px-5 py-2.5 text-white bg-amber-500 rounded border-white border-[none] font-[bold]">
         Search
       </button>
     </form>

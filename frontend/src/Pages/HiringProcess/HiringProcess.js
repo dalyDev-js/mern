@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const HiringProcess = () => {
   const [paymentOption, setPaymentOption] = useState("hourly");
@@ -283,9 +284,11 @@ const HiringProcess = () => {
           <button className="px-4 py-2 border hover:bg-gray-100 border-gray-300 rounded text-black">
             Cancel
           </button>
-          <button className="px-4 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded">
+          <Link
+            to={"/payment"}
+            className="px-4 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded">
             Continue
-          </button>
+          </Link>
         </div>
       </div>
     </div>
