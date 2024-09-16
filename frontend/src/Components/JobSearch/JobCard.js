@@ -74,6 +74,7 @@ function JobCard({ props, postedTime }) {
           <p className="text-sm mb-3 text-gray-500">
             Fixed-price - Intermediate - Est. Budget: {props.budget}
           </p>
+          <p className="mb-2.5 text-gray-500">{props.description}</p>
           {props.skills &&
             props.skills.length > 0 && ( // Check if skills exist and are not empty
               <div className="skills flex gap-3">

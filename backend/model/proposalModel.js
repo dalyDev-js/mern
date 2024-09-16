@@ -1,12 +1,14 @@
+import mongoose from "mongoose";
+
 const proposalSchema = new mongoose.Schema({
   engineer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Engineer",
     required: true,
   },
-  project: {
+  service:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Project",
+    ref: "Service",
     required: true,
   },
   bidAmount: {
@@ -14,8 +16,14 @@ const proposalSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-  proposalDetails: {
+  content: {
     type: String,
     required: true,
   },
+  budget:{
+    type: Number,
+    required: true,
+  }
 });
+
+export const Proposal = mongoose.model('Proposal',proposalSchema)

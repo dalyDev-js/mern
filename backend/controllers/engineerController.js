@@ -5,25 +5,20 @@ import { Engineer } from "../model/engineerModel.js";
 //     res.status(200).json({message:"Success",engineers})
 // })
 
-const addPortofolio = async (req, res, next) => {
-  let engineerId = req.user.id; //user id from token
-  let engineerPortfolio = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { portfolio: req.body.portfolio },
-    { new: true }
-  );
-  res
-    .status(200)
-    .json({ message: "Portfolio added successfully", engineerPortfolio });
-};
-
-const addEducation = async (req, res, next) => {
+const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
   let engineerEducation = await Engineer.findByIdAndUpdate(
     engineerId,
-    { education: req.body.education },
+    {
+      education: {
+        title: req.body.title,
+        startDate: new Date(req.body.startDate),
+        endDate: new Date(req.body.endDate),
+      },
+    },
     { new: true }
   );
+
   res
     .status(200)
     .json({ message: "Education added successfully", engineerEducation });
@@ -47,19 +42,8 @@ const addSkill = async (req, res, next) => {
     { skills: { skillsToAdd } },
     { new: true }
   );
-  res.json({message:"Skills:",engineerSkill});
+
+  res.json({ message: "Skills:", engineerSkill });
 };
 
-const addCertificate = async (req, res, next) => {
-  let engineerId = req.user.id; //user id from token
-  let engineerCertificate = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { certificates: req.body.certificates },
-    { new: true }
-  );
-  res
-    .status(200)
-    .json({ message: "Certificate added successfully", engineerCertificate });
-};
-
-export { addPortofolio, addEducation, addTitle, addSkill, addCertificate };
+export { updateEducation, addTitle, addSkill };
