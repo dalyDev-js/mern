@@ -74,3 +74,13 @@ export const deleteService = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+const searchService = catchAsync(async (req, res, next) => {
+  const keyword = req.query.keyword;
+  const conditions = {};
+  if (keyword) {
+    conditions.title = { $regex: ".*" + keyword + ".*", $options: "i" };
+  }
+  const services = await Service.find(conditions);
+  res.status(200).json(services);
+});
