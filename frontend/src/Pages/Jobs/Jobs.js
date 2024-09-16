@@ -1,7 +1,39 @@
-import React from "react";
-import SearchBar from "../../Components/JobSearch/SearchBar";
-import JobList from "../../Components/JobSearch/JobList";
-import Sidebar from "../../Components/Sidebar/Sidebar";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import JobCard from "../../Components/JobSearch/JobCard.js";
+import { fetchAllServices } from "../../redux/slices/jobSlice";
+import SearchBar from "../../Components/JobSearch/SearchBar.js";
+import Sidebar from "../../Components/Sidebar/Sidebar.js";
+
+export function JobList() {
+  const dispatch = useDispatch();
+
+  // Access the jobs and loading state from Redux
+  const { jobs, status, error } = useSelector((state) => state.job);
+
+  // Dispatch the fetchAllServices thunk when the component mounts
+  useEffect(() => {
+    dispatch(fetchAllServices());
+  }, [dispatch]);
+
+  return (
+    <div className="flex flex-col gap-5 w-full">
+      {status === "loading" && <p>Loading jobs...</p>}
+      {status === "failed" && <p>Error: {error}</p>}
+      {status === "succeeded" &&
+        jobs.map((job, index) => (
+          <JobCard
+            key={index}
+            title={job.title}
+            budget={job.budget}
+            skills={job.skills}
+            description={job.description}
+            level={job.level}
+          />
+        ))}
+    </div>
+  );
+}
 
 function JobSearch() {
   return (

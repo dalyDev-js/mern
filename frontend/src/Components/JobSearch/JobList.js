@@ -1,37 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import JobCard from "./JobCard";
-
-const jobsData = [
-  {
-    title: "Architecture Engineer Needed",
-    budget: "$25",
-    description:
-      "We are seeking a talented Architecture Engineer to join our team...",
-    postedTime: "Posted 2 hours ago",
-    paymentType: "Hourly",
-  },
-  {
-    title: "Civil Engineer ",
-    budget: "$50",
-    description: "Looking for an experienced...",
-    postedTime: "Posted 5 hours ago",
-    paymentType: "Hourly",
-  },
-  {
-    title: "Land design required ",
-    budget: "$120",
-    description: "We need a skilled copywriter to create engaging content...",
-    postedTime: "Posted 1 day ago",
-    paymentType: "Fixed-Price",
-  },
-];
+import { fetchAllServices } from "../../redux/slices/jobSlice";
 
 function JobList() {
+  const dispatch = useDispatch();
+
+  // Access the jobs and loading state from Redux
+  const { jobs, status, error } = useSelector((state) => state.job);
+
+  // Dispatch the fetchMyJobs thunk when the component mounts
+  useEffect(() => {
+    dispatch(fetchAllServices());
+  }, [dispatch]);
+
   return (
     <div className="flex flex-col gap-5 w-full">
-      {jobsData.map((job, index) => (
-        <JobCard key={index} {...job} />
-      ))}
+      {status === "loading" && <p>Loading jobs...</p>}
+      {status === "failed" && <p>Error: {error}</p>}
+      {status === "succeeded" &&
+        jobs.map((job, index) => (
+          <JobCard
+            key={index}
+            title={job.title}
+            budget={job.budget}
+            skills={job.skills}
+            description={job.description}
+            level={job.level}
+          />
+        ))}
     </div>
   );
 }

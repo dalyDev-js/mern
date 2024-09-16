@@ -3,6 +3,20 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:8000";
 
+export const fetchAllServices = createAsyncThunk(
+  "job/fetchAllServices",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/v1/services");
+      return response.data.data.services; // Assuming your backend returns an object with `data.services`
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+
 // Async thunk to post a new job
 export const postJob = createAsyncThunk(
   "job/postJob",
@@ -64,6 +78,18 @@ const jobSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch all services
+      .addCase(fetchAllServices.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllServices.fulfilled, (state, action) => {
+        state.jobs = action.payload;
+        state.status = "succeeded";
+      })
+      .addCase(fetchAllServices.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      })
       .addCase(postJob.pending, (state) => {
         state.status = "loading";
       })
