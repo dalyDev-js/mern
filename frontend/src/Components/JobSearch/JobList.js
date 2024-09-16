@@ -24,8 +24,9 @@ function JobList() {
             key={index}
             title={job.title}
             budget={job.budget}
-            description={job.description}
             skills={job.skills}
+            description={job.description}
+            level={job.level}
           />
         ))}
     </div>
