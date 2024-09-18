@@ -1,9 +1,28 @@
 import { Engineer } from "../model/engineerModel.js";
 
-// const getAllEngineers = (async(req,res,next)=>{
-//     let engineers = await Engineer.find()
-//     res.status(200).json({message:"Success",engineers})
-// })
+const getAllEngineers = (async(req,res,next)=>{
+    let engineers = await Engineer.find()
+  if(engineers){
+    res.status(200).json({message:"All Engineers found",engineers})
+
+  }else{
+    res.status(404).json({message:"No Engineers found",engineers})
+
+  }
+})
+
+const addEngineer = async(req,res,next) =>{
+
+  let engineer = await Engineer.create(req.body)
+  if(engineer){
+    res.status(200).json({message:"Engineer added successfully",engineer})
+  }else{
+    res.status(404).json({message:"Engineer not added",engineer})
+  }
+}
+
+
+
 
 const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
@@ -46,4 +65,4 @@ const addSkill = async (req, res, next) => {
   res.json({ message: "Skills:", engineerSkill });
 };
 
-export { updateEducation, addTitle, addSkill };
+export { updateEducation, addTitle, addSkill,getAllEngineers,addEngineer };

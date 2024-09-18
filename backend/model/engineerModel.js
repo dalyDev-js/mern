@@ -1,9 +1,11 @@
+import mongoose from "mongoose";
+
 const engineerSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   required: true,
+  // },
   portfolio: {
     type: String,
     required: true,
@@ -36,12 +38,12 @@ const engineerSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  completedProjects: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
-    },
-  ],
+  // completedProjects: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Project",
+  //   },
+  // ],
   verifiedStatus: {
     type: Boolean,
     default: false,
