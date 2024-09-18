@@ -1,9 +1,14 @@
 import { Engineer } from "../model/engineerModel.js";
 
-// const getAllEngineers = (async(req,res,next)=>{
-//     let engineers = await Engineer.find()
-//     res.status(200).json({message:"Success",engineers})
-// })
+const getAllEngineers = (async(req,res,next)=>{
+    let engineers = await Engineer.find()
+
+    if(engineers){
+      res.status(200).json({message:"All Engineers found",engineers})
+    }else{
+      res.status(404).json({message:"No Engineers found"})
+    }
+})
 
 const addPortofolio = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
@@ -62,4 +67,4 @@ const addCertificate = async (req, res, next) => {
     .json({ message: "Certificate added successfully", engineerCertificate });
 };
 
-export { addPortofolio, addEducation, addTitle, addSkill, addCertificate };
+export { addPortofolio, addEducation, addTitle, addSkill, addCertificate ,getAllEngineers};

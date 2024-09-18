@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 import cors from "cors";
+import engineerRouters from "./routes/engineerRoute.js";
 
 
 const app = express();
@@ -21,7 +22,8 @@ app.use(cors());
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", servicesRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/client",clientRouter)
+app.use("/api/v1/client",clientRouter);
+app.use("/api/v1/engineers",engineerRouters);
 
 
 app.all("*", (req, res, next) => {
