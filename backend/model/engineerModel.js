@@ -26,7 +26,7 @@ const engineerSchema = new mongoose.Schema({
     endDate: {
       type: Date,
       required: true,
-    }
+    },
   },
   specialization: {
     type: [String],
@@ -46,6 +46,12 @@ const engineerSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  savedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SavedJob", // assuming you have a Job model
+    },
+  ],
 });
 
 export const Engineer = mongoose.model("Engineer", engineerSchema);
