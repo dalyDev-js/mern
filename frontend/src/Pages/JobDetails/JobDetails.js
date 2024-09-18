@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -10,10 +11,44 @@ function JobDetail() {
   const [showForm, setShowForm] = useState(false);
   const handleSendProposal = () => setShowForm(true);
   const handleCancelProposal = () => setShowForm(false);
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmitProposal = async () => {
+    try {
+      setLoading(true);
+
+      // Prepare the data
+      const proposalData = {
+        content: coverLetter,
+        budget: hourlyRate,
+        service: "Engineering service", // or you can fetch this dynamically
+      };
+
+      // Send the POST request to the API
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/proposal/addproposal",
+        proposalData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // if you are sending cookies or auth tokens
+        }
+      );
+
+      // Handle the response
+      console.log(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error submitting proposal:", error);
+      setLoading(false);
+      alert("Failed to submit proposal");
+    }
+  };
 
   return (
     <div className="grid bg-slate-50 rounded-lg grid-cols-1 sm:grid-cols-3 gap-6 m-16">
-      {/* Proposal Form */}
       {showForm && (
         <div className="propsal-form flex justify-center items-center z-20 fixed inset-0 bg-black bg-opacity-30">
           <div className="form w-1/2 h-4/5 shadow-md drop-shadow shadow-amber-700 border border-amber-500 bg-slate-50 rounded-lg p-10">
@@ -42,6 +77,8 @@ function JobDetail() {
                   className="border border-gray-400 bg-slate-100 rounded-lg"
                   type="text"
                   placeholder="$10/hr"
+                  value={hourlyRate}
+                  onChange={(e) => setHourlyRate(e.target.value)}
                 />{" "}
                 /hr
               </div>
@@ -58,6 +95,8 @@ function JobDetail() {
               <textarea
                 rows={6}
                 className="w-full bg-slate-100 rounded-md"
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
               ></textarea>
             </div>
             <div className="proposal-action flex justify-between mt-4">
@@ -67,8 +106,12 @@ function JobDetail() {
               >
                 Cancel
               </button>
-              <button className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md">
-                Send
+              <button
+                onClick={handleSubmitProposal}
+                className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send"}
               </button>
             </div>
           </div>
