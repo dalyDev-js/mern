@@ -5,6 +5,6 @@ import { protect } from "../middleware/protectRoute.js";
 const router = express.Router();
 
 router.patch("/updateMe", protect, updateMe);
-router.delete("/deleteMe", protect, deleteMe);
+router.delete("/deleteMe", deleteMe);
 
 export default router;

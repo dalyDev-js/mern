@@ -25,7 +25,7 @@ const updateEducation = async (req, res, next) => {
 };
 
 const addTitle = async (req, res, next) => {
-  let engineerId = req.user.id; //user id from token
+  let engineerId = req.user.id;
   let engineerTitle = await Engineer.findByIdAndUpdate(
     engineerId,
     { title: req.body.title },
@@ -35,7 +35,7 @@ const addTitle = async (req, res, next) => {
 };
 
 const addSkill = async (req, res, next) => {
-  let engineerId = req.user.id; //user id from token
+  let engineerId = req.user.id;
   let { skillsToAdd } = req.body;
   const engineerSkill = await Engineer.findByIdAndUpdate(
     engineerId,

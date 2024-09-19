@@ -8,7 +8,7 @@ export const fetchAllServices = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/api/v1/services");
-      return response.data.data.services; // Assuming your backend returns an object with `data.services`
+      return response.data.data.services;
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : "Unknown error"
