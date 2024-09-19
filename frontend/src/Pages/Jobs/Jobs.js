@@ -57,7 +57,6 @@ function JobSearch() {
           <JobList />
         </div>
         <div className="right-content w-1/3">
-          {" "}
           <Sidebar />
         </div>
       </div>
