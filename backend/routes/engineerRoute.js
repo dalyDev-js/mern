@@ -1,21 +1,16 @@
 import express from "express";
 import {
-
-  addEngineer,
-  // addPortofolio,
-  getAllEngineers,
+  addEducation,
+  addOverview,
+  addSkill,
+  addTitle,
 } from "../controllers/engineerController.js";
-// import { upload } from "../middleware/uploads/portfolioUpload.js";
 
 const engineerRouters = express.Router();
 
-engineerRouters.post("/addEngineer",addEngineer)
-engineerRouters.get("/getAllEngineers",getAllEngineers)
-// engineerRouters.put("/addeducation/:id", addEducation);
-// engineerRouters.put(
-//   "/addcertificate/:id",
-//   upload.single("file"),
-//   addCertificate
-// );
+engineerRouters.put("/addeducation", addEducation);
+engineerRouters.post("/addskill", addSkill);
+engineerRouters.post("/addtitle", addTitle);
+engineerRouters.post("/addoverview", addOverview);
 
 export default engineerRouters;

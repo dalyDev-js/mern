@@ -30,7 +30,7 @@ app.use("/api/v1/certificates", certificateRouter);
 app.use("/api/v1/experiences", experienceRouter);
 app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/engineers",engineerRouters);
+app.use("/api/v1/engineer", engineerRouters);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`con't find ${req.originalUrl}`, 404));

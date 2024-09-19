@@ -7,8 +7,9 @@ const addCertificate = catchAsync(async (req, res) => {
     name,
     file: req.file,
   });
-  //   let user = req.user.id;
-  //   let certificate = await Certificate.create({ name, file: req.file.filename });
+  // TODO : replace static id with the id extracted from tokwn sent in cookies
+  let engineer = "66eaf0bb855debafe88f9068";
+  await Certificate.create({ name, file: req.file.filename, engineer });
   res.status(200).json({ message: "Certificate added successfully" });
 });
 

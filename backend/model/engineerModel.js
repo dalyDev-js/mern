@@ -1,21 +1,15 @@
 import mongoose from "mongoose";
 
 const engineerSchema = new mongoose.Schema({
-  // user: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "User",
-  //   required: true,
-  // },
-  portfolio: {
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  title: {
     type: String,
     required: true,
   },
-  certifications: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
   education: {
     title: {
       type: String,
@@ -28,10 +22,10 @@ const engineerSchema = new mongoose.Schema({
     endDate: {
       type: Date,
       required: true,
-    }
+    },
   },
-  specialization: {
-    type: [String],
+  overview: {
+    type: String,
     required: true,
   },
   skills: {

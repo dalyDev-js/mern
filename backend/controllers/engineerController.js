@@ -1,28 +1,10 @@
 import { Engineer } from "../model/engineerModel.js";
+import catchAsync from "../utils/catchAsync.js";
 
-const getAllEngineers = (async(req,res,next)=>{
-    let engineers = await Engineer.find()
-  if(engineers){
-    res.status(200).json({message:"All Engineers found",engineers})
-
-  }else{
-    res.status(404).json({message:"No Engineers found",engineers})
-
-  }
-})
-
-const addEngineer = async(req,res,next) =>{
-
-  let engineer = await Engineer.create(req.body)
-  if(engineer){
-    res.status(200).json({message:"Engineer added successfully",engineer})
-  }else{
-    res.status(404).json({message:"Engineer not added",engineer})
-  }
-}
-
-
-
+// const getAllEngineers = (async(req,res,next)=>{
+//     let engineers = await Engineer.find()
+//     res.status(200).json({message:"Success",engineers})
+// })
 
 const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
@@ -53,7 +35,7 @@ const addTitle = async (req, res, next) => {
   res.status(200).json({ message: "Title added successfully", engineerTitle });
 };
 
-const addSkill = async (req, res, next) => {
+const addSkill = catchAsync(async (req, res, next) => {
   let engineerId = req.user.id;
   let { skillsToAdd } = req.body;
   const engineerSkill = await Engineer.findByIdAndUpdate(
@@ -63,6 +45,48 @@ const addSkill = async (req, res, next) => {
   );
 
   res.json({ message: "Skills:", engineerSkill });
+});
+
+// frontend will update the skills array and save them in the database
+
+const addOverview = async (req, res, next) => {
+  let engineerId = req.user.id;
+  const { profileOverview } = req.body;
+
+  if (!profileOverview) {
+    return res.status(400).json({ message: "Profile Overview is required." });
+  }
+  await Engineer.findByIdAndUpdate(
+    engineerId,
+    { overview: req.body.overview },
+    { new: true }
+  );
+  res.status(200).json({ message: "Overview added successfully" });
 };
 
-export { updateEducation, addTitle, addSkill,getAllEngineers,addEngineer };
+const addEducation = catchAsync(async (req, res, next) => {
+  const { title, startDate, endDate } = req.body;
+
+  if (!title || !startDate || !endDate) {
+    return res
+      .status(400)
+      .json({ message: "Title, Start Date, and End Date are required." });
+  }
+
+  const engineerId = req.user.id;
+
+  const updatedEngineer = await Engineer.findByIdAndUpdate(
+    engineerId,
+    {
+      education: {
+        title,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+      },
+    },
+    { new: true }
+  );
+  res.json({ message: "Education added successfully", updatedEngineer });
+});
+
+export { updateEducation, addTitle, addSkill, addOverview, addEducation };
