@@ -251,7 +251,7 @@
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllEngineers } from "../../redux/slices/engineerSlice";
+import { fetchAllEngineers } from "../../redux/slices/engineersSlice";
 import { Link } from "react-router-dom";
 
 function EngineersList() {

@@ -118,7 +118,7 @@
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEngineerById } from "../../redux/slices/engineerSlice"; // Import the thunk
+import { fetchEngineerById } from "../../redux/slices/engineersSlice"; // Import the thunk
 import { useParams, Link } from "react-router-dom";
 
 const Profile = () => {
