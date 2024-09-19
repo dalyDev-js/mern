@@ -1,19 +1,15 @@
+import mongoose from "mongoose";
+
 const engineerSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  portfolio: {
+  title: {
     type: String,
     required: true,
   },
-  certifications: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
   education: {
     title: {
       type: String,
@@ -28,8 +24,8 @@ const engineerSchema = new mongoose.Schema({
       required: true,
     }
   },
-  specialization: {
-    type: [String],
+  overview: {
+    type: String,
     required: true,
   },
   skills: {
