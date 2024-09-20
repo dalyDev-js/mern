@@ -34,6 +34,7 @@ const userSchema = mongoose.Schema({
   },
   profilePic: {
     type: String,
+    required:[true,"please provide profile picture!"],
     default: "",
   },
   role: {

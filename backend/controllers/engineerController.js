@@ -1,54 +1,96 @@
 import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
-import AppError from "../utils/appError.js";
-import User from "../model/userModel.js";
+
+
+const getAllEngineers = catchAsync(async (req, res, next) => {
+  const engineers = await Engineer.find();
+
+  if (engineers && engineers.length) {
+    res.status(200).json({ status: "success", results: engineers.length, data: { engineers } });
+  } else {
+    res.status(404).json({ message: "No Engineers found" });
+  }
+});
+
+const getSingleEngineer = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const engineer = await Engineer.findById(id);
+
+    if (engineer) {
+      res.status(200).json(engineer);
+    } else {
+      res.status(404).json({ message: "No Engineer found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const addEngineer = async (req, res, next) => {
+  try {
+    const engineer = await Engineer.create(req.body);
+    res.status(201).json({ message: "Engineer added successfully", engineer });
+  } catch (error) {
+    res.status(400).json({ message: "Engineer not added", error });
+  }
+};
+
+
 // const getAllEngineers = (async(req,res,next)=>{
 //     let engineers = await Engineer.find()
 //     res.status(200).json({message:"Success",engineers})
 // })
 
-const getAllEngineers = catchAsync(async (req, res, next) => {
-  // Populate 'user' and filter only users whose role is 'engineer'
-  const engineers = await Engineer.find().populate({
-    path: "user",
-    select: "fullName email role", // Select relevant fields
-    match: { role: "engineer" }, // Only include users with role 'engineer'
-  });
+// const getAllEngineers = catchAsync(async (req, res, next) => {
+//   // Populate 'user' and filter only users whose role is 'engineer'
+//   const engineers = await Engineer.find().populate({
+//     path: "user",
+//     select: "fullName email role", // Select relevant fields
+//     match: { role: "engineer" }, // Only include users with role 'engineer'
+//   });
 
-  // Filter out any engineers where the user didn't match (role isn't 'engineer')
-  const filteredEngineers = engineers.filter(
-    (engineer) => engineer.user !== null
-  );
+//   // Filter out any engineers where the user didn't match (role isn't 'engineer')
+//   const filteredEngineers = engineers.filter(
+//     (engineer) => engineer.user !== null
+//   );
 
-  res.status(200).json({
-    status: "success",
-    results: filteredEngineers.length,
-    data: {
-      engineers: filteredEngineers,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     results: filteredEngineers.length,
+//     data: {
+//       engineers: filteredEngineers,
+//     },
+//   });
+// });
 
-const getEngineerById = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
+// const getEngineerById = catchAsync(async (req, res, next) => {
+//   const { id } = req.params; // Extract the ID from the URL parameters
 
-  console.log("User ID received:", userId); // Debugging: Check if userId is passed
+//   const engineer = await Engineer.findById(id).populate({
+//     path: "user", // Populate the user field
+//     select: "fullName email role", // Select relevant user fields
+//   });
 
-  // Attempt to find an engineer by the user ID and populate the user data
-  const engineer = await Engineer.findOne({ user: userId }).populate("user");
+//   if (!engineer) {
+//     return res.status(404).json({
+//       status: "fail",
+//       message: "No engineer found with that ID",
+//     });
+//   }
 
-  if (!engineer) {
-    console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
-    return next(new AppError("Engineer not found with this user ID", 404));
-  }
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       engineer,
+//     },
+//   });
+// });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      engineer,
-    },
-  });
-});
+
+
+
 
 const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
@@ -173,52 +215,7 @@ const getSavedJobs = catchAsync(async (req, res, next) => {
   });
 });
 
-// Update engineer profile by ID
-const updateEngineer = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
-  console.log("User ID:", userId);
-  console.log("Request body:", req.body);
-
-  // Check if there is a 'fullName' in the request body and update the User model
-  if (req.body.fullName) {
-    await User.findByIdAndUpdate(
-      userId,
-      { fullName: req.body.fullName },
-      {
-        new: true, // Return the updated User document
-        runValidators: true, // Ensure that the update follows the schema rules
-      }
-    );
-  }
-
-  // Handle profilePic upload, if file exists
-  if (req.file) {
-    const profilePicUrl = `https://some-cloud-storage.com/${req.file.originalname}`; // Process and get URL after uploading to a cloud storage
-    req.body.profilePic = profilePicUrl; // Attach the processed profilePic URL to the request body
-    // You can implement cloud storage upload logic here to get the URL
-  }
-
-  // Update the Engineer document
-  const engineer = await Engineer.findOneAndUpdate({ user: userId }, req.body, {
-    new: true,
-    runValidators: true,
-  }).populate("user"); // Populate the 'user' field
-
-  if (!engineer) {
-    return next(new AppError("Engineer not found for this user ID", 404));
-  }
-
-  // Return the updated engineer with populated user data
-  res.status(200).json({
-    status: "success",
-    data: {
-      engineer,
-    },
-  });
-});
-
 export {
-  updateEngineer,
   updateEducation,
   addTitle,
   addSkill,
@@ -227,5 +224,6 @@ export {
   getAllEngineers,
   getSavedJobs,
   saveJob,
-  getEngineerById,
+  getSingleEngineer,
+  addEngineer
 };
