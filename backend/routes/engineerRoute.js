@@ -4,10 +4,11 @@ import {
   addOverview,
   addSkill,
   addTitle,
+  getAllEngineers,
 } from "../controllers/engineerController.js";
 
 const engineerRouters = express.Router();
-
+engineerRouters.get("/all", getAllEngineers);
 engineerRouters.put("/addeducation", addEducation);
 engineerRouters.post("/addskill", addSkill);
 engineerRouters.post("/addtitle", addTitle);

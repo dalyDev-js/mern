@@ -6,6 +6,17 @@ import catchAsync from "../utils/catchAsync.js";
 //     res.status(200).json({message:"Success",engineers})
 // })
 
+const getAllEngineers = catchAsync(async (req, res, next) => {
+  const engineers = await Engineer.find().populate("user", "fullName email"); // Populates user data
+  res.status(200).json({
+    status: "success",
+    results: engineers.length,
+    data: {
+      engineers,
+    },
+  });
+});
+
 const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
   let engineerEducation = await Engineer.findByIdAndUpdate(
@@ -89,4 +100,11 @@ const addEducation = catchAsync(async (req, res, next) => {
   res.json({ message: "Education added successfully", updatedEngineer });
 });
 
-export { updateEducation, addTitle, addSkill, addOverview, addEducation };
+export {
+  updateEducation,
+  addTitle,
+  addSkill,
+  addOverview,
+  addEducation,
+  getAllEngineers,
+};
