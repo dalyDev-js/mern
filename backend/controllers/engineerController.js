@@ -1,6 +1,7 @@
 import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
-
+import AppError from "../utils/appError.js";
+import User from "../model/userModel.js";
 // const getAllEngineers = (async(req,res,next)=>{
 //     let engineers = await Engineer.find()
 //     res.status(200).json({message:"Success",engineers})
@@ -29,18 +30,16 @@ const getAllEngineers = catchAsync(async (req, res, next) => {
 });
 
 const getEngineerById = catchAsync(async (req, res, next) => {
-  const { id } = req.params; // Extract the ID from the URL parameters
+  const { userId } = req.params;
 
-  const engineer = await Engineer.findById(id).populate({
-    path: "user", // Populate the user field
-    select: "fullName email role", // Select relevant user fields
-  });
+  console.log("User ID received:", userId); // Debugging: Check if userId is passed
+
+  // Attempt to find an engineer by the user ID and populate the user data
+  const engineer = await Engineer.findOne({ user: userId }).populate("user");
 
   if (!engineer) {
-    return res.status(404).json({
-      status: "fail",
-      message: "No engineer found with that ID",
-    });
+    console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
+    return next(new AppError("Engineer not found with this user ID", 404));
   }
 
   res.status(200).json({
@@ -174,7 +173,52 @@ const getSavedJobs = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update engineer profile by ID
+const updateEngineer = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+  console.log("User ID:", userId);
+  console.log("Request body:", req.body);
+
+  // Check if there is a 'fullName' in the request body and update the User model
+  if (req.body.fullName) {
+    await User.findByIdAndUpdate(
+      userId,
+      { fullName: req.body.fullName },
+      {
+        new: true, // Return the updated User document
+        runValidators: true, // Ensure that the update follows the schema rules
+      }
+    );
+  }
+
+  // Handle profilePic upload, if file exists
+  if (req.file) {
+    const profilePicUrl = `https://some-cloud-storage.com/${req.file.originalname}`; // Process and get URL after uploading to a cloud storage
+    req.body.profilePic = profilePicUrl; // Attach the processed profilePic URL to the request body
+    // You can implement cloud storage upload logic here to get the URL
+  }
+
+  // Update the Engineer document
+  const engineer = await Engineer.findOneAndUpdate({ user: userId }, req.body, {
+    new: true,
+    runValidators: true,
+  }).populate("user"); // Populate the 'user' field
+
+  if (!engineer) {
+    return next(new AppError("Engineer not found for this user ID", 404));
+  }
+
+  // Return the updated engineer with populated user data
+  res.status(200).json({
+    status: "success",
+    data: {
+      engineer,
+    },
+  });
+});
+
 export {
+  updateEngineer,
   updateEducation,
   addTitle,
   addSkill,
