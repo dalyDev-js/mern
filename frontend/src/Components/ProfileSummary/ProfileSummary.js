@@ -47,7 +47,6 @@ function ProfileSummary() {
     const token = localStorage.getItem("token"); // Adjust based on how you store tokens
 
     try {
-      // Update Title
       if (title) {
         await axios.post(
           "http://localhost:8000/api/v1/engineers/addtitle",
@@ -60,7 +59,6 @@ function ProfileSummary() {
         );
       }
 
-      // Update Profile Overview
       if (profileOverview) {
         await axios.post(
           "http://localhost:8000/api/v1/engineers/addoverview",

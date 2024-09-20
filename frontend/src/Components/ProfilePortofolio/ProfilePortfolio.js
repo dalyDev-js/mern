@@ -54,12 +54,10 @@ function ProfilePortfolio() {
       });
       alert('Portfolio added successfully!');
       toggleModal();
-      // Clear form fields
       setTitle('');
       setDescription('');
       setUrl('');
       setFile(null);
-      // Refresh the list of projects
       fetchProjects();
     } catch (error) {
       console.error('Error adding portfolio:', error);
