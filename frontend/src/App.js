@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import NotFound from "./Pages/NotFound/NotFound";
 import SignIn from "./Pages/SignIn/SignIn";
-import SignUp from "./Pages/SignUp/SignUp";
+import SignUp from "./Pages/SignUp/SignUpClient";
 import JobSearch from "./Pages/Jobs/Jobs";
 import GetStarted from "./Pages/GetStarted/GetStarted";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
@@ -28,6 +28,9 @@ import SaveJobs from "./Pages/SaveJobs/SaveJobs";
 import MyJobsPosts from "./Pages/MyJobsPosts/MyJobsPosts";
 import JobProposals from "./Pages/JobProposals/JobProposals";
 import ProposalsStatus from "./Pages/ProposalsStatus/ProposalsStatus";
+import SignUpClient from "./Pages/SignUp/SignUpClient";
+import SignUpEngineer from "./Pages/SignUp/SignUpEngineer";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 let routers = createBrowserRouter([
   {
@@ -35,16 +38,38 @@ let routers = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <SignIn /> },
-      { path: "/register", element: <SignUp /> },
-      { path: "/jobs", element: <JobSearch /> }, //engineer view to jobs
-      { path: "/started", element: <GetStarted /> }, //join as an engineer or client
-      { path: "/profile", element: <ProfilePage /> }, //update engineer profile -- engineer view
-      { path: "/job-details", element: <JobDetail /> }, // job details -- engineer view
-      // update
+      { path: "/signin", element: <SignIn /> },
+      { path: "/signup-client", element: <SignUpClient /> },
+      { path: "/signup-engineer", element: <SignUpEngineer /> },
+      {
+        path: "/jobs",
+        element: (
+          <ProtectedRoute role="engineer">
+            <JobSearch />
+          </ProtectedRoute>
+        ),
+      },
+      { path: "/get-started", element: <GetStarted /> },
+      {
+        path: "/profile/:id",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      }, //update engineer profile -- engineer view
+      { path: "/job-details/:id", element: <JobDetail /> }, // job details -- engineer view
+      { path: "/engineer-details", element: <Profile /> }, //engineer details -- client view
       { path: "/engineer-details/:id", element: <Profile /> }, //engineer details -- client view
       { path: "/hiring", element: <HiringProcess /> }, //sending proposal -- engineer view
-      { path: "/client", element: <Client /> }, // job posting -- client view
+      {
+        path: "/client",
+        element: (
+          <ProtectedRoute role="client">
+            <Client />
+          </ProtectedRoute>
+        ), // Only clients can access
+      }, // job posting -- client view
       { path: "/payment", element: <Payment /> }, // job payment for the engineer -- client view
       { path: "/proposal", element: <Proposal /> }, // job posting client view
       { path: "/contact", element: <ContactUs /> }, // job posting client view

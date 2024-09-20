@@ -5,14 +5,19 @@ import { fetchAllServices } from "../../redux/slices/jobSlice";
 
 function JobList() {
   const dispatch = useDispatch();
-
-  // Access the jobs and loading state from Redux
   const { jobs, status, error } = useSelector((state) => state.job);
 
-  // Dispatch the fetchMyJobs thunk when the component mounts
+  // Dispatch the fetchAllServices thunk when the component mounts
   useEffect(() => {
     dispatch(fetchAllServices());
   }, [dispatch]);
+
+  // Log the jobs only when the status is 'succeeded'
+  useEffect(() => {
+    if (status === "succeeded") {
+      console.log("Fetched jobs:", jobs); // Log jobs to the console
+    }
+  }, [status, jobs]); // Trigger the log when status or jobs change
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -21,12 +26,14 @@ function JobList() {
       {status === "succeeded" &&
         jobs.map((job, index) => (
           <JobCard
-            key={index}
+            key={job._id} // Use _id as the key
+            jobId={job._id} // Pass jobId to JobCard
             title={job.title}
+            description={job.description}
             budget={job.budget}
             skills={job.skills}
-            description={job.description}
             level={job.level}
+            createdAt={job.createdAt}
           />
         ))}
     </div>

@@ -1,7 +1,10 @@
 import gsap from "gsap";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Content({ activeData }) {
+  const userRole = JSON.parse(localStorage.getItem("User"))?.role;
+  const navigate = useNavigate();
   useEffect(() => {
     // Animate button colors
     gsap.to(".button", {
@@ -34,6 +37,14 @@ function Content({ activeData }) {
     return () => {};
   }, [activeData]);
 
+  const handleButtonClick = () => {
+    if (userRole === "client") {
+      navigate("/engineers-list"); // Navigate to engineers list for client
+    } else if (userRole === "engineer") {
+      navigate("/jobs"); // Navigate to jobs for engineer
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-col items-center md:items-start w-full md:w-2/3 text-center md:text-left">
@@ -47,8 +58,10 @@ function Content({ activeData }) {
           <p className="text">{activeData.text}</p>
         </p>
         <div className="relative overflow-hidden p-4">
-          <button className="cursor-pointer button rounded-2xl outline-none px-8 py-2 font-medium bg-amber-400 md:px-10 md:py-4">
-            Hire Now
+          <button
+            className="cursor-pointer button rounded-2xl outline-none px-8 py-2 font-medium bg-amber-400 md:px-10 md:py-4"
+            onClick={handleButtonClick}>
+            {userRole === "client" ? "Hire Now" : "Find Job Now"}
           </button>
         </div>
       </div>

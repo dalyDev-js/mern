@@ -29,6 +29,7 @@ export function JobList() {
             skills={job.skills}
             description={job.description}
             level={job.level}
+            createdAt={job.createdAt} // Pass createdAt to JobCard
           />
         ))}
     </div>
