@@ -11,6 +11,7 @@ export const fetchAllEngineers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/api/v1/engineers/getAllEngineers");
+      console.log(response);
       return response.data.data.engineers;
     } catch (error) {
       return rejectWithValue(
