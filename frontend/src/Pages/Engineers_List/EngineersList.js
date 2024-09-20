@@ -52,22 +52,17 @@ function EngineersList() {
               <p className="absolute text-gray-600 top-4 right-2 text-sm px-2 py-1 ">
                 {engineer.rate}
               </p>
-
               <br></br>
-
               {/* Engineer Image */}
               <img
                 src={engineer.imgSrc}
                 alt={engineer.name}
                 className="w-24 h-24 rounded-full"
               />
-
               {/* Engineer Name */}
               <h2 className="text-l mt-1 ">{engineer.name}</h2>
-
               {/* Role */}
               <p className="text-gray-500 text-xs">{engineer.role}</p>
-
               {/* Rating */}
               <p className="text-xs mt-3 text-gray-600 flex items-center">
                 <span className="ml-1" aria-hidden="true">
@@ -86,7 +81,6 @@ function EngineersList() {
                 </span>
                 {engineer.rating} ({engineer.jobs})
               </p>
-
               {/* Prospect List */}
               <a
                 href="#"
@@ -113,7 +107,6 @@ function EngineersList() {
                 </span>
                 Prospect List
               </a>
-
               {/* Skills */}
               <div className="mt-2">
                 {engineer.skills.map((skill, skillIndex) => (
@@ -125,11 +118,11 @@ function EngineersList() {
                   </span>
                 ))}
               </div>
-
               {/* See More Button */}
               <button className="text-xs mt-4 bg-amber-300 text-white px-3 py-1 rounded-md hover:bg-amber-400">
                 <Link to={`/engineer-details/${engineer._id}`}>See more</Link>
               </button>
+              {/* console.log({`id:${engineer._id}`}); */}
             </div>
           ))}
         </div>

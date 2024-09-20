@@ -41,7 +41,8 @@ let routers = createBrowserRouter([
       { path: "/started", element: <GetStarted /> }, //join as an engineer or client
       { path: "/profile", element: <ProfilePage /> }, //update engineer profile -- engineer view
       { path: "/job-details", element: <JobDetail /> }, // job details -- engineer view
-      { path: "/engineer-details", element: <Profile /> }, //engineer details -- client view
+      // update
+      { path: "/engineer-details/:id", element: <Profile /> }, //engineer details -- client view
       { path: "/hiring", element: <HiringProcess /> }, //sending proposal -- engineer view
       { path: "/client", element: <Client /> }, // job posting -- client view
       { path: "/payment", element: <Payment /> }, // job payment for the engineer -- client view
