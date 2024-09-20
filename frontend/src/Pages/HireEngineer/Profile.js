@@ -122,8 +122,12 @@ import { fetchEngineerById } from "../../redux/slices/engineersSlice"; // Import
 import { useParams, Link } from "react-router-dom";
 
 const Profile = () => {
+  console.log("helleo");
+
   const dispatch = useDispatch();
-  const { id } = useParams(); // Get the engineer ID from the URL
+  const { id } = useParams();
+  console.log(id);
+  // Get the engineer ID from the URL
   const { selectedEngineer, status, error } = useSelector(
     (state) => state.engineerlist
   );

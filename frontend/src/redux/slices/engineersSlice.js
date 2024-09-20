@@ -10,7 +10,7 @@ export const fetchAllEngineers = createAsyncThunk(
   "engineerlist/fetchAllEngineers",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/v1/engineers/getAllEngineers");
+      const response = await axios.get("api/v1/engineer/all");
       console.log(response);
       return response.data.data.engineers;
     } catch (error) {
@@ -72,7 +72,9 @@ export const fetchEngineerById = createAsyncThunk(
   "engineerlist/fetchEngineerById",
   async (engineerId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/v1/engineers/${engineerId}`);
+      const response = await axios.get(`/api/v1/engineer/${engineerId}`);
+      console.log(response);
+
       return response.data.data.engineer; // Assuming the response structure
     } catch (error) {
       return rejectWithValue(
