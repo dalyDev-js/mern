@@ -19,28 +19,16 @@ export default function SignIn() {
       .max(15, "You cannot enter more than 15 characters"),
   });
 
-  const handleLogin = async (formValues) => {
+  async function handleSignin(formValues) {
     setLoading(true);
-    try {
-      const response = await axios.post(
-        `https://ecommerce.routemisr.com/api/v1/auth/signin`,
-        formValues
-      );
-      const { token, user } = response.data;
-      if (token) {
-        localStorage.setItem("Token", token);
-        localStorage.setItem("User", JSON.stringify(user));
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-      setApiResponse(
-        error?.response?.data?.message || "An error occurred. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log(formValues);
+
+  const response = await axios.post('http://localhost:8000/api/v1/auth/login',formValues )
+            
+  console.log (response);
+  setLoading(false);
+  navigate('/')
+}
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +36,7 @@ export default function SignIn() {
       password: "",
     },
     validationSchema,
-    onSubmit: handleLogin,
+    onSubmit: handleSignin,
   });
 
     return (
