@@ -11,11 +11,6 @@ const proposalSchema = new mongoose.Schema({
     ref: "Service",
     required: true,
   },
-  bidAmount: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
   content: {
     type: String,
     required: true,
