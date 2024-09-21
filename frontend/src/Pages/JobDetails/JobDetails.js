@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -5,15 +6,55 @@ function JobDetail() {
   const params = useParams(); //--> func
   const location = useLocation();
   const { title, description, budget } = location.state || {};
-  console.log(params.id);
+  // console.log(params.id);
   const [job, setJobs] = useState({});
   const [showForm, setShowForm] = useState(false);
   const handleSendProposal = () => setShowForm(true);
-  const handleCancelProposal = () => setShowForm(false);
+  // const handleCancelProposal = () => setShowForm(false);
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [service, setService] = useState("66e93aebec043729fd2e613e");
+
+  const [coverLetter, setCoverLetter] = useState("");
+  const [engBudget, setEngBudget] = useState(""); // Assuming you'll also collect the budget
+  const [loading, setLoading] = useState(false);
+  // const { service } = useParams(); // Get service from URL params
+  const handleSubmitProposal = async () => {
+    setLoading(true);
+    try {
+      // const data = {
+      //   hourlyRate,
+      //   coverLetter,
+      //   budget,
+      //   service,
+      // };
+
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/proposals/addproposal",
+        {
+          content: coverLetter,
+          budget: hourlyRate,
+          service: service,
+        }
+      );
+
+      console.log("Proposal sent:", response.data);
+    } catch (error) {
+      console.error("Error submitting proposal:", error);
+    } finally {
+      setLoading(false);
+    }
+    setShowForm(false);
+  };
+
+  const handleCancelProposal = () => {
+    setHourlyRate("");
+    setCoverLetter("");
+    setEngBudget("");
+    setShowForm(false);
+  };
 
   return (
     <div className="grid bg-slate-50 rounded-lg grid-cols-1 sm:grid-cols-3 gap-6 m-16">
-      {/* Proposal Form */}
       {showForm && (
         <div className="propsal-form flex justify-center items-center z-20 fixed inset-0 bg-black bg-opacity-30">
           <div className="form w-1/2 h-4/5 shadow-md drop-shadow shadow-amber-700 border border-amber-500 bg-slate-50 rounded-lg p-10">
@@ -42,6 +83,8 @@ function JobDetail() {
                   className="border border-gray-400 bg-slate-100 rounded-lg"
                   type="text"
                   placeholder="$10/hr"
+                  value={hourlyRate}
+                  onChange={(e) => setHourlyRate(e.target.value)}
                 />{" "}
                 /hr
               </div>
@@ -58,6 +101,8 @@ function JobDetail() {
               <textarea
                 rows={6}
                 className="w-full bg-slate-100 rounded-md"
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
               ></textarea>
             </div>
             <div className="proposal-action flex justify-between mt-4">
@@ -67,8 +112,12 @@ function JobDetail() {
               >
                 Cancel
               </button>
-              <button className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md">
-                Send
+              <button
+                onClick={handleSubmitProposal}
+                className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send"}
               </button>
             </div>
           </div>
