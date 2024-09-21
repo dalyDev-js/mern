@@ -198,7 +198,6 @@ const updateVerificationDocument = catchAsync(async (req, res, next) => {
 const getVerificationDocument = catchAsync(async (req, res, next) => {
   const filename = req.params.filename;
   const filePath = path.resolve("tmp/my-uploads/documents", filename);
-  console.log(filename);
 
   // Check if the file exists
   fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -216,6 +215,12 @@ const getVerificationDocument = catchAsync(async (req, res, next) => {
     });
   });
 });
+const updateEngineer = catchAsync(async (req, res, next) => {
+  // this method was imported in engineerRouters.put("/updateEngineer/:userId", updateEngineer); and wasn't exsit,
+  // added it to be able to start the server
+
+  res.json({ message: "This method do no thing , just added to solve error" });
+});
 
 export {
   updateEducation,
@@ -229,4 +234,5 @@ export {
   getEngineerById,
   updateVerificationDocument,
   getVerificationDocument,
+  updateEngineer,
 };

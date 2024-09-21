@@ -17,8 +17,8 @@ export default function Navbar() {
     const updateUserInfo = () => {
       const token = localStorage.getItem("Token");
       if (token) {
-        const decodedToken = jwtDecode(token);
-        const fullName = decodedToken.fullName.split(" ")[0]; // Get the first part of the full name
+        const decodedToken = jwtDecode(token) || {};
+        const fullName = decodedToken.fullName?.split(" ")[0]; // Get the first part of the full name
         const role = decodedToken.role;
         setUserName(fullName);
         setUserRole(role);
@@ -141,7 +141,8 @@ export default function Navbar() {
                             document.querySelector(
                               ".group .hover-block"
                             ).style.display = "none";
-                          }}>
+                          }}
+                        >
                           <p className="mb-2">
                             {userRole === "client"
                               ? "Please verify your identity to hire engineers and post jobs."
@@ -153,7 +154,8 @@ export default function Navbar() {
                       {/* Logout Button */}
                       <button
                         className="ml-4 bg-red-500 text-white px-4 py-2 rounded-lg"
-                        onClick={handleLogout}>
+                        onClick={handleLogout}
+                      >
                         Logout
                       </button>
                     </div>
@@ -165,7 +167,8 @@ export default function Navbar() {
                     </NavLink>
                     <Link
                       to={"/get-started"}
-                      className="text-whitetext-black hover:bg-amber-400 bg-amber-300 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-6 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:text-black focus:outline-none dark:focus:ring-purple-800">
+                      className="text-whitetext-black hover:bg-amber-400 bg-amber-300 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-6 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:text-black focus:outline-none dark:focus:ring-purple-800"
+                    >
                       Sign up
                     </Link>
                   </>
@@ -178,27 +181,32 @@ export default function Navbar() {
                 type="button"
                 className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hovetext-black dark:focus:ring-gray-600"
                 aria-controls="mobile-menu-2"
-                aria-expanded={isOpen}>
+                aria-expanded={isOpen}
+              >
                 <span className="sr-only">Open main menu</span>
                 <svg
                   className={`w-6 h-6 ${isOpen ? "hidden" : "block"}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     fillRule="evenodd"
                     d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                    clipRule="evenodd"></path>
+                    clipRule="evenodd"
+                  ></path>
                 </svg>
                 <svg
                   className={`w-6 h-6 ${isOpen ? "block" : "hidden"}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     fillRule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"></path>
+                    clipRule="evenodd"
+                  ></path>
                 </svg>
               </button>
             </div>
@@ -206,13 +214,15 @@ export default function Navbar() {
               className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${
                 isOpen ? "block" : "hidden"
               }`}
-              id="mobile-menu-2">
+              id="mobile-menu-2"
+            >
               {/* Original Nav Links */}
               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 <li>
                   <NavLink
                     to={""}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0"
+                  >
                     Home
                   </NavLink>
                 </li>
@@ -298,10 +308,12 @@ export default function Navbar() {
                         </>
                       )
                     }
-                    onMouseLeave={handleMouseLeaveLi}>
+                    onMouseLeave={handleMouseLeaveLi}
+                  >
                     <a
                       href="#"
-                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0">
+                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0"
+                    >
                       Find Talent{" "}
                       <i className="ttext-black fa-solid fa-chevron-down"></i>
                     </a>
@@ -346,10 +358,12 @@ export default function Navbar() {
                         </>
                       )
                     }
-                    onMouseLeave={handleMouseLeaveLi}>
+                    onMouseLeave={handleMouseLeaveLi}
+                  >
                     <a
                       href="#"
-                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
+                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
+                    >
                       Find Work{" "}
                       <i className="ttext-black fa-solid fa-chevron-down"></i>
                     </a>
@@ -396,10 +410,12 @@ export default function Navbar() {
                       </>
                     )
                   }
-                  onMouseLeave={handleMouseLeaveLi}>
+                  onMouseLeave={handleMouseLeaveLi}
+                >
                   <a
                     href="#"
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
+                  >
                     Why Handas{" "}
                     <i className="ttext-black fa-solid fa-chevron-down"></i>
                   </a>
@@ -408,7 +424,8 @@ export default function Navbar() {
                 <li>
                   <NavLink
                     to={"/contact"}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0"
+                  >
                     Contact
                   </NavLink>
                 </li>
@@ -421,7 +438,8 @@ export default function Navbar() {
             isSubNavVisible ? "opacity-100" : "opacity-0 hidden"
           }`}
           onMouseEnter={handleMouseEnterSubNav}
-          onMouseLeave={handleMouseLeaveSubNav}>
+          onMouseLeave={handleMouseLeaveSubNav}
+        >
           {subNavContent}
         </div>
 
