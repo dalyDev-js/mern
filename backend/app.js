@@ -20,6 +20,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.static("tmp"));
+
 app.use(express.json());
 app.use(cookieParser());
 
