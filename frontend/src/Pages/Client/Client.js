@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux"; // Import useDispatch to dispatch Redux actions
 import { postJob } from "../../redux/slices/jobSlice"; // Import the Redux action to post the job
 import eng1 from "../../assets/engineer1.png";
@@ -10,10 +10,12 @@ import card2 from "../../assets/card2.png";
 import network from "../../assets/network.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useLoading } from "../../utils/LoadingContext";
 export default function Client() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const { setIsLoading } = useLoading();
 
   // Form state to hold the job data
   const [jobData, setJobData] = useState({
@@ -123,6 +125,14 @@ export default function Client() {
     setIsSuccessModalVisible(false);
     navigate("/recent-posts");
   };
+  useEffect(() => {
+    setIsLoading(true);
+
+    // Simulate loading completion after 1.5 seconds
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  }, [setIsLoading]);
   return (
     <>
       {isSuccessModalVisible && (

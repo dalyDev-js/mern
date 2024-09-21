@@ -2,6 +2,33 @@ import User from "../model/userModel.js";
 import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 
+// userController.js
+
+// Fetch user by ID
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id); // Fetch user by ID
+
+    if (!user) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: { user },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error fetching user",
+    });
+  }
+};
+
 const filterObj = (obj, ...allowedFields) => {
   const filteredObj = {};
   Object.keys(obj).forEach((key) => {
