@@ -52,6 +52,29 @@ const getEngineerById = catchAsync(async (req, res, next) => {
   });
 });
 
+const getEngineerByUserId = catchAsync(async (req, res, next) => {
+  const { userId } = req.params; // Extract the ID from the URL parameters
+
+  const engineer = await Engineer.findOne({ user: userId }).populate({
+    path: "user", // Populate the user field
+    select: "fullName email role", // Select relevant user fields
+  });
+
+  if (!engineer) {
+    return res.status(404).json({
+      status: "fail",
+      message: "No engineer found with that ID",
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      engineer,
+    },
+  });
+});
+
 const updateEducation = async (req, res, next) => {
   let engineerId = req.user.id; //user id from token
   let engineerEducation = await Engineer.findByIdAndUpdate(
@@ -174,7 +197,7 @@ const getSavedJobs = catchAsync(async (req, res, next) => {
     },
   });
 });
-
+//after upload to save file name in engineers table in db
 const updateVerificationDocument = catchAsync(async (req, res, next) => {
   const uploadedFile = req.file;
   if (!uploadedFile) {
@@ -183,18 +206,37 @@ const updateVerificationDocument = catchAsync(async (req, res, next) => {
       .json({ message: "document update unsuccessful! please try again" });
   }
 
-  const engineerId = req.user.id;
+  const userId = req.user.id;
 
   const updatedEngineer = await Engineer.findOneAndUpdate(
-    { user: engineerId },
+    { user: userId },
     {
       verificationDocument: uploadedFile.filename,
+      verifiedStatus: "pending",
     },
     { new: true }
   );
   res.json({ message: "Document updated successfully", updatedEngineer });
 });
+//verify or reject from admin
+const updateVerificationStatus = catchAsync(async (req, res, next) => {
+  const { status, id } = req.body;
+  if (!["verified", "rejected"].includes(status)) {
+    return res.status(404).json({
+      message: "please check status name to be included in engineers enum",
+    });
+  }
 
+  const updatedEngineer = await Engineer.findOneAndUpdate(
+    { _id: id },
+    {
+      verifiedStatus: status,
+    },
+    { new: true }
+  );
+  res.json({ message: "Request updated successfully", updatedEngineer });
+});
+// get file from uploads
 const getVerificationDocument = catchAsync(async (req, res, next) => {
   const filename = req.params.filename;
   const filePath = path.resolve("tmp/my-uploads/documents", filename);
@@ -215,11 +257,30 @@ const getVerificationDocument = catchAsync(async (req, res, next) => {
     });
   });
 });
+//the engineers whose the document ins't null in admin
+const getPendingVerificationEngineers = catchAsync(async (req, res, next) => {
+  // Query engineers with verificationDocument not null and verifiedStatus as 'pending'
+  const engineers = await Engineer.find({
+    verificationDocument: { $ne: null }, // Only documents where verificationDocument is not null
+    verifiedStatus: "pending", // Only documents where verifiedStatus is 'pending'
+  }).populate({
+    path: "user",
+    select: "fullName email role",
+    match: { role: "engineer" },
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: engineers.length,
+    data: {
+      engineers: engineers,
+    },
+  });
+});
+// this method was imported in engineerRouters.put("/updateEngineer/:userId", updateEngineer); and wasn't exsit,
+// added it to be able to start the server
 
 const updateEngineer = catchAsync(async (req, res, next) => {
-  // this method was imported in engineerRouters.put("/updateEngineer/:userId", updateEngineer); and wasn't exsit,
-  // added it to be able to start the server
-
   res.json({ message: "This method do no thing , just added to solve error" });
 });
 
@@ -233,7 +294,10 @@ export {
   getSavedJobs,
   saveJob,
   getEngineerById,
+  getEngineerByUserId,
   updateVerificationDocument,
   getVerificationDocument,
+  getPendingVerificationEngineers,
+  updateVerificationStatus,
   updateEngineer,
 };

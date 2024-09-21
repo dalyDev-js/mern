@@ -6,6 +6,7 @@ import {
   addTitle,
   getAllEngineers,
   getEngineerById,
+  getEngineerByUserId,
   getSavedJobs,
   saveJob,
   updateEngineer,
@@ -14,7 +15,8 @@ import { upload } from "../utils/multer.js";
 
 const engineerRouters = express.Router();
 engineerRouters.get("/all", getAllEngineers);
-engineerRouters.get("/:userId", getEngineerById);
+engineerRouters.get("/:id", getEngineerById);
+engineerRouters.get("/userid/:userId", getEngineerByUserId);
 engineerRouters.put("/addeducation", addEducation);
 engineerRouters.post("/addskill", addSkill);
 engineerRouters.post("/addtitle", addTitle);

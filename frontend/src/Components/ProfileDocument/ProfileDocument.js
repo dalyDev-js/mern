@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { FaPen, FaPlus } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaPen, FaPlus } from "react-icons/fa";
 
 function ProfileDocument() {
+  const { id } = useParams(); // Extract the engineer ID from the URL
+  console.log("Extracted ID:", id);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
+  const [engineerData, setEngineerData] = useState(null); // State for engineer data
   const [certifications, setCertifications] = useState([]);
-
-  // Fetch certifications on component mount
-  // useEffect(() => {
-  //   fetchCertifications();
-  // }, []);
-
-  // const fetchCertifications = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(
-  //       "http://localhost:8000/api/v1/certificates",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     setCertifications(response.data.certificates);
-  //   } catch (error) {
-  //     console.error("Error fetching certifications:", error);
-  //   }
-  // };
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -41,8 +24,7 @@ function ProfileDocument() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", "testName");
-
+    formData.append("name", "testName"); // Change as needed
     formData.append("file", file);
 
     try {
@@ -55,11 +37,40 @@ function ProfileDocument() {
       });
       alert("Card added successfully!");
       toggleModal();
+
+      // Fetch engineer data after successfully adding the document
+      fetchEngineerData();
     } catch (error) {
       console.log("Error adding card:", error);
       alert("Failed to add card.");
     }
   };
+
+  const fetchEngineerData = async () => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/engineer/userid/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setEngineerData(response.data); // Set the fetched engineer data
+      console.log("Engineer data:", response.data); // Optional: log the data
+    } catch (error) {
+      console.log("Error fetching engineer data:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch engineer data when the component mounts
+    if (id) {
+      fetchEngineerData();
+    }
+  }, [id]);
 
   return (
     <div>
