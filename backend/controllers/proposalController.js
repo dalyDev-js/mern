@@ -3,7 +3,7 @@ import catchAsync from "../utils/catchAsync.js";
 
 const addProposal = catchAsync(async (req, res, next) => {
   const { content, budget, service } = req.body;
-  const engineer = req.user.id;
+  const engineer = "66eac77b51996ba2ae25ec85";
   if (!content || !service || !budget || !engineer)
     res.status(404).json({ message: "Complete required fields" });
   await Proposal.create({ content, budget, service, engineer });

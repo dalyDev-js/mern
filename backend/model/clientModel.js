@@ -5,8 +5,9 @@ const clientSchema = new mongoose.Schema({
     required: true,
   },
   verifiedStatus: {
-    type: Boolean,
-    default: false,
+    type: String,
+    enum: ["pending", "verified", "rejected"],
+    default: "pending",
   },
   postedProjects: [
     {

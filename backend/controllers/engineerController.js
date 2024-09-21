@@ -1,6 +1,7 @@
 import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
-
+import path from "path";
+import fs from "fs";
 // const getAllEngineers = (async(req,res,next)=>{
 //     let engineers = await Engineer.find()
 //     res.status(200).json({message:"Success",engineers})
@@ -174,6 +175,48 @@ const getSavedJobs = catchAsync(async (req, res, next) => {
   });
 });
 
+const updateVerificationDocument = catchAsync(async (req, res, next) => {
+  const uploadedFile = req.file;
+  if (!uploadedFile) {
+    return res
+      .status(404)
+      .json({ message: "document update unsuccessful! please try again" });
+  }
+
+  const engineerId = "Eng_ID";
+
+  const updatedEngineer = await Engineer.findByIdAndUpdate(
+    engineerId,
+    {
+      verificationDocument: uploadedFile.filename,
+    },
+    { new: true }
+  );
+  res.json({ message: "Document updated successfully", updatedEngineer });
+});
+
+const getVerificationDocument = catchAsync(async (req, res, next) => {
+  const filename = req.params.filename;
+  const filePath = path.resolve("tmp/my-uploads/documents", filename);
+  console.log(filename);
+
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error("File not found:", filePath);
+      return res.status(404).json({ error: "File not found" });
+    }
+
+    // Send the file to the front-end
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error("Error sending file:", err);
+        res.status(500).send("Error sending the file");
+      }
+    });
+  });
+});
+
 export {
   updateEducation,
   addTitle,
@@ -184,4 +227,6 @@ export {
   getSavedJobs,
   saveJob,
   getEngineerById,
+  updateVerificationDocument,
+  getVerificationDocument,
 };
