@@ -257,7 +257,7 @@ const getVerificationDocument = catchAsync(async (req, res, next) => {
     });
   });
 });
-//the engineers whose the document ins't null in admin
+//the engineers whose the document ins't null in adminss
 const getPendingVerificationEngineers = catchAsync(async (req, res, next) => {
   // Query engineers with verificationDocument not null and verifiedStatus as 'pending'
   const engineers = await Engineer.find({
