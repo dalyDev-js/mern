@@ -2,6 +2,7 @@ import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import User from "../model/userModel.js";
+
 // const getAllEngineers = (async(req,res,next)=>{
 //     let engineers = await Engineer.find()
 //     res.status(200).json({message:"Success",engineers})
@@ -41,6 +42,8 @@ const getEngineerById = catchAsync(async (req, res, next) => {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
     return next(new AppError("Engineer not found with this user ID", 404));
   }
+
+  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
 
   res.status(200).json({
     status: "success",
@@ -177,43 +180,32 @@ const getSavedJobs = catchAsync(async (req, res, next) => {
 const updateEngineer = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
   console.log("User ID:", userId);
-  console.log("Request body:", req.body);
+  console.log("Request body:", req.file);
+  const data = {};
 
   // Check if there is a 'fullName' in the request body and update the User model
   if (req.body.fullName) {
-    await User.findByIdAndUpdate(
-      userId,
-      { fullName: req.body.fullName },
-      {
-        new: true, // Return the updated User document
-        runValidators: true, // Ensure that the update follows the schema rules
-      }
-    );
+    data.fullName = req.body.fullName;
   }
 
   // Handle profilePic upload, if file exists
   if (req.file) {
-    const profilePicUrl = `https://some-cloud-storage.com/${req.file.originalname}`; // Process and get URL after uploading to a cloud storage
-    req.body.profilePic = profilePicUrl; // Attach the processed profilePic URL to the request body
-    // You can implement cloud storage upload logic here to get the URL
+    data.profilePic = req.file.filename;
   }
-
+  console.log(data);
   // Update the Engineer document
-  const engineer = await Engineer.findOneAndUpdate({ user: userId }, req.body, {
+  const user = await User.findOneAndUpdate({ _id: userId }, data, {
     new: true,
     runValidators: true,
-  }).populate("user"); // Populate the 'user' field
+  });
 
-  if (!engineer) {
+  if (!user) {
     return next(new AppError("Engineer not found for this user ID", 404));
   }
 
   // Return the updated engineer with populated user data
   res.status(200).json({
     status: "success",
-    data: {
-      engineer,
-    },
   });
 });
 
