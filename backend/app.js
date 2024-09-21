@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
+import verifyRouter from "./routes/requestVerification.js";
 const app = express();
 
 app.use(
@@ -26,6 +27,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", servicesRouter);
 // app.use("/api/v1/services/my-jobs", servicesRouter);
 app.use("/api/v1/portfolios", portfolioRouter);
+app.use("/api/v1/request-verification", verifyRouter);
 app.use("/api/v1/certificates", certificateRouter);
 app.use("/api/v1/experiences", experienceRouter);
 app.use("/api/v1/proposals", proposalRouter);
