@@ -26,7 +26,6 @@ export const payment = catchAsync(async (req, res, next) => {
     },
   });
 
-  // If payment succeeds, save the payment record
   if (paymentIntent.status === 'succeeded') {
     let paymentRecord = await Payment.create({
       clientId,
@@ -41,11 +40,10 @@ export const payment = catchAsync(async (req, res, next) => {
 
     paymentRecord = await paymentRecord
       .populate('clientId', 'name email')        
-      .populate('engineerId', 'name skills')     // Populate engineerId with engineer's name and skills
-      .populate('projectId', 'title budget')     // Populate projectId with project title and budget
-      .execPopulate();                          // Execute the population
+      .populate('engineerId', 'name skills')     
+      .populate('projectId', 'title budget')     
+      .execPopulate();                        
 
-    // Respond with the populated payment record
     res.status(200).json({
       status: 'success',
       message: 'Payment successful',
