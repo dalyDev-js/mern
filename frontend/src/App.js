@@ -16,7 +16,6 @@ import Payment from "./Pages/Payment_Pages/Payment";
 import Proposal from "./Pages/Proposal/Proposal";
 import ContactUs from "./Pages/Contact_Us/ContactUs";
 import Jobs from "./Pages/Jobs/Jobs";
-
 import ProfileCertifications from "./Components/ProfileCertifications/ProfileCertifications";
 import ProfileEducation from "./Components/ProfileEducation/ProfileEducation";
 import ProfileHeader from "./Components/ProfileHeader/ProfileHeader";
@@ -31,6 +30,8 @@ import ProposalsStatus from "./Pages/ProposalsStatus/ProposalsStatus";
 import SignUpClient from "./Pages/SignUp/SignUpClient";
 import SignUpEngineer from "./Pages/SignUp/SignUpEngineer";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import Verify from "./Pages/Verify/Verify";
+import { LoadingProvider } from "./utils/LoadingContext";
 
 let routers = createBrowserRouter([
   {
@@ -57,11 +58,12 @@ let routers = createBrowserRouter([
             <ProfilePage />
           </ProtectedRoute>
         ),
-      }, //update engineer profile -- engineer view
+      }, // update engineer profile -- engineer view
       { path: "/job-details/:id", element: <JobDetail /> }, // job details -- engineer view
-      { path: "/engineer-details", element: <Profile /> }, //engineer details -- client view
-      { path: "/engineer-details/:id", element: <Profile /> }, //engineer details -- client view
-      { path: "/hiring", element: <HiringProcess /> }, //sending proposal -- engineer view
+      { path: "/engineer-details", element: <Profile /> }, // engineer details -- client view
+      { path: "/engineer-details/:id", element: <Profile /> }, // engineer details -- client view
+      { path: "/hiring", element: <HiringProcess /> }, // sending proposal -- engineer view
+      { path: "/verify", element: <Verify /> },
       {
         path: "/client",
         element: (
@@ -79,14 +81,17 @@ let routers = createBrowserRouter([
       { path: "/recent-posts", element: <MyJobsPosts /> }, // jobs already posted client view
       { path: "/job-proposals", element: <JobProposals /> }, // job posting
       { path: "/proposals-status", element: <ProposalsStatus /> }, // job posting
-
       { path: "*", element: <NotFound /> },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={routers}></RouterProvider>;
+  return (
+    <LoadingProvider>
+      <RouterProvider router={routers}></RouterProvider>
+    </LoadingProvider>
+  );
 }
 
 export default App;
