@@ -6,24 +6,19 @@ const proposalSchema = new mongoose.Schema({
     ref: "Engineer",
     required: true,
   },
-  service:{
+  service: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Service",
     required: true,
-  },
-  bidAmount: {
-    type: Number,
-    required: true,
-    min: 0,
   },
   content: {
     type: String,
     required: true,
   },
-  budget:{
+  budget: {
     type: Number,
     required: true,
-  }
+  },
 });
 
-export const Proposal = mongoose.model('Proposal',proposalSchema)
+export const Proposal = mongoose.model("Proposal", proposalSchema);

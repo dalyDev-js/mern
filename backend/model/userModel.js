@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
     type: ["pending", "rejected", "accepted"],
     default: "pending",
   },
-  requstVerifiedStatus: {
+  requestVerifiedStatus: {
     type: Boolean,
     default: false,
   },
