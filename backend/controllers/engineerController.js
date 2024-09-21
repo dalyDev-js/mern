@@ -183,10 +183,10 @@ const updateVerificationDocument = catchAsync(async (req, res, next) => {
       .json({ message: "document update unsuccessful! please try again" });
   }
 
-  const engineerId = "Eng_ID";
+  const engineerId = req.user.id;
 
-  const updatedEngineer = await Engineer.findByIdAndUpdate(
-    engineerId,
+  const updatedEngineer = await Engineer.findOneAndUpdate(
+    { user: engineerId },
     {
       verificationDocument: uploadedFile.filename,
     },
@@ -215,6 +215,7 @@ const getVerificationDocument = catchAsync(async (req, res, next) => {
     });
   });
 });
+
 const updateEngineer = catchAsync(async (req, res, next) => {
   // this method was imported in engineerRouters.put("/updateEngineer/:userId", updateEngineer); and wasn't exsit,
   // added it to be able to start the server

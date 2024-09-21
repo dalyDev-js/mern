@@ -46,7 +46,7 @@ function ProfileDocument() {
     formData.append("file", file);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("Token");
       await axios.post("http://localhost:8000/api/v1/vdocuments", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
