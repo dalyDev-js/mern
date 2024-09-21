@@ -10,6 +10,7 @@ export const fetchUserById = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/v1/users/getUser/${userId}`);
+
       return response.data.data.user; // Assuming response structure
     } catch (error) {
       return rejectWithValue(

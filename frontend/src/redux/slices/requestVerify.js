@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
 // Initial state
 const initialState = {
@@ -33,22 +32,11 @@ const verificationReducer = (state = initialState, action) => {
 };
 
 // Action creator for requesting verification
-export const requestVerification = () => async (dispatch) => {
+export const requestVerification = (userId) => async (dispatch) => {
   dispatch({ type: VERIFICATION_REQUEST });
 
   try {
-    // Get the token from localStorage
-    const token = localStorage.getItem("Token");
-
-    if (!token) {
-      throw new Error("No token found. Please log in.");
-    }
-
-    // Decode the token to extract the userId
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.id; // Assuming the token contains userId as 'id'
-
-    // Make the request to the backend
+    // Make the request to the backend with userId
     const response = await axios.post(
       "http://localhost:8000/api/v1/request-verification",
       { userId }

@@ -29,7 +29,7 @@ export const fetchEngineerById = createAsyncThunk(
       const response = await axios.get(`/api/v1/engineer/${engineerId}`);
       console.log(response);
 
-      return response.data.data.engineer; // Assuming the response structure
+      return response.data.data.engineer;
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : "Unknown error"
@@ -78,15 +78,77 @@ export const updateEngineerProfilePic = createAsyncThunk(
   }
 );
 
+export const submitProposal = createAsyncThunk(
+  "engineerlist/submitProposal",
+  async ({ engineerId, service, content, budget }, { rejectWithValue }) => {
+    try {
+      console.log(engineerId, service, content, budget);
+      const response = await axios.post(
+        "/api/v1/proposals/addproposal",
+        { engineerId, service, content, budget } // Include engineerId
+      );
+      console.log("Proposal response:", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error submitting proposal:", error);
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+
+// Async thunk to save a job to the engineer's saved jobs
+export const saveJob = createAsyncThunk(
+  "engineerlist/saveJob",
+  async ({ serviceId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.post(
+        "/api/v1/engineer/savejob",
+        { serviceId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return response.data.data.engineer; // Assuming response returns the updated engineer
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+// In engineersSlice.js
+
+export const fetchSubmittedProposals = createAsyncThunk(
+  "engineerlist/fetchSubmittedProposals",
+  async (engineerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/api/v1/engineers/${engineerId}/submittedProposals`
+      );
+      return response.data; // Assuming this returns an array of submitted proposals
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+
 // Slice for engineers
 const engineerSlice = createSlice({
   name: "engineerlist", // Updated the slice name
   initialState: {
-    engineers: [], // List of engineers
-    selectedEngineer: null, // Engineer details for the selected engineer
-    status: "idle", // Status of operations
-    error: null, // Store any errors
+    engineers: [],
+    selectedEngineer: null,
+    savedJobs: [], // Ensure this is initialized
+    submittedProposals: [], // Initialize this as well
+    status: "idle",
+    error: null,
   },
+
   reducers: {
     setStatus: (state, action) => {
       state.status = action.payload;
@@ -119,6 +181,32 @@ const engineerSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(fetchEngineerById.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      })
+      .addCase(submitProposal.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(submitProposal.fulfilled, (state, action) => {
+        const { service } = action.payload; // Assuming the response contains the service ID
+        state.submittedProposals.push(service); // Update the submitted proposals
+        state.status = "succeeded";
+      })
+
+      .addCase(submitProposal.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      })
+
+      // Save job
+      .addCase(saveJob.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(saveJob.fulfilled, (state, action) => {
+        state.savedJobs.push(action.payload); // Add the saved job
+        state.status = "succeeded";
+      })
+      .addCase(saveJob.rejected, (state, action) => {
         state.error = action.payload;
         state.status = "failed";
       });

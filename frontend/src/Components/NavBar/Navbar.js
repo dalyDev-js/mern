@@ -3,7 +3,8 @@ import logo from "../../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { fetchUserById } from "../../redux/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/authSlice";
 
 export default function Navbar() {
   const [subNavContent, setSubNavContent] = useState("");
@@ -11,31 +12,37 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [verifiedStatus, setverifiedStatus] = useState(null);
-
+  const [verifiedStatus, setVerifiedStatus] = useState(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   // Handle token decoding to get the first part of the user's full name and role
   useEffect(() => {
     const updateUserInfo = async () => {
       const token = localStorage.getItem("Token");
       if (token) {
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode(token); // Decode the token to get user info
         const fullName = decodedToken.fullName.split(" ")[0]; // Get the first part of the full name
         const role = decodedToken.role;
         const id = decodedToken.id;
+
+        // Fetch user data using the decoded user ID
         const user = await dispatch(fetchUserById(id));
+
+        // Set user name, role, and verification status in state
         setUserName(fullName);
         setUserRole(role);
-        setverifiedStatus(...user.payload.verifiedStatus);
-        // console.log(...user.payload.verifiedStatus);
+        setVerifiedStatus(...user?.payload?.verifiedStatus); // Set verification status
       } else {
+        // Clear user data if token is not found
         setUserName(null);
         setUserRole(null);
+        setVerifiedStatus(null);
       }
     };
 
-    // Initial call to set the user info when component mounts
+    // Initial call to set the user info when the component mounts
     updateUserInfo();
 
     // Polling `localStorage` every second to detect changes within the same tab
@@ -51,14 +58,28 @@ export default function Navbar() {
       clearInterval(intervalId);
       window.removeEventListener("storage", updateUserInfo);
     };
-  }, []);
+  }, [dispatch]);
 
   const handleLogout = () => {
-    localStorage.removeItem("Token");
-    localStorage.removeItem("User");
-    navigate("/signin");
-  };
+    setIsLoggingOut(true);
 
+    // Clear user-related state and token
+    setUserName(null);
+    setUserRole(null);
+    setVerifiedStatus(null);
+
+    // Remove the token and user info from localStorage
+    localStorage.removeItem("Token");
+    localStorage.removeItem("UserName");
+    localStorage.removeItem("UserRole");
+
+    // Set timeout to delay the navigation for 1 second
+    setTimeout(() => {
+      dispatch(logout()); // Dispatch the logout action
+      navigate("/signin"); // Navigate to the sign-in page
+      setIsLoggingOut(false); // Reset logging out state
+    }, 1000); // Wait for 1 second before redirecting
+  };
   const handleMouseEnterLi = (content) => {
     setSubNavContent(content);
     setIsSubNavVisible(true);
@@ -133,7 +154,7 @@ export default function Navbar() {
 
                       {/* Warning Icon with tooltip positioned to the left */}
                       <div className="relative group">
-                        {verifiedStatus === "pending" || null ? (
+                        {verifiedStatus === "pending" && (
                           <>
                             <Link to="/verify">
                               <i className="fa-solid fa-exclamation-circle text-yellow-500 cursor-pointer"></i>
@@ -158,13 +179,15 @@ export default function Navbar() {
                               </p>
                             </div>
                           </>
-                        ) : verifiedStatus === "accepted" ? (
+                        )}{" "}
+                        {verifiedStatus === "accepted" && (
                           <img
                             src="/images/verified.png"
                             alt="Verified"
                             className="w-6 h-6" // Adjust the size as needed
                           />
-                        ) : verifiedStatus === "rejected" ? (
+                        )}{" "}
+                        {verifiedStatus === "rejected" && (
                           <>
                             <span
                               role="img"
@@ -180,7 +203,7 @@ export default function Navbar() {
                               </p>
                             </div>
                           </>
-                        ) : null}
+                        )}
                       </div>
 
                       {/* Logout Button */}
@@ -251,143 +274,90 @@ export default function Navbar() {
                 </li>
 
                 {/* Conditional "Find Talent" for client or when not logged in */}
-                {(userRole === "client" || !userRole) && (
+                {userRole === null ? (
+                  // Fallback UI, e.g., loading spinner, until role is determined
+                  <div>Find Projects</div>
+                ) : userRole === "client" ? (
                   <li
                     onMouseEnter={() =>
                       handleMouseEnterLi(
-                        <>
-                          <div className="md:flex gap-2">
-                            <div className="options border-r border-gray-400 md:w-1/4">
-                              <div className="option rounded-lg hover:bg-yellow-50 mr-4 p-4">
-                                <p className=" my-2 font-medium text-sm text-black">
-                                  <Link to={"/client"}>
-                                    Post job and hire Engineer
-                                  </Link>
-                                </p>
-                                <p className="font-medium text-sm text-black">
-                                  Engineers Catalog
-                                </p>
-                              </div>
-                            </div>
-                            <div className="selected-option p-3 md:w-1/3">
-                              <p className=" my-2text-black font-bold">
-                                At Handas
-                              </p>
-                              <p className=" my-2 font-medium text-black">
-                                you can find the right engineer for your job{" "}
-                              </p>
-                              <p className=" text-sm leading-7 my-2 font-medium">
-                                <span className="text-black font-bold">
-                                  Specialized Expertise:
-                                </span>{" "}
-                                With access to a wide range of engineers, you
-                                can find individuals with specific expertise
-                                that perfectly matches your project
-                                requirements.
-                              </p>
-                              <p className=" text-sm leading-7 my-2 font-medium">
-                                <span className="text-black font-bold">
-                                  Diverse Perspectives:
-                                </span>{" "}
-                                Engineers from different backgrounds bring
-                                unique approaches to problem-solving, leading to
-                                more innovative solutions.
-                              </p>
-
-                              <p className="text-amber-600 underline text-sm font-bold">
-                                <Link to={"/engineers-list"}>
-                                  Browse all Engineers
+                        <div className="md:flex gap-2">
+                          <div className="options border-r border-gray-400 md:w-1/4">
+                            <div className="option rounded-lg hover:bg-yellow-50 mr-4 p-4">
+                              <p className="my-2 font-medium text-sm text-black">
+                                <Link to={"/client"}>
+                                  Post job and hire Engineer
                                 </Link>
-                                <i class="fa-solid fa-arrow-right"></i>{" "}
                               </p>
-                            </div>
-                            <div className="eng-types p-3 ms-3">
-                              <p className="my-2 font-semibold text-gray-800">
-                                1. Civil Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                2. Software Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                3. Industrial Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                4. Mechanical Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                5. Electrical Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                6. Systems Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                7. Petroleum Engineers
-                              </p>
-                              <p className="my-2 font-semibold text-gray-800">
-                                8. Materials Engineers
+                              <p className="font-medium text-sm text-black">
+                                Engineers Catalog
                               </p>
                             </div>
                           </div>
-                        </>
+                          <div className="selected-option p-3 md:w-1/3">
+                            <p className="my-2 text-black font-bold">
+                              At Handas
+                            </p>
+                            <p className="my-2 font-medium text-black">
+                              You can find the right engineer for your job.
+                            </p>
+                            <p className="text-sm leading-7 my-2 font-medium">
+                              <span className="text-black font-bold">
+                                Specialized Expertise:
+                              </span>{" "}
+                              With access to a wide range of engineers, you can
+                              find individuals with specific expertise that
+                              perfectly matches your project requirements.
+                            </p>
+                            <p className="text-amber-600 underline text-sm font-bold">
+                              <Link to={"/engineers-list"}>
+                                Browse all Engineers
+                              </Link>
+                            </p>
+                          </div>
+                        </div>
                       )
                     }
                     onMouseLeave={handleMouseLeaveLi}>
-                    <a
-                      href="#"
+                    <NavLink
+                      to="/client"
                       className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0">
-                      Find Talent{" "}
-                      <i className="ttext-black fa-solid fa-chevron-down"></i>
-                    </a>
+                      Client Dashboard
+                    </NavLink>
                   </li>
-                )}
-
-                {/* Conditional "Find Work" for engineer or when not logged in */}
-                {(userRole === "engineer" || !userRole) && (
+                ) : userRole === "engineer" ? (
                   <li
                     onMouseEnter={() =>
                       handleMouseEnterLi(
-                        <>
-                          <div className="find-work md:flex">
-                            <div className="md:w-1/4 border-r border-gray-600">
-                              <p className="text-black font-bold">
-                                Ways to Earn
-                              </p>
-                              <p className=" text-black text-sm  md:w-1/2">
-                                Learn why Handas is the best for you
-                              </p>
-                            </div>
-                            <div className="md:w-1/3 ms-3 border-r hover:bg-amber-100 border-gray-600">
-                              <p className="text-black font-bold">
-                                <Link to={"/jobs"}>
-                                  Find work for your Skills
-                                </Link>
-                              </p>
-                              <p className=" text-black text-sm  md:w-1/2">
-                                Explore the kind of work that will be available
-                                in your field
-                              </p>
-                            </div>{" "}
-                            <div className="md:w-1/3 ms-3 border-r border-gray-600">
-                              <p className="text-black font-bold">
-                                Gain work by Ads
-                              </p>
-                              <p className=" text-black text-sm  w-1/2">
-                                Get Notified with all jobs available for you{" "}
-                              </p>
-                            </div>
+                        <div className="md:flex gap-2">
+                          <div className="find-work md:w-1/4 border-r border-gray-600">
+                            <p className="text-black font-bold">Ways to Earn</p>
+                            <p className="text-black text-sm">
+                              Learn why Handas is the best for you.
+                            </p>
                           </div>
-                        </>
+                          <div className="md:w-1/3 ms-3 border-r hover:bg-amber-100 border-gray-600">
+                            <p className="text-black font-bold">
+                              <Link to={"/jobs"}>
+                                Find work for your Skills
+                              </Link>
+                            </p>
+                            <p className="text-black text-sm">
+                              Explore the kind of work that will be available in
+                              your field.
+                            </p>
+                          </div>
+                        </div>
                       )
                     }
                     onMouseLeave={handleMouseLeaveLi}>
-                    <Link
-                      to={"/jobs"}
+                    <NavLink
+                      to="/jobs"
                       className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
-                      Find Work{" "}
-                      <i className="ttext-black fa-solid fa-chevron-down"></i>
-                    </Link>
+                      Find Work
+                    </NavLink>
                   </li>
-                )}
+                ) : null}
 
                 <li
                   onMouseEnter={() =>
