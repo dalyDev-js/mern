@@ -16,7 +16,7 @@ function GetStarted() {
               Forget the old rules. You can have the best people. Right now.
               Right here.
             </p>
-            <Link to={"/started"}>
+            <Link to={"/get-started"}>
               <button
                 type="button"
                 className="focus:outline-none text-lg my-5 md:my-7 lg:my-8 text-black bg-amber-300 hover:bg-yellow-400 focus:ring-amber-400 font-medium rounded-lg px-7 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">

@@ -108,6 +108,7 @@ export const logout = () => (dispatch) => {
 
   // Dispatch the logout action to clear Redux state
   dispatch({ type: LOGOUT });
+  console.log("logged out");
 };
 
 export default authReducer;

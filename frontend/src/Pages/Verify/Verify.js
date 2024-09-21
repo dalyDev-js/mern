@@ -2,46 +2,40 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { requestVerification } from "../../redux/slices/requestVerify";
 import { fetchUserById } from "../../redux/slices/userSlice";
-import { jwtDecode } from "jwt-decode"; // Import jwt-decode to decode the token
+import { jwtDecode } from "jwt-decode";
 
 const Verify = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [country, setCountry] = useState("Egypt");
-  const [step, setStep] = useState(1); // Step tracker: 1 = ID selection, 2 = file upload
-  const [isVerificationPending, setIsVerificationPending] = useState(false); // Verification pending state
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [verifiedStatus, setVerifiedStatus] = useState(""); // Store verifiedStatus
-  const dispatch = useDispatch(); // Initialize dispatch
+  const [step, setStep] = useState(1);
+  const [isVerificationPending, setIsVerificationPending] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const dispatch = useDispatch();
 
-  // Function to extract userId from JWT token
   const getUserIdFromToken = () => {
-    const token = localStorage.getItem("Token"); // Get token from local storage
+    const token = localStorage.getItem("Token");
     if (token) {
-      const decodedToken = jwtDecode(token); // Decode the token
-      return decodedToken.userId || decodedToken.id; // Return user ID from token
+      const decodedToken = jwtDecode(token);
+      return decodedToken.userId || decodedToken.id;
     }
     return null;
   };
 
-  // Fetch user data on component mount
   useEffect(() => {
     const loadUserData = async () => {
-      const userId = getUserIdFromToken(); // Get userId from token
+      const userId = getUserIdFromToken();
 
       if (userId) {
-        const userData = await dispatch(fetchUserById(userId)); // Fetch user data by ID
-        const verifiedStatus = userData.payload.verifiedStatus; // Assuming this comes from the payload
-        setVerifiedStatus(...verifiedStatus); // Set the verified status
+        const userData = await dispatch(fetchUserById(userId));
+        const verifiedStatus = userData.payload.verifiedStatus;
+        const requested = userData.payload.requestVerifiedStatus;
 
-        // If the verification status is "pending", show the pending state
-        if (verifiedStatus && verifiedStatus.includes("pending")) {
+        if (verifiedStatus && verifiedStatus.includes("pending") && requested) {
           setIsVerificationPending(true);
         }
       } else {
         console.error("No user ID found in the token");
       }
-
-      setIsLoading(false); // Set loading to false once data is fetched
     };
 
     loadUserData();
@@ -60,63 +54,63 @@ const Verify = () => {
       alert("Please select a country and ID type.");
       return;
     }
-    setStep(2); // Move to the next step (file upload)
+    setStep(2);
   };
 
-  // File upload handler for the next step
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     console.log("Uploaded file:", file);
   };
 
-  // Handle verification request
   const handleRequestVerification = () => {
-    const userId = getUserIdFromToken(); // Get userId from token
+    const userId = getUserIdFromToken();
     if (userId) {
-      // Dispatch the requestVerification action with the userId
       dispatch(requestVerification(userId)).then((res) => {
         if (res.error) {
           console.error("Error requesting verification:", res.error);
         } else {
-          // If the request is successful, show pending state
-          setIsVerificationPending(true);
+          setIsSuccessModalVisible(true);
         }
       });
     }
   };
 
-  // Breadcrumb navigation function
-  const handleBack = () => {
-    setStep(1); // Go back to the previous step (ID selection)
+  const handleSuccessModalOkClick = () => {
+    setIsSuccessModalVisible(false);
+    setIsVerificationPending(true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
-        <p className="ml-4">Loading...</p>
-      </div>
-    );
-  }
-
-  // Show success container when verifiedStatus is "accepted"
-  if (verifiedStatus === "accepted") {
-    return (
-      <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-green-100 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold text-green-700 mb-4">
-          Your account is Verified!
-        </h2>
-        <p className="text-sm text-green-600">
-          Thank you for verifying your account. You can now enjoy full access to
-          all our features.
-        </p>
-      </div>
-    );
-  }
+  const handleBack = () => {
+    setStep(1);
+  };
 
   return (
     <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg shadow-md">
-      {/* Verification Pending Message with Loader */}
+      {isSuccessModalVisible && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-35">
+          <div
+            className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
+            style={{
+              animation: "fadeInScale 0.3s ease-out",
+            }}>
+            <div className="flex justify-center mb-4">
+              <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
+            </div>
+            <p className="text-2xl font-semibold mb-2">Success</p>
+            <p className="text-gray-600 mb-4">
+              Your document has been uploaded. It will take up to 2 hours to
+              review and verify your account. Please be patient while we
+              complete the process.
+            </p>
+            <button
+              onClick={handleSuccessModalOkClick}
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       {isVerificationPending ? (
         <div className="flex flex-col items-center">
           <p className="text-lg font-semibold mb-4">
@@ -129,7 +123,6 @@ const Verify = () => {
         </div>
       ) : (
         <>
-          {/* Breadcrumbs */}
           <nav className="text-gray-700 text-sm mb-6">
             <ul className="flex">
               <li className={`mr-2 ${step === 1 ? "font-bold" : ""}`}>
@@ -261,7 +254,7 @@ const Verify = () => {
                   type="file"
                   accept="image/*,application/pdf"
                   onChange={handleFileUpload}
-                  className="w-full border-2 p-2 rounded-xl border-gray-300 cursor-pointer file:rounded-lg file:bg-amber-300 file:text-black file:py-2 file:px-4 file:border-none file:cursor-pointer file:pl-22" // Shift "Choose File" button to the right
+                  className="w-full border-2 p-2 rounded-xl border-gray-300 cursor-pointer file:rounded-lg file:bg-amber-300 file:text-black file:py-2 file:px-4 file:border-none file:cursor-pointer file:pl-22"
                 />
               </div>
 

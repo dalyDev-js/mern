@@ -11,7 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     user: userSlice,
     verification: verificationReducer,
-    engineerlist: engineerReducer, // Handles engineer-related actions
+    engineerlist: engineerReducer,
   },
 });
 

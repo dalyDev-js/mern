@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,17 +6,17 @@ import { signIn } from "../../redux/slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function SignIn() {
+  const [isLoading, setIsLoading] = useState(false); // New loading state
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
 
-  // Validation schema with password required
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
     password: Yup.string()
-      .required("Password is required") // Adding password validation back
+      .required("Password is required")
       .min(5, "Password must be at least 5 characters")
       .max(15, "Password cannot be more than 15 characters"),
   });
@@ -28,36 +28,50 @@ export default function SignIn() {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setIsLoading(true); // Show loading screen
       const result = await dispatch(signIn(values));
 
+      let isMounted = true;
+
       if (!result.error) {
-        // Add a 1-second delay for loading simulation
         setTimeout(() => {
-          // Check the role and navigate accordingly
-          const userRole = result.payload.user.role;
-          if (userRole === "client") {
-            navigate("/client");
-          } else if (userRole === "engineer") {
-            navigate("/jobs");
-          } else {
-            navigate("/"); // Fallback, in case role is something else
+          if (isMounted) {
+            const userRole = result.payload.user.role;
+            if (userRole === "client") {
+              navigate("/client");
+            } else if (userRole === "engineer") {
+              navigate("/jobs");
+            } else {
+              navigate("/");
+            }
           }
-        }, 1000); // 1 second delay
+          setIsLoading(false); // Hide loading screen after navigation
+        }, 3000); // 3-second delay
+      } else {
+        setIsLoading(false); // Hide loading screen on error
       }
+
+      return () => {
+        isMounted = false;
+      };
     },
   });
 
-  const handleInputStyle = "w-full p-4 border border-gray-300 rounded-lg"; // Consistent input style with SignUp
-  const handleErrorStyle = "text-red-500 text-sm mt-2"; // Consistent error style
+  const handleInputStyle = "w-full p-4 border border-gray-300 rounded-lg";
+  const handleErrorStyle = "text-red-500 text-sm mt-2";
 
-  return (
+  return isLoading ? (
+    <div className="flex justify-center items-center h-screen">
+      <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+      <p className="ml-4">Loading...</p>
+    </div>
+  ) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
 
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-6">
-            {/* Email Input */}
             <div className="relative">
               <input
                 type="email"
@@ -73,7 +87,6 @@ export default function SignIn() {
               )}
             </div>
 
-            {/* Password Input */}
             <div className="relative">
               <input
                 type="password"
@@ -94,7 +107,7 @@ export default function SignIn() {
             <button
               type="submit"
               className="w-full bg-yellow-300 text-white py-3 px-4 rounded-lg mt-4"
-              disabled={loading}>
+              disabled={loading || isLoading}>
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
 

@@ -13,7 +13,7 @@ export const requestVerification = async (req, res) => {
     }
 
     // Update requestVerifiedStatus to true
-    user.requstVerifiedStatus = true;
+    user.requestVerifiedStatus = true;
     await user.save();
 
     res.status(200).json({
