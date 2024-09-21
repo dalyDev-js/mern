@@ -18,15 +18,14 @@ function JobCard({
   const handleToggle = () => {
     setLiked(!liked);
   };
+  console.log("Job ID:", jobId);
 
   // Calculate the time ago based on the createdAt field
   const timeAgo = moment(createdAt).fromNow();
 
   return (
     <Link
-      to={{
-        pathname: `/job-details/${jobId}`,
-      }}
+      to={`/job-details/${jobId}`}
       state={{ title, description, budget, skills, level, createdAt }}>
       <article className="flex justify-between items-start p-5 bg-white hover:bg-slate-100 rounded-md border border-solid border-neutral-300">
         <div className="grow-[2]">

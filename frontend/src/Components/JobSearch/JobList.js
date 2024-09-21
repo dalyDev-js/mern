@@ -26,8 +26,8 @@ function JobList() {
       {status === "succeeded" &&
         jobs.map((job, index) => (
           <JobCard
-            key={job._id} // Use _id as the key
-            jobId={job._id} // Pass jobId to JobCard
+            key={job._id}
+            jobId={job._id}
             title={job.title}
             description={job.description}
             budget={job.budget}
