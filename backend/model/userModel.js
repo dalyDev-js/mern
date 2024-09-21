@@ -27,6 +27,10 @@ const userSchema = mongoose.Schema({
     type: ["pending", "rejected", "accepted"],
     default: "pending",
   },
+  requstVerifiedStatus: {
+    type: Boolean,
+    default: false,
+  },
   gender: {
     type: String,
     required: [true, "Please Prodive your gender!"],
@@ -49,12 +53,11 @@ const userSchema = mongoose.Schema({
   },
   passwordConfirm: {
     type: String,
-    required: [true, "please Confirm your password"],
     validate: {
       validator: function (el) {
         return el === this.password;
       },
-      message: "passwords are not the same!!!",
+      message: "Passwords are not the same!",
     },
   },
   passwordChangedAt: Date,

@@ -1,10 +1,15 @@
 import express from "express";
-import { deleteMe, updateMe } from "../controllers/userController.js";
+import {
+  deleteMe,
+  getUserById,
+  updateMe,
+} from "../controllers/userController.js";
 import { protect } from "../middleware/protectRoute.js";
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.patch("/updateMe", protect, updateMe);
-router.delete("/deleteMe", deleteMe);
+userRouter.get("/getUser/:id", getUserById);
+userRouter.patch("/updateMe", protect, updateMe);
+userRouter.delete("/deleteMe", deleteMe);
 
-export default router;
+export default userRouter;

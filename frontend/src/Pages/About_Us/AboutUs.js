@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLoading } from "../../utils/LoadingContext";
 
 function AboutUs() {
+  const { setIsLoading } = useLoading();
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    // Simulate loading completion after 1.5 seconds
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  }, [setIsLoading]);
   return (
     <div className="flex flex-col bg-white py-10 px-6 ml-20">
       <div className="flex flex-col items-start bg-white py-12 px-6">
@@ -155,14 +166,12 @@ function AboutUs() {
         <span className="flex gap-7 ml-3">
           <a
             href="#"
-            className="text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
-          >
+            className="text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
             Find Talent
           </a>
           <a
             href="#"
-            className=" text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
-          >
+            className=" text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
             Find Work
           </a>
         </span>

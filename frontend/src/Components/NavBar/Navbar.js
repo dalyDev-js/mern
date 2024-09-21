@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { fetchUserById } from "../../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Navbar() {
   const [subNavContent, setSubNavContent] = useState("");
@@ -9,19 +11,24 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [verifiedStatus, setverifiedStatus] = useState(null);
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   // Handle token decoding to get the first part of the user's full name and role
   useEffect(() => {
-    const updateUserInfo = () => {
+    const updateUserInfo = async () => {
       const token = localStorage.getItem("Token");
       if (token) {
         const decodedToken = jwtDecode(token);
         const fullName = decodedToken.fullName.split(" ")[0]; // Get the first part of the full name
         const role = decodedToken.role;
+        const id = decodedToken.id;
+        const user = await dispatch(fetchUserById(id));
         setUserName(fullName);
         setUserRole(role);
+        setverifiedStatus(...user.payload.verifiedStatus);
+        // console.log(...user.payload.verifiedStatus);
       } else {
         setUserName(null);
         setUserRole(null);
@@ -126,28 +133,54 @@ export default function Navbar() {
 
                       {/* Warning Icon with tooltip positioned to the left */}
                       <div className="relative group">
-                        <Link to="/verify">
-                          <i className="fa-solid fa-exclamation-circle text-yellow-500 cursor-pointer"></i>
-                        </Link>
-                        {/* Adding an additional hover trigger for both icon and tooltip */}
-                        <div
-                          className="absolute right-0 mt-2 p-4 bg-white rounded-lg shadow-lg border-2 border-amber-400 text-sm hidden group-hover:block hover:block max-w-xs w-64 whitespace-normal z-50"
-                          onMouseEnter={() => {
-                            document.querySelector(
-                              ".group .hover-block"
-                            ).style.display = "block";
-                          }}
-                          onMouseLeave={() => {
-                            document.querySelector(
-                              ".group .hover-block"
-                            ).style.display = "none";
-                          }}>
-                          <p className="mb-2">
-                            {userRole === "client"
-                              ? "Please verify your identity to hire engineers and post jobs."
-                              : "Please verify your identity to find jobs and submit proposals."}
-                          </p>
-                        </div>
+                        {verifiedStatus === "pending" || null ? (
+                          <>
+                            <Link to="/verify">
+                              <i className="fa-solid fa-exclamation-circle text-yellow-500 cursor-pointer"></i>
+                            </Link>
+                            {/* Tooltip for pending status */}
+                            <div
+                              className="absolute right-0 mt-2 p-4 bg-white rounded-lg shadow-lg border-2 border-amber-400 text-sm hidden group-hover:block hover:block max-w-xs w-64 whitespace-normal z-50"
+                              onMouseEnter={() => {
+                                document.querySelector(
+                                  ".group .hover-block"
+                                ).style.display = "block";
+                              }}
+                              onMouseLeave={() => {
+                                document.querySelector(
+                                  ".group .hover-block"
+                                ).style.display = "none";
+                              }}>
+                              <p className="mb-2">
+                                {userRole === "client"
+                                  ? "Please verify your identity to hire engineers and post jobs."
+                                  : "Please verify your identity to find jobs and submit proposals."}
+                              </p>
+                            </div>
+                          </>
+                        ) : verifiedStatus === "accepted" ? (
+                          <img
+                            src="/images/verified.png"
+                            alt="Verified"
+                            className="w-6 h-6" // Adjust the size as needed
+                          />
+                        ) : verifiedStatus === "rejected" ? (
+                          <>
+                            <span
+                              role="img"
+                              aria-label="error"
+                              className="text-red-500">
+                              ❌
+                            </span>
+                            {/* Tooltip for rejected status */}
+                            <div className="absolute right-0 mt-2 p-4 bg-white rounded-lg shadow-lg border-2 border-red-400 text-sm hidden group-hover:block hover:block max-w-xs w-64 whitespace-normal z-50">
+                              <p className="mb-2">
+                                Your verification was rejected. Please re-upload
+                                your documents for verification.
+                              </p>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
 
                       {/* Logout Button */}
@@ -347,12 +380,12 @@ export default function Navbar() {
                       )
                     }
                     onMouseLeave={handleMouseLeaveLi}>
-                    <a
-                      href="#"
+                    <Link
+                      to={"/jobs"}
                       className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-600 lg:p-0">
                       Find Work{" "}
                       <i className="ttext-black fa-solid fa-chevron-down"></i>
-                    </a>
+                    </Link>
                   </li>
                 )}
 
