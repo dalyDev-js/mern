@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaPen, FaPlus } from "react-icons/fa";
+import { log } from "three/webgpu";
 
 function ProfileDocument() {
   const { id } = useParams(); // Extract the engineer ID from the URL
@@ -10,7 +11,7 @@ function ProfileDocument() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [engineerData, setEngineerData] = useState(null); // State for engineer data
-  const [certifications, setCertifications] = useState([]);
+  const [documents, setdocuments] = useState([]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -37,6 +38,7 @@ function ProfileDocument() {
       });
       alert("Card added successfully!");
       toggleModal();
+      console.log("added successfylly");
 
       // Fetch engineer data after successfully adding the document
       fetchEngineerData();
@@ -58,7 +60,7 @@ function ProfileDocument() {
         }
       );
 
-      setEngineerData(response.data); // Set the fetched engineer data
+      setEngineerData(response.data.data.engineer); // Store the engineer data
       console.log("Engineer data:", response.data); // Optional: log the data
     } catch (error) {
       console.log("Error fetching engineer data:", error);
@@ -74,8 +76,8 @@ function ProfileDocument() {
 
   return (
     <div>
-      <div className="flex justify-between items-start p-4 border rounded-lg border-gray-300 bg-white">
-        <div className="flex flex-col w-1/2">
+      <div className="flex  justify-between items-start p-4 border rounded-lg border-gray-300 bg-white">
+        <div className="flex flex-col ">
           <div className="flex items-center justify-start">
             <h2 className="text-lg font-semibold">Engineer's syndicate card</h2>
             <button
@@ -85,26 +87,35 @@ function ProfileDocument() {
               <FaPen />
             </button>
           </div>
-          {/* Display Syndicate card */}
-          <div className="mt-2">
-            {certifications.length > 0 ? (
-              <ul>
-                {certifications.map((cert, index) => (
-                  <li key={index} className="mb-2">
-                    <span className="text-gray-600">{cert.name}</span>
-                    <a
-                      href={`http://localhost:8000/uploads/${cert.file}`}
-                      className="text-blue-500 ml-2"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View syndicate card
-                    </a>
-                  </li>
-                ))}
-              </ul>
+          <div className="mt-2 flex w-full ">
+            {engineerData ? (
+              engineerData.verificationDocument ? (
+                <p className="cursor-pointer">
+                  Verification Document: {engineerData.verificationDocument}
+                </p>
+              ) : (
+                <p>No Card available...</p>
+              )
             ) : (
-              <p>No cards available</p>
+              <p>Loading...</p> // Show loading state until engineerData is fetched
+            )}
+
+            {engineerData ? (
+              engineerData.verificationDocument ? (
+                engineerData.verifiedStatus === "pending" ? (
+                  <p className="ms-5 text-amber-600 cursor-pointer">
+                    Wait for admin approval
+                  </p>
+                ) : engineerData.verifiedStatus === "rejected" ? (
+                  <p className="ms-5 text-red-600">
+                    The document is rejected. Please update again.
+                  </p>
+                ) : (
+                  <p className="ms-5 text-green-600">Document approved!</p>
+                )
+              ) : null // Do nothing if no verification document
+            ) : (
+              <p>Loading...</p> // Show loading state until engineerData is fetched
             )}
           </div>
         </div>
@@ -118,7 +129,7 @@ function ProfileDocument() {
           <div className="relative p-4 w-full max-w-md max-h-full bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Add your certificates
+                Add your Identity
               </h3>
               <button
                 onClick={toggleModal}
