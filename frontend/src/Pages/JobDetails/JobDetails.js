@@ -1,9 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-
+import { fetchServiceById } from "../../redux/slices/jobSlice";
+import moment from "moment";
 function JobDetail() {
   const params = useParams(); //--> func
+  const { id } = useParams(); //--> func
+  const dispatch = useDispatch();
+  const { selectedJob, status } = useSelector((state) => state.job);
   const location = useLocation();
   const { title, description, budget } = location.state || {};
   // console.log(params.id);
@@ -52,6 +58,19 @@ function JobDetail() {
     setEngBudget("");
     setShowForm(false);
   };
+  console.log(selectedJob);
+  useEffect(() => {
+    dispatch(fetchServiceById(id));
+  }, [dispatch, id]);
+
+  const postedTimeAgo = moment(selectedJob?.createdAt).fromNow();
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (!selectedJob) {
+    return <div>Job not found</div>;
+  }
 
   return (
     <div className="grid bg-slate-50 rounded-lg grid-cols-1 sm:grid-cols-3 gap-6 m-16">
@@ -59,23 +78,22 @@ function JobDetail() {
         <div className="propsal-form flex justify-center items-center z-20 fixed inset-0 bg-black bg-opacity-30">
           <div className="form w-1/2 h-4/5 shadow-md drop-shadow shadow-amber-700 border border-amber-500 bg-slate-50 rounded-lg p-10">
             <div className="proposal-ad w-full bg-slate-100  p-4">
-              Trust in your abilities, stay confident, and show them why you're
-              the perfect fit.{" "}
+              {selectedJob.title}
               <span className="text-amber-500">Best of luck!</span>
             </div>
             <div className="client-engineer-budget mt-4 flex justify-between">
-              <p className="text-sm text-gray-600">
+              {/* <p className="text-sm text-gray-600">
                 Your Profile Rate: $5.00/hr
-              </p>
+              </p> */}
               <p className="text-sm text-gray-600">
-                Client budget: {budget}/hr
+                Client budget: {selectedJob.budget}
               </p>
             </div>
             <div className="engineer-job-hourly-rate mt-4 flex justify-between">
               <div className="rate-desscription">
-                <p className="font-medium text-lg">Hourly Rate</p>
+                <p className="font-medium text-lg">fixed price</p>
                 <p className="text-[0.8rem] font-medium text-gray-500">
-                  The total amount that the client will see in your proposal
+                  {selectedJob.description}{" "}
                 </p>
               </div>
               <div className="engineer-amount">
@@ -126,10 +144,10 @@ function JobDetail() {
 
       <div className="col-span-2 p-8">
         <h1 className="job-title text-2xl text-amber-600 font-bold mb-4">
-          {title}
+          {selectedJob.title}
         </h1>
 
-        <p className="text-gray-600">Posted 8 minutes ago</p>
+        <p className="text-gray-600">Posted {postedTimeAgo}</p>
         <span className="flex gap-2 mb-4">
           <svg
             className="w-6 h-6 text-gray-800 dark:text-white"
@@ -162,17 +180,19 @@ function JobDetail() {
         </span>
         {/* hr */}
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <p className="job-description mb-4">{description}</p>
+        <p className="job-description mb-4">{selectedJob.description}</p>
 
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Budget:</span>
-          <span className="job-budget text-amber-400">{budget}</span>
+          <span className="job-budget text-amber-400">
+            {selectedJob.budget}
+          </span>
         </div>
         {/* hr */}
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Experience Level:</span>
-          <span>Intermediate</span>
+          <span>{selectedJob.level}</span>
         </div>
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Project Type:</span>
@@ -182,7 +202,7 @@ function JobDetail() {
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className="mt-8">
           <h2 className="font-bold text-lg">Skills and Expertise</h2>
-          <p className="mt-2">JavaScript</p>
+          <p className="mt-2">{selectedJob.skills}</p>
         </div>
       </div>
 

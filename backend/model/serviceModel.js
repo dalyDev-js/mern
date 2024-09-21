@@ -50,6 +50,9 @@ const serviceSchema = mongoose.Schema(
     completedAt: {
       type: Date,
     },
+    createdAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

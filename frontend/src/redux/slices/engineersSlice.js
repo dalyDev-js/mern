@@ -10,7 +10,7 @@ export const fetchAllEngineers = createAsyncThunk(
   "engineerlist/fetchAllEngineers",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/v1/engineers/getAllEngineers");
+      const response = await axios.get("api/v1/engineer/all");
       console.log(response);
       return response.data.data.engineers;
     } catch (error) {
@@ -21,31 +21,33 @@ export const fetchAllEngineers = createAsyncThunk(
   }
 );
 
-// Async thunk to post a new engineer
-export const postEngineer = createAsyncThunk(
-  "engineerlist/postEngineer",
-  async (engineerData, { rejectWithValue }) => {
+// Async thunk to fetch engineer details by ID
+export const fetchEngineerById = createAsyncThunk(
+  "engineerlist/fetchEngineerById",
+  async (engineerId, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/v1/engineers", engineerData);
-      return response.data;
+      const response = await axios.get(`/api/v1/engineer/${engineerId}`);
+      console.log(response);
+
+      return response.data.data.engineer; // Assuming the response structure
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
     }
   }
 );
-
-// Async thunk to fetch engineers by client or specific criteria
-export const fetchMyEngineers = createAsyncThunk(
-  "engineerlist/fetchMyEngineers",
-  async (_, { rejectWithValue }) => {
+// update engineer details
+export const updateEngineerName = createAsyncThunk(
+  "engineerlist/updateEngineerName",
+  async ({ engineerId, fullName }, { rejectWithValue }) => {
     try {
-      const hardcodedClientId = "66e6fb684b5878794bcadf9b";
-      const response = await axios.post("/api/v1/engineers/my-engineers", {
-        clientId: hardcodedClientId,
-      });
-      return response.data.data.engineers;
+      const response = await axios.put(
+        `/api/v1/engineer/updateEngineer/${engineerId}`,
+        { fullName }
+      );
+      return response.data.data.engineer;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(
         error.response ? error.response.data : "Unknown error"
       );
@@ -53,27 +55,21 @@ export const fetchMyEngineers = createAsyncThunk(
   }
 );
 
-// Async thunk to delete an engineer
-export const deleteEngineer = createAsyncThunk(
-  "engineerlist/deleteEngineer",
-  async (engineerId, { rejectWithValue }) => {
+export const updateEngineerProfilePic = createAsyncThunk(
+  "engineerlist/updateEngineerProfilePic",
+  async ({ engineerId, profilePic }, { rejectWithValue }) => {
     try {
-      await axios.delete(`/api/v1/engineers/${engineerId}`);
-      return engineerId; // Return the engineer ID to remove it from the state
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+      const formData = new FormData();
+      formData.append("profilePic", profilePic);
 
-//  ///////////////////// engineer details   /////////////////////
-// Async thunk to fetch engineer details by ID
-export const fetchEngineerById = createAsyncThunk(
-  "engineerlist/fetchEngineerById",
-  async (engineerId, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`/api/v1/engineers/${engineerId}`);
-      return response.data.data.engineer; // Assuming the response structure
+      const response = await axios.put(
+        `/api/v1/engineer/updateEngineer/${engineerId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return response.data.data.engineer;
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : "Unknown error"
@@ -113,7 +109,7 @@ const engineerSlice = createSlice({
         state.error = action.payload;
         state.status = "failed";
       })
-      //////////////////////// engineer by ID ////////////////////////////////
+
       // Fetch engineer by ID
       .addCase(fetchEngineerById.pending, (state) => {
         state.status = "loading";
@@ -123,44 +119,6 @@ const engineerSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(fetchEngineerById.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      })
-      // Post a new engineer
-      .addCase(postEngineer.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(postEngineer.fulfilled, (state, action) => {
-        state.engineers.push(action.payload);
-        state.status = "succeeded";
-      })
-      .addCase(postEngineer.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      })
-      // Fetch engineers based on client or specific criteria
-      .addCase(fetchMyEngineers.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchMyEngineers.fulfilled, (state, action) => {
-        state.engineers = action.payload;
-        state.status = "succeeded";
-      })
-      .addCase(fetchMyEngineers.rejected, (state, action) => {
-        state.error = action.payload;
-        state.status = "failed";
-      })
-      // Delete an engineer
-      .addCase(deleteEngineer.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(deleteEngineer.fulfilled, (state, action) => {
-        state.engineers = state.engineers.filter(
-          (engineer) => engineer._id !== action.payload
-        );
-        state.status = "succeeded";
-      })
-      .addCase(deleteEngineer.rejected, (state, action) => {
         state.error = action.payload;
         state.status = "failed";
       });

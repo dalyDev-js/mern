@@ -7,10 +7,10 @@ import Slider from "../../Components/Slider";
 import Category from "../../Components/Category";
 import Support from "../../Components/Support";
 const Home = () => {
+  const isLoggedIn = localStorage.getItem("Token");
   return (
     <>
-      <GetStarted />
-
+      {!isLoggedIn && <GetStarted />}
       <SectionMain />
       <Slider />
       <Category />

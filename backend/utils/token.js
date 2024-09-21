@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
 
-export const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+export const generateToken = (id, fullName, role) => {
+  return jwt.sign({ id, fullName, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES,
   });
 };

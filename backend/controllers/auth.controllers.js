@@ -6,12 +6,36 @@ import { sendResponse } from "../utils/responseHandler.js";
 import AppError from "../utils/appError.js";
 import sendEmail from "../utils/email.js";
 import crypto from "crypto";
+import { Engineer } from "../model/engineerModel.js";
 
 export const signup = catchAsync(async (req, res, next) => {
+  // Step 1: Create the user
   const newUser = await createUser(req.body);
+
+  let engineer = null;
+  if (newUser.role === "engineer") {
+    engineer = await Engineer.create({
+      user: newUser._id, // Link engineer with the user
+      title: req.body.title || "Engineer", // You can set other fields as needed
+      education: req.body.education || {
+        title: "Degree Title",
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+      overview: req.body.overview || "An engineer overview",
+      skills: req.body.skills || [],
+      profilePic: req.body.profilePic || "", // Set profilePic if available
+    });
+  }
+
+  // Step 3: Generate JWT token
   const token = generateToken(newUser._id);
+
+  // Step 4: Set token in cookie
   setTokenInCookie(token, res);
-  sendResponse(res, 201, token, newUser);
+
+  // Step 5: Send response including the user and engineer data (if engineer)
+  sendResponse(res, 201, token, { user: newUser, engineer });
 });
 
 export const login = catchAsync(async (req, res, next) => {
@@ -26,7 +50,7 @@ export const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorrect email or password", 401));
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id, user.fullName, user.role);
   setTokenInCookie(token, res);
   sendResponse(res, 200, token, user);
 });

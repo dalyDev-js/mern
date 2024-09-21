@@ -5,6 +5,7 @@ import {
   getAllServices,
   getAllServicesByClient,
   getService,
+  getServiceById,
   updateService,
 } from "../controllers/serviceController.js";
 import { protect } from "../middleware/protectRoute.js";
@@ -16,6 +17,10 @@ router.route("/").get(getAllServices).post(createService);
 //by client
 router.route("/my-jobs").post(getAllServicesByClient);
 
-router.route("/:id").get(getService).patch(updateService).delete(deleteService);
+router
+  .route("/:id")
+  .get(getServiceById)
+  .patch(updateService)
+  .delete(deleteService);
 
 export default router;

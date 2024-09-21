@@ -17,7 +17,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3001", "http://localhost:4200"],
     credentials: true,
   })
 );
@@ -36,7 +36,7 @@ app.use("/api/v1/engineer", engineerRouters);
 app.use("/api/v1/vdocuments", documentRouter);
 
 app.all("*", (req, res, next) => {
-  next(new AppError(`con't find ${req.originalUrl}`, 404));
+  next(new AppError(`can't find ${req.originalUrl}`, 404));
 });
 
 app.use(globalErrorHandler);

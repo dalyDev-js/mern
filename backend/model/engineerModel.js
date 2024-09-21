@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const engineerSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User", // This creates a relationship between Engineer and User models
     required: true,
   },
   title: {
@@ -36,6 +36,9 @@ const engineerSchema = new mongoose.Schema({
     type: String,
     default: null,
     required: false,
+  },
+  profilePic: {
+    type: String,
   },
 
   verifiedStatus: {

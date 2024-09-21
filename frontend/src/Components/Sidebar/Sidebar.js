@@ -1,12 +1,39 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux"; // Import from react-redux
 import { Accordion } from "flowbite-react";
+import { jwtDecode } from "jwt-decode";
+import { fetchEngineerById } from "../../redux/slices/engineersSlice";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
   const [expanded, setExpanded] = useState(true);
+  const dispatch = useDispatch();
+  const [userId, setUserId] = useState(null);
+  // Access selected engineer from Redux state
+  const selectedEngineer = useSelector(
+    (state) => state.engineerlist.selectedEngineer
+  );
+  console.log(selectedEngineer);
+
+  console.log(selectedEngineer);
+  const [fullName, setFullName] = useState("");
 
   useEffect(() => {
+    // Handle dynamic name from token
+    const token = localStorage.getItem("Token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      setFullName(decodedToken.fullName); // Set full name from token
+      setUserId(decodedToken.id);
+
+      // Dispatch fetchEngineerById to populate the selectedEngineer state
+
+      dispatch(fetchEngineerById(userId));
+      console.log();
+    }
+
     const handleResize = () => {
       if (window.innerWidth < 1024) {
         setExpanded(false);
@@ -16,57 +43,61 @@ function Sidebar() {
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Check initial screen size
-    handleResize();
+    handleResize(); // Check initial screen size
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [dispatch, userId]);
 
   return (
     <>
       {expanded && (
         <>
-          <div class=" w-full p-4  bg-white   rounded-lg   ">
-            <div class="p-4  bg-gray-100   rounded-lg   mb-6 ">
-              <div class="flex flex-col  mb-6 ">
-                <div class="flex justify-start gap-3 mb-1">
+          <div className="w-full p-4 bg-white rounded-lg">
+            <div className="p-4 bg-gray-100 rounded-lg mb-6">
+              <div className="flex flex-col mb-6">
+                <div className="flex justify-start gap-3 mb-1">
                   <img
-                    className=" w-16 h-16 mb-2 rounded-full shadow-lg"
-                    src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                    alt="imaage"
+                    className="w-16 h-16 mb-2 rounded-full shadow-lg"
+                    // Use engineer.profilePic if available, else fallback to Link placeholder
+                    src={
+                      selectedEngineer?.user?.profilePic ||
+                      "https://via.placeholder.com/150"
+                    }
+                    alt="Profile"
                   />
-                  <div class="flex flex-col  mb-6 ">
-                    <a
-                      href="#"
-                      class="mb-1 text-xl font-medium underline text-gray-900 "
+                  <div className="flex flex-col mb-6">
+                    <Link
+                      to={`/profile/${userId}`}
+                      className="mb-1 text-xl font-medium underline text-gray-900"
                     >
-                      Bonnie Green
-                    </a>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                      Visual Designer
+                      {fullName}
+                    </Link>
+                    {/* Display engineer title */}
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {selectedEngineer?.title || "Engineer"}
                     </span>
                   </div>
                 </div>
-                <a
+                <Link
                   href="#"
-                  class="text-xs text-amber-400 underline  hover:no-underline"
+                  className="text-xs text-amber-400 underline hover:no-underline"
                 >
                   Complete your profile
-                </a>
-                <div className="text-xs text-right text-amber-400  ">45%</div>
-                <div class="w-full bg-gray-200 rounded-full h-2.5 ">
+                </Link>
+                <div className="text-xs text-right text-amber-400">45%</div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    class="bg-amber-400 h-2.5 rounded-full"
+                    className="bg-amber-400 h-2.5 rounded-full"
                     style={{ width: "45%" }}
                   ></div>
                 </div>
               </div>
             </div>
-            {/* dropdown  dark:border-gray-700*/}
-            <div class="p-4  bg-gray-100  rounded-lg shadow   mb-6">
+
+            {/* Other Sidebar content */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow mb-6">
               <Accordion>
                 <Accordion.Panel>
                   <Accordion.Title className="p-3">
@@ -74,16 +105,13 @@ function Sidebar() {
                   </Accordion.Title>
                   <Accordion.Content>
                     <span className="flex gap-16 hover:underline">
-                      <p className="mb-2  text-gray-1000 ">
-                        Availability badge
-                      </p>
-                      <a
+                      <p className="mb-2 text-gray-1000">Availability badge</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -92,25 +120,22 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
                     <span className="flex gap-16 hover:underline">
-                      <p className="text-gray-1000  dark:text-gray-500">
-                        Boost your profile
-                      </p>
-                      <a
+                      <p className="text-gray-1000">Boost your profile</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -119,13 +144,13 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
                   </Accordion.Content>
                 </Accordion.Panel>
@@ -134,41 +159,37 @@ function Sidebar() {
                 <Accordion.Panel>
                   <Accordion.Title className="p-3">Connects</Accordion.Title>
                   <Accordion.Content>
-                    <p className="mb-2 text-gray-1000 dark:text-gray-500">
-                      Available: 0
-                    </p>
-                    <span className="flex gap-2 ">
-                      <a
-                        href="https://flowbite.com/figma/"
-                        className="text-xs text-amber-400 underline "
+                    <p className="mb-2 text-gray-1000">Available: 0</p>
+                    <span className="flex gap-2">
+                      <Link
+                        href="#"
+                        className="text-xs text-amber-400 underline"
                       >
                         View details
-                      </a>
+                      </Link>
                       <span>|</span>
-                      <a
-                        href="https://flowbite.com/figma/"
-                        className="text-xs text-amber-400 underline "
+                      <Link
+                        href="#"
+                        className="text-xs text-amber-400 underline"
                       >
                         Buy Connects
-                      </a>
+                      </Link>
                     </span>
                   </Accordion.Content>
                 </Accordion.Panel>
+
                 <hr />
                 <Accordion.Panel>
                   <Accordion.Title className="p-3">Preferences</Accordion.Title>
                   <Accordion.Content>
                     <span className="flex gap-16 hover:underline">
-                      <p className="text-gray-1000 dark:text-gray-500">
-                        Hours per week
-                      </p>
-                      <a
+                      <p className="text-gray-1000">Hours per week</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -177,26 +198,23 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
-                    <p className="text-xs mb-2 ">More than 30 hrs/week</p>
+                    <p className="text-xs mb-2">More than 30 hrs/week</p>
                     <span className="flex gap-16 hover:underline">
-                      <p className="text-gray-1000 dark:text-gray-500">
-                        Profile Visibility
-                      </p>
-                      <a
+                      <p className="text-gray-1000">Profile Visibility</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -205,27 +223,24 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
                     <p className="text-xs mb-2">Public</p>
 
                     <span className="flex gap-16 hover:underline">
-                      <p className="text-gray-1000 dark:text-gray-500">
-                        Job Preference
-                      </p>
-                      <a
+                      <p className="text-gray-1000">Job Preference</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -234,27 +249,24 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
                     <p className="text-xs mb-2">No preference set</p>
 
-                    <span className="flex gap-16 ">
-                      <p className="text-gray-1000 dark:text-gray-500">
-                        My Categories
-                      </p>
-                      <a
+                    <span className="flex gap-16">
+                      <p className="text-gray-1000">My Categories</p>
+                      <Link
                         href="#"
-                        class=" text-base text-amber-400 underline  hover:no-underline"
+                        className="text-base text-amber-400 underline hover:no-underline"
                       >
                         <svg
-                          class="w-4 h-4 text-amber-400 underline  hover:no-underline"
-                          aria-hidden="true"
+                          className="w-4 h-4 text-amber-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
@@ -263,31 +275,30 @@ function Sidebar() {
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </span>
                     <ul className="list-none pl-2">
                       <li>
-                        <a
+                        <Link
                           href="#"
-                          className="text-xs text-amber-400 underline "
+                          className="text-xs text-amber-400 underline"
                         >
                           Web & Mobile Design
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
+                        <Link
                           href="#"
-                          rel="nofollow"
-                          className="text-xs text-amber-400 underline "
+                          className="text-xs text-amber-400 underline"
                         >
                           Web Development
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </Accordion.Content>
@@ -297,210 +308,37 @@ function Sidebar() {
                 <Accordion.Panel>
                   <Accordion.Title className="p-3">Proposals</Accordion.Title>
                   <Accordion.Content>
-                    <a
-                      href="https://flowbite.com/figma/"
-                      className="text-xs text-amber-400 underline "
-                    >
+                    <Link href="#" className="text-xs text-amber-400 underline">
                       My Proposals
-                    </a>
+                    </Link>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                      Looking for work? Browse jobs and get started on a
+                      Looking for work? Browse jobs and get started on Link
                       proposal.
                     </p>
                   </Accordion.Content>
                 </Accordion.Panel>
-                <hr />
 
+                <hr />
                 <Accordion.Panel>
                   <Accordion.Title className="p-3">
                     Project Catalog
                   </Accordion.Title>
                   <Accordion.Content>
-                    <a
-                      href="https://flowbite.com/figma/"
-                      className="text-xs text-amber-400 underline "
-                    >
+                    <Link href="#" className="text-xs text-amber-400 underline">
                       My Project Dashboard
-                    </a>
-                    <p className="mb-2 text-xs  text-gray-500 dark:text-gray-400">
-                      <a
-                        href="https://flowbite.com/figma/"
-                        className="text-xs  text-amber-400 underline "
+                    </Link>
+                    <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+                      <Link
+                        href="#"
+                        className="text-xs text-amber-400 underline"
                       >
-                        Create a Catalog project
-                      </a>
-                      for clients to purchase instantly
+                        Create Link Catalog project
+                      </Link>{" "}
+                      for clients to purchase instantly.
                     </p>
                   </Accordion.Content>
                 </Accordion.Panel>
               </Accordion>
-            </div>
-            {/* certificat */}
-            <div class="p-4  bg-gray-100  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
-              {/* icon */}
-              <span className="flex gap-2">
-                <svg
-                  class=" mb-1 w-6 h-6 text-gray-800 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill="currentColor"
-                    d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
-                  />
-                  <path
-                    fill="#fff"
-                    d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"
-                  />
-                </svg>
-                {/* text */}
-
-                <p class="text-gray-500 dark:text-gray-400">
-                  Stand out with an Upwork Certification!
-                  <a
-                    href="#"
-                    class=" text-base text-amber-400 underline  hover:no-underline"
-                  >
-                    Get Started
-                  </a>
-                </p>
-              </span>
-            </div>
-
-            {/* Links */}
-            <div class="p-4  bg-gray-100 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6 ">
-              <a
-                href="#"
-                className="text-sm text-amber-400 underline flex items-center"
-              >
-                Upwork Academy
-                <span className="ml-1" aria-hidden="true">
-                  {/* icon */}
-                  <svg
-                    class="w-4 h-4 text-amber-400 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
-                    />
-                  </svg>
-                </span>
-              </a>
-              <a
-                href="#"
-                className="text-sm text-amber-400 underline flex items-center"
-              >
-                Direct Contracts
-                <span className="ml-1" aria-hidden="true">
-                  {/* icon */}
-                  <svg
-                    class="w-4 h-4 text-amber-400 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
-                    />
-                  </svg>
-                </span>
-              </a>
-              <a
-                href="#"
-                className="text-sm text-amber-400 underline flex items-center"
-              >
-                Get Paid
-                <span className="ml-1" aria-hidden="true">
-                  {/* icon */}
-                  <svg
-                    class="w-4 h-4 text-amber-400 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
-                    />
-                  </svg>
-                </span>
-              </a>
-              <a
-                href="#"
-                className="text-sm text-amber-400 underline flex items-center"
-              >
-                Community & Forums
-                <span className="ml-1" aria-hidden="true">
-                  {/* icon */}
-                  <svg
-                    class="w-4 h-4 text-amber-400 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
-                    />
-                  </svg>
-                </span>
-              </a>
-              <a
-                href="#"
-                className="text-sm text-amber-400 underline flex items-center"
-              >
-                Help Center
-                <span className="ml-1" aria-hidden="true">
-                  {/* icon */}
-                  <svg
-                    class="w-4 h-4 text-amber-400 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
-                    />
-                  </svg>
-                </span>
-              </a>
             </div>
           </div>
         </>

@@ -30,6 +30,20 @@ export const postJob = createAsyncThunk(
   }
 );
 
+export const fetchServiceById = createAsyncThunk(
+  "job/fetchServiceById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/v1/services/${id}`);
+      return response.data.data.service;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+
 // Async thunk to fetch jobs by client
 export const fetchMyJobs = createAsyncThunk(
   "job/fetchMyJobs",
@@ -54,6 +68,7 @@ export const deleteJob = createAsyncThunk(
   async (jobId, { rejectWithValue }) => {
     try {
       await axios.delete(`/api/v1/services/${jobId}`);
+      console.log(jobId);
       return jobId; // Return the job ID to remove it from the state
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -120,6 +135,17 @@ const jobSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(deleteJob.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "failed";
+      })
+      .addCase(fetchServiceById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchServiceById.fulfilled, (state, action) => {
+        state.selectedJob = action.payload;
+        state.status = "succeeded";
+      })
+      .addCase(fetchServiceById.rejected, (state, action) => {
         state.error = action.payload;
         state.status = "failed";
       });

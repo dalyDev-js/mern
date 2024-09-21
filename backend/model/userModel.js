@@ -20,10 +20,17 @@ const userSchema = mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please Provide a valid email"],
   },
+  docID: {
+    type: String,
+  },
+  verifiedStatus: {
+    type: ["pending", "rejected", "accepted"],
+    default: "pending",
+  },
   gender: {
     type: String,
     required: [true, "Please Prodive your gender!"],
-    enum: ["male", "female", "gay"],
+    enum: ["male", "female"],
   },
   profilePic: {
     type: String,

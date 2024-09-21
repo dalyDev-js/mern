@@ -15,11 +15,9 @@ export default function GetStarted() {
 
   const handleSignup = () => {
     if (isFreelancer) {
-      navigate("/signup?role=freelancer");
-      navigate("/register");
+      navigate("/signup-engineer"); // Navigate to signup-engineer if freelancer
     } else {
-      navigate("/signup?role=client");
-      navigate("/register");
+      navigate("/signup-client"); // Navigate to signup-client if client
     }
   };
 
@@ -36,8 +34,7 @@ export default function GetStarted() {
                 ? "bg-green-50 border-black-600 text-green-600"
                 : "bg-white border-gray-300 text-gray-700"
             }`}
-            onClick={handleClientClick}
-          >
+            onClick={handleClientClick}>
             I'm a client, hiring for a project
           </button>
           <button
@@ -46,16 +43,14 @@ export default function GetStarted() {
                 ? "bg-green-50 border-yellow-300 text-black-600"
                 : "bg-white border-gray-300 text-gray-700"
             }`}
-            onClick={handleFreelancerClick}
-          >
+            onClick={handleFreelancerClick}>
             I'm a freelancer, looking for work
           </button>
         </div>
 
         <button
           className="bg-yellow-300 text-white py-3 px-8 rounded-lg w-full sm:w-auto"
-          onClick={handleSignup}
-        >
+          onClick={handleSignup}>
           {isFreelancer ? "Apply as a Freelancer" : "Apply as a Client"}
         </button>
 

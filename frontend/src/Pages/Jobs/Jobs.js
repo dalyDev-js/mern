@@ -14,7 +14,12 @@ export function JobList() {
   // Dispatch the fetchAllServices thunk when the component mounts
   useEffect(() => {
     dispatch(fetchAllServices());
+    console.log("Fetched jobs after fetchAllServices:", jobs);
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log("Updated jobs in state:", jobs);
+  }, [jobs]);
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -23,12 +28,14 @@ export function JobList() {
       {status === "succeeded" &&
         jobs.map((job, index) => (
           <JobCard
-            key={index}
+            key={job._id}
+            jobId={job._id}
             title={job.title}
             budget={job.budget}
             skills={job.skills}
             description={job.description}
             level={job.level}
+            createdAt={job.createdAt} // Pass createdAt to JobCard
           />
         ))}
     </div>

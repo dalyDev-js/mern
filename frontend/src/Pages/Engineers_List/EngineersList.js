@@ -10,6 +10,7 @@ function EngineersList() {
   const { engineers, status, error } = useSelector(
     (state) => state.engineerlist
   );
+  // console.log(engineers.map((engineer) => engineer._id));
 
   // Fetch all engineers when the component mounts
   useEffect(() => {
@@ -45,27 +46,23 @@ function EngineersList() {
           {engineers.map((engineer, index) => (
             <div
               key={index}
-              className="border rounded-lg pb-5 p-3 flex flex-col items-center text-center shadow-sm relative">
+              className="border rounded-lg pb-5 p-3 flex flex-col items-center text-center shadow-sm relative"
+            >
               {/* Engineer Rate  */}
               <p className="absolute text-gray-600 top-4 right-2 text-sm px-2 py-1 ">
                 {engineer.rate}
               </p>
-
               <br></br>
-
               {/* Engineer Image */}
               <img
                 src={engineer.imgSrc}
                 alt={engineer.name}
                 className="w-24 h-24 rounded-full"
               />
-
               {/* Engineer Name */}
               <h2 className="text-l mt-1 ">{engineer.name}</h2>
-
               {/* Role */}
               <p className="text-gray-500 text-xs">{engineer.role}</p>
-
               {/* Rating */}
               <p className="text-xs mt-3 text-gray-600 flex items-center">
                 <span className="ml-1" aria-hidden="true">
@@ -77,17 +74,18 @@ function EngineersList() {
                     width="24"
                     height="24"
                     fill="currentColor"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                   </svg>
                 </span>
                 {engineer.rating} ({engineer.jobs})
               </p>
-
               {/* Prospect List */}
               <a
                 href="#"
-                className="text-xs text-gray-700  bg-gray-100 rounded-full px-1 py-1 pr-2 mt-2 flex items-center">
+                className="text-xs text-gray-700  bg-gray-100 rounded-full px-1 py-1 pr-2 mt-2 flex items-center"
+              >
                 <span className="ml-1" aria-hidden="true">
                   <svg
                     className="w-4 h-4 text-gray-600"
@@ -96,7 +94,8 @@ function EngineersList() {
                     width="24"
                     height="24"
                     fill="currentColor"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M11 9a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z" />
                     <path
                       fillRule="evenodd"
@@ -108,22 +107,22 @@ function EngineersList() {
                 </span>
                 Prospect List
               </a>
-
               {/* Skills */}
               <div className="mt-2">
                 {engineer.skills.map((skill, skillIndex) => (
                   <span
                     key={skillIndex}
-                    className="flex gap-2 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full ">
+                    className="flex gap-2 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full "
+                  >
                     {skill}
                   </span>
                 ))}
               </div>
-
               {/* See More Button */}
               <button className="text-xs mt-4 bg-amber-300 text-white px-3 py-1 rounded-md hover:bg-amber-400">
-                <Link to={"/engineer-details"}>See more</Link>
+                <Link to={`/engineer-details/${engineer._id}`}>See more</Link>
               </button>
+              {/* console.log({`id:${engineer._id}`}); */}
             </div>
           ))}
         </div>
