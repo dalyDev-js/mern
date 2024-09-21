@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
+import paymentRouter from "./routes/payment.routes.js";
 const app = express();
 
 app.use(
@@ -31,6 +32,7 @@ app.use("/api/v1/experiences", experienceRouter);
 app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/engineer", engineerRouters);
+app.use("/api/vi/payment", paymentRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`con't find ${req.originalUrl}`, 404));

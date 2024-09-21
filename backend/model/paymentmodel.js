@@ -1,25 +1,49 @@
+import mongoose from 'mongoose';
+
 const paymentSchema = new mongoose.Schema({
-  contract: {
+  clientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Contract",
-    required: true,
+    ref: 'User', 
+    required: [true, 'A payment must belong to a client'],
+  },
+  engineerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Engineer', 
+    required: [true, 'A payment must belong to an engineer'],
+  },
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project', 
+    required: [true, 'A payment must belong to a project'],
   },
   amount: {
     type: Number,
-    required: true,
-    min: 0,
+    required: [true, 'A payment must have an amount'],
   },
-  paymentDate: {
-    type: Date,
-    required: true,
-  },
-  paymentMethod: {
+  currency: {
     type: String,
-    required: true,
+    enum: ['usd', 'eur', 'gbp'], 
+    required: [true, 'A payment must have a currency'],
+  },
+  paymentIntentId: {
+    type: String,
+    required: [true, 'A payment must have a Stripe paymentIntentId'],
   },
   status: {
     type: String,
-    required: true,
-    enum: ["pending", "paid", "failed"],
+    enum: ['succeeded', 'pending', 'failed'],
+    default: 'pending',
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  description: {
+    type: String,
   },
 });
+
+// Create the Payment model
+const Payment = mongoose.model('Payment', paymentSchema);
+
+export default Payment;

@@ -1,13 +1,17 @@
 import app from "./app.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import express from "express";
 
 dotenv.config({ path: "./config.env" });
 
+const router = express.Router();
+
 const DB = process.env.DATABASE.replace(
-  "<PASSWORD>",
+  "<PASSWORD>", 
   process.env.DATABASE_PASSWORD
 );
+
 
 mongoose.connect(DB).then(() => {
   console.log("DB connection successfull!");
