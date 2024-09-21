@@ -11,11 +11,8 @@ import cookieParser from "cookie-parser";
 import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
-
 import paymentRouter from "./routes/paymnet.routes.js";
-
 import verifyRouter from "./routes/requestVerification.js";
-
 const app = express();
 
 app.use(
