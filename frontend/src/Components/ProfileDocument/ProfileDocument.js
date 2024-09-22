@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaPen, FaPlus } from "react-icons/fa";
 import { log } from "three/webgpu";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProfileDocument() {
   const { id } = useParams(); // Extract the engineer ID from the URL
@@ -36,7 +37,9 @@ function ProfileDocument() {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("Card added successfully!");
+      // alert("Card added successfully!");
+      toast.success("Card added successfully!");
+
       toggleModal();
       console.log("added successfylly");
 
@@ -44,7 +47,8 @@ function ProfileDocument() {
       fetchEngineerData();
     } catch (error) {
       console.log("Error adding card:", error);
-      alert("Failed to add card.");
+      // alert("Failed to add card.");
+      toast.error("Failed to add card.");
     }
   };
 
@@ -76,6 +80,7 @@ function ProfileDocument() {
 
   return (
     <div>
+      <Toaster />
       <div className="flex  justify-between items-start p-4 border rounded-lg border-gray-300 bg-white">
         <div className="flex flex-col ">
           <div className="flex items-center justify-start">
