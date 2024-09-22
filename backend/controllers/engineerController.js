@@ -137,30 +137,81 @@ const addEducation = catchAsync(async (req, res, next) => {
 });
 
 // Save a service (job) to an engineer's saved jobs
-const saveJob = catchAsync(async (req, res, next) => {
-  const { engineerId, serviceId } = req.body; // Engineer ID and Service ID from the request body
+const saveJob = async (req, res, next) => {
+  try {
+    const { engineerId, serviceId } = req.body; // Extract both engineerId and serviceId from the request body
 
-  if (!engineerId || !serviceId) {
-    return res.status(400).json({
-      status: "fail",
-      message: "Engineer ID and Service ID are required.",
+    if (!serviceId || !engineerId) {
+      return res
+        .status(400)
+        .json({ message: "Service ID and Engineer ID are required." });
+    }
+
+    // Find the engineer by their ID
+    const engineer = await Engineer.findById(engineerId);
+    if (!engineer) {
+      return res.status(404).json({ message: "Engineer not found." });
+    }
+
+    // Check if the job is already saved
+    const alreadySaved = engineer.savedJobs.find(
+      (job) => job.service.toString() === serviceId
+    );
+
+    if (alreadySaved) {
+      return res.status(400).json({ message: "Job already saved." });
+    }
+
+    // Save the job
+    engineer.savedJobs.push({ service: serviceId });
+    await engineer.save();
+
+    res.status(200).json({
+      message: "Job saved successfully",
+      savedJobs: engineer.savedJobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
     });
   }
+};
 
-  // Add the service to the saved jobs array
-  const updatedEngineer = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { $addToSet: { savedJobs: serviceId } }, // Prevents duplicates
-    { new: true }
-  ).populate("savedJobs"); // Populates saved service details if necessary
+export const removeSavedJob = async (req, res, next) => {
+  try {
+    const { engineerId, serviceId } = req.body; // Extract both engineerId and serviceId from the request body
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      engineer: updatedEngineer,
-    },
-  });
-});
+    if (!serviceId || !engineerId) {
+      return res
+        .status(400)
+        .json({ message: "Service ID and Engineer ID are required." });
+    }
+
+    // Find the engineer by their ID
+    const engineer = await Engineer.findById(engineerId);
+    if (!engineer) {
+      return res.status(404).json({ message: "Engineer not found." });
+    }
+
+    // Remove the job from saved jobs
+    engineer.savedJobs = engineer.savedJobs.filter(
+      (job) => job.service.toString() !== serviceId
+    );
+
+    await engineer.save();
+
+    res.status(200).json({
+      message: "Job removed successfully",
+      savedJobs: engineer.savedJobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
 
 // Get all saved services (jobs) for an engineer
 const getSavedJobs = catchAsync(async (req, res, next) => {

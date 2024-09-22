@@ -7,6 +7,7 @@ import {
   getAllEngineers,
   getEngineerById,
   getSavedJobs,
+  removeSavedJob,
   saveJob,
   updateEngineer,
 } from "../controllers/engineerController.js";
@@ -20,6 +21,7 @@ engineerRouters.post("/addskill", addSkill);
 engineerRouters.post("/addtitle", addTitle);
 engineerRouters.post("/addoverview", addOverview);
 engineerRouters.post("/savejob", saveJob);
+engineerRouters.post("/removejob", removeSavedJob);
 engineerRouters.get("/savedjobs", getSavedJobs);
 engineerRouters.put(
   "/updateEngineer/:userId",

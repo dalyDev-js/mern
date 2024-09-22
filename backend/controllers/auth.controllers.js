@@ -15,8 +15,8 @@ export const signup = catchAsync(async (req, res, next) => {
   let engineer = null;
   if (newUser.role === "engineer") {
     engineer = await Engineer.create({
-      user: newUser._id, // Link engineer with the user
-      title: req.body.title || "Engineer", // You can set other fields as needed
+      user: newUser._id,
+      title: req.body.title || "Engineer",
       education: req.body.education || {
         title: "Degree Title",
         startDate: new Date(),

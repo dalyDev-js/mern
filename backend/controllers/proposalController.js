@@ -5,17 +5,23 @@ import catchAsync from "../utils/catchAsync.js";
 
 const addProposal = catchAsync(async (req, res, next) => {
   const { content, budget, service, engineerId } = req.body;
-
+  console.log("Received Proposal Data:", req.body);
   // Validate input
   if (!content || !service || !budget || !engineerId) {
     return res.status(400).json({ message: "Complete all required fields" });
   }
 
-  // Check for existing proposal
-  const existingProposal = await Proposal.findOne({
-    engineer: engineerId,
-    service,
-  });
+  // Fetch the engineer
+  const engineer = await Engineer.findById(engineerId);
+
+  if (!engineer) {
+    return res.status(404).json({ message: "Engineer not found." });
+  }
+
+  // Check if the proposal already exists in the engineer's submitted proposals
+  const existingProposal = engineer.submittedProposals.find(
+    () => service.toString() === service
+  );
 
   if (existingProposal) {
     return res.status(400).json({
@@ -23,38 +29,23 @@ const addProposal = catchAsync(async (req, res, next) => {
     });
   }
 
-  // Create the new proposal
-  const newProposal = await Proposal.create({
-    content,
-    budget,
+  // Add the new proposal to the engineer's submitted proposals
+  engineer.submittedProposals.push({
     service,
-    engineer: engineerId,
   });
 
-  console.log("New proposal created:", newProposal);
-
-  // Update the engineer's submitted proposals
-  const updatedEngineer = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { $addToSet: { submittedProposals: newProposal } },
-    { new: true }
-  );
-  console.log(updatedEngineer);
-  if (!updatedEngineer) {
-    console.error("Engineer not found for ID:", engineerId);
-    return res.status(404).json({ message: "Engineer not found." });
-  }
+  // Save the engineer with the updated submitted proposals
+  await engineer.save();
 
   console.log(
     "Successfully updated submitted proposals:",
-    updatedEngineer.submittedProposals
+    engineer.submittedProposals
   );
 
-  // Respond with the new proposal
+  // Respond with the updated submitted proposals
   res.status(201).json({
     message: "Proposal added successfully",
-    proposal: newProposal,
-    submittedProposals: updatedEngineer.submittedProposals, // Optionally return updated proposals
+    submittedProposals: engineer.submittedProposals, // Return updated proposals
   });
 });
 

@@ -37,14 +37,20 @@ const engineerSchema = new mongoose.Schema({
   },
   savedJobs: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
+      service: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Service",
+        required: true,
+      },
     },
   ],
   submittedProposals: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service",
+      service: {
+        type: mongoose.Schema.Types.ObjectId, // Assuming service is an ObjectId
+        ref: "Service",
+        required: true,
+      },
     },
   ], // Add this to track submitted proposals
 });
