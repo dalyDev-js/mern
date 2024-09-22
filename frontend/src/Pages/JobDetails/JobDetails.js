@@ -8,54 +8,60 @@ import {
   fetchEngineerById,
   saveJob,
   submitProposal,
-} from "../../redux/slices/engineersSlice"; // Updated import
+} from "../../redux/slices/engineersSlice";
 import { useLoading } from "../../utils/LoadingContext";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Fix this import
 import { ProposalModa } from "../../Components/ProposalModal/ProposalModal";
 
 function JobDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // job id from URL params
   const dispatch = useDispatch();
-  const { selectedJob } = useSelector((state) => state.job);
-  const { savedJobs = [] } = useSelector((state) => state.engineerlist);
 
+  const { savedJobs = [] } = useSelector((state) => state.engineerlist);
   const { setIsLoading } = useLoading();
+
   const [showForm, setShowForm] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [engineerId, setEngineerId] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const [submittedProposals, setSubmittedProposals] = useState([]);
+  const [isProposalSubmitted, setIsProposalSubmitted] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      console.log("Loading data...");
       try {
         const token = localStorage.getItem("Token");
 
         if (token) {
-          const decodedToken = jwtDecode(token);
+          const decodedToken = jwtDecode(token); // Decode token to get userId
           const userId = decodedToken.id;
-          console.log("Decoded user ID:", userId);
 
-          await Promise.all([
-            dispatch(fetchServiceById(id)),
-            dispatch(fetchUserById(userId)),
+          // Fetch the job by id from params, and the user (engineer)
+          const [serviceResponse, userResponse] = await Promise.all([
+            dispatch(fetchServiceById(id)), // Fetch the job using params
+            dispatch(fetchUserById(userId)), // Fetch user info
           ]);
 
-          const userResponse = await dispatch(fetchUserById(userId));
-          console.log(userResponse, "response");
+          const job = serviceResponse.payload; // Fetched job from service response
+          const engineerResponse = await dispatch(fetchEngineerById(userId)); // Fetch engineer using userId
+
+          const engineer = engineerResponse.payload;
+          setEngineerId(engineer._id); // Store engineer's ID for later
+
+          // Check if engineer is verified
           const [verifiedStatus] = userResponse?.payload?.verifiedStatus || [];
           setIsVerified(verifiedStatus === "accepted");
 
-          // Fetch engineer by ID to use for submission
-          const engineerResponse = await dispatch(fetchEngineerById(userId));
-          setEngineerId(engineerResponse.payload._id); // Set the engineer ID
+          // Set the engineer's submitted proposals
+          const proposals = engineer?.submittedProposals || [];
+          setSubmittedProposals(proposals);
 
-          setSubmittedProposals(
-            engineerResponse.payload.submittedProposals || []
-          );
+          // Check if the current job has already been submitted by this engineer
+          const alreadySubmitted = proposals.includes(id); // Check against job id in params
+          setIsProposalSubmitted(alreadySubmitted);
+
           setDataLoaded(true);
         }
       } catch (error) {
@@ -68,14 +74,13 @@ function JobDetail() {
     loadData();
   }, [dispatch, id, setIsLoading]);
 
-  const postedTimeAgo = moment(selectedJob?.createdAt).fromNow();
-
   const handleSubmitProposal = async (proposalData) => {
     console.log("Submitting proposal:", proposalData);
+
     const response = await dispatch(
       submitProposal({
-        engineerId: engineerId, // Use the fetched engineerId here
-        service: selectedJob._id,
+        engineerId: engineerId, // Use the engineer's ID here
+        service: id, // Use the job id from URL params
         content: proposalData.content,
         budget: proposalData.budget,
       })
@@ -87,7 +92,7 @@ function JobDetail() {
       setIsSuccessModalVisible(true);
 
       // Update local state to reflect the submitted proposal
-      setSubmittedProposals((prev) => [...prev, response.payload.service]);
+      setSubmittedProposals((prev) => [...prev, id]);
     } else {
       console.log("Failed to submit proposal:", response);
     }
@@ -95,15 +100,12 @@ function JobDetail() {
 
   const handleSaveJob = async () => {
     if (isVerified) {
-      console.log("Saving job with ID:", selectedJob._id);
-      await dispatch(saveJob({ serviceId: selectedJob._id }));
+      console.log("Saving job with ID:", id);
+      await dispatch(saveJob({ serviceId: id }));
     }
   };
 
-  const isJobSaved = savedJobs.some((job) => job._id === selectedJob?._id);
-  const isProposalSubmitted = submittedProposals.some(
-    (proposal) => proposal === selectedJob?._id
-  );
+  const isJobSaved = savedJobs.some((job) => job._id === id);
 
   if (!dataLoaded) {
     return <div>Loading...</div>;
@@ -115,7 +117,7 @@ function JobDetail() {
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         onSubmit={handleSubmitProposal}
-        selectedJob={selectedJob}
+        selectedJob={id} // Pass the job ID directly
         engineerId={engineerId}
       />
 
@@ -142,41 +144,40 @@ function JobDetail() {
         </div>
       )}
 
+      {/* Display the job details */}
       <div className="col-span-2 p-8">
         <h1 className="job-title text-2xl text-amber-600 font-bold mb-4">
-          {selectedJob?.title}
+          {/* Use job title fetched from the server */}
+          Job Title Here {/* Update this with actual job title from response */}
         </h1>
 
-        <p className="text-gray-600">Posted {postedTimeAgo}</p>
-        <span className="flex gap-2 mb-4"></span>
+        <p className="text-gray-600">
+          {/* Replace this with actual posting time */}
+          Posted {moment().fromNow()}
+        </p>
+
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <p className="job-description mb-4">{selectedJob?.description}</p>
+        <p className="job-description mb-4">
+          {/* Replace with job description */}
+          Job Description Here
+        </p>
 
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Budget:</span>
           <span className="job-budget text-amber-400">
-            {selectedJob?.budget}
+            {/* Replace with actual budget */}
+            1000 USD
           </span>
         </div>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <div className="flex items-center mb-4">
-          <span className="font-bold mr-2">Experience Level:</span>
-          <span>{selectedJob?.level}</span>
-        </div>
-        <div className="flex items-center mb-4">
-          <span className="font-bold mr-2">Project Type:</span>
-          <span>One-time project</span>
-        </div>
-        <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+
         <div className="mt-8">
           <h2 className="font-bold text-lg">Skills and Expertise</h2>
-          <p className="mt-2">{selectedJob?.skills}</p>
+          <p className="mt-2">{/* Replace with skills */} Skillset Here</p>
         </div>
       </div>
 
       <div className="col-span-1 p-4 bg-gray-100 border-l border-gray-200 shadow dark:bg-gray-800 dark:border-gray-700">
-        <div className="mb-6"></div>
-
         <button
           onClick={
             isVerified && !isProposalSubmitted ? () => setShowForm(true) : null
@@ -199,22 +200,6 @@ function JobDetail() {
           }`}
           disabled={!isVerified || isJobSaved}>
           <span className="relative w-full flex items-center justify-center px-5 py-2.5 transition-all ease-in duration-75 rounded-md">
-            <svg
-              className="w-6 h-5 pr-2 text-black group-hover:text-black"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24">
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
-              />
-            </svg>
             {isJobSaved ? "Job Saved" : "Save Job"}
           </span>
         </button>
@@ -224,8 +209,6 @@ function JobDetail() {
             You must be verified to apply or save jobs.
           </p>
         )}
-
-        <div className="flex items-center gap-2 mb-6 mt-4"></div>
       </div>
     </div>
   );

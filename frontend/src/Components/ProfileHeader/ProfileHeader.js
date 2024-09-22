@@ -107,7 +107,7 @@ function ProfileHeader() {
           <div className="ml-4 flex items-center">
             <h1 className="text-2xl font-bold flex items-center">
               {fullName}
-              <FaCheckCircle className="text-blue-500 ml-2" />
+              {/* <FaCheckCircle className="text-blue-500 ml-2" /> */}
             </h1>
             <div
               className="ml-2 bg-white border border-gray-300 rounded-full p-1 cursor-pointer"

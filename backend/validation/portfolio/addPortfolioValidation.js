@@ -9,7 +9,7 @@ const schema = Joi.object({
   description: Joi.string().min(10).max(500).required().messages({
     "string.empty": "Description is required.",
     "string.min": "Description should be at least 10 characters long.",
-    "string.max": "Description should not exceed 500 characters.",
+    "string.max": "Description should not exceed 500 characters",
   }),
   url: Joi.string().allow(null),
 });

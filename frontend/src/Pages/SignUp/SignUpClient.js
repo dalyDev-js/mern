@@ -9,6 +9,7 @@ export default function SignUpClient() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
+  const [isLoading, setIsLoading] = useState(false); // New loading state
 
   const { loading, error } = useSelector((state) => state.auth);
 
@@ -21,7 +22,6 @@ export default function SignUpClient() {
       )
       .min(3, "Full Name must be at least 3 characters")
       .max(30, "You cannot enter more than 30 characters"),
-
     username: Yup.string()
       .required("Username is required")
       .min(3, "Username must be at least 3 characters")
@@ -54,16 +54,28 @@ export default function SignUpClient() {
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      const formData = { ...values, role: "client" }; // or "client"
+      setIsLoading(true); // Show loading screen
+      const formData = { ...values, role: "client" };
       const result = await dispatch(signUp(formData));
 
-      // Check if the result contains an error or not
+      let isMounted = true;
       if (!result.payload?.error) {
-        resetForm(); // Clear form inputs on successful submission
-        setSuccessMessage("Account created successfully!"); // Show success message
+        setTimeout(() => {
+          if (isMounted) {
+            resetForm(); // Clear form inputs on successful submission
+            setSuccessMessage("Account created successfully!"); // Show success message
+            navigate("/signin"); // Redirect to sign-in page
+          }
+          setIsLoading(false); // Hide loading screen after navigation
+        }, 3000); // 3-second delay
       } else {
+        setIsLoading(false); // Hide loading screen on error
         setSuccessMessage(""); // Reset success message in case of an error
       }
+
+      return () => {
+        isMounted = false;
+      };
     },
   });
 
@@ -71,7 +83,12 @@ export default function SignUpClient() {
     formik.setFieldValue("terms", e.target.checked);
   };
 
-  return (
+  return isLoading ? (
+    <div className="flex justify-center items-center h-screen">
+      <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+      <p className="ml-4">Loading...</p>
+    </div>
+  ) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div
         className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full"
@@ -82,8 +99,6 @@ export default function SignUpClient() {
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-10">
-            {" "}
-            {/* Increased space between inputs */}
             {/* Full Name Input */}
             <div className="relative">
               <input
@@ -101,6 +116,7 @@ export default function SignUpClient() {
                 </div>
               )}
             </div>
+
             {/* Username Input */}
             <div className="relative">
               <input
@@ -118,6 +134,7 @@ export default function SignUpClient() {
                 </div>
               )}
             </div>
+
             {/* Email Input */}
             <div className="relative">
               <input
@@ -135,6 +152,7 @@ export default function SignUpClient() {
                 </div>
               )}
             </div>
+
             {/* Password Input */}
             <div className="relative">
               <input
@@ -152,6 +170,7 @@ export default function SignUpClient() {
                 </div>
               )}
             </div>
+
             {/* Confirm Password Input */}
             <div className="relative">
               <input
@@ -170,6 +189,7 @@ export default function SignUpClient() {
                   </div>
                 )}
             </div>
+
             {/* Gender Input */}
             <div className="relative">
               <select
@@ -188,6 +208,7 @@ export default function SignUpClient() {
                 </div>
               )}
             </div>
+
             {/* Country Input */}
             <div className="relative">
               <select
@@ -210,6 +231,7 @@ export default function SignUpClient() {
             </div>
           </div>
 
+          {/* Terms and Conditions */}
           <div className="mt-8">
             <label className="flex items-center space-x-2">
               <input
@@ -227,11 +249,12 @@ export default function SignUpClient() {
             )}
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-yellow-500 text-white py-3 px-4 rounded-lg mt-4"
-            disabled={loading}>
-            {loading ? (
+            className="w-full bg-yellow-300 text-black py-3 px-4 rounded-lg mt-4"
+            disabled={loading || isLoading}>
+            {loading || isLoading ? (
               <i className="fa fa-spin fa-spinner"></i>
             ) : (
               "Create Freelancer Account"

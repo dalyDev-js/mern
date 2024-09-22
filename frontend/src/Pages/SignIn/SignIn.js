@@ -106,7 +106,7 @@ export default function SignIn() {
           <div className="flex flex-col items-center">
             <button
               type="submit"
-              className="w-full bg-yellow-300 text-white py-3 px-4 rounded-lg mt-4"
+              className="w-full bg-yellow-300 text-text py-3 px-4 rounded-lg mt-4"
               disabled={loading || isLoading}>
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
