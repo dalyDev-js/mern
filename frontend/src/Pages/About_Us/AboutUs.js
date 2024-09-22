@@ -32,9 +32,9 @@ function AboutUs() {
         <p className="text-md font-semibold text-amber-500  ">
           Our mission is to empower engineers by offering a specialized
           marketplace that fosters collaboration, innovation, and growth.
-          Whether you’re an engineer seeking freelance work or a company in need
-          of the best in the field, we’re here to simplify the hiring process
-          and ensure successful partnerships every step of the way.
+          Whether you&apos;re an engineer seeking freelance work or a company in
+          need of the best in the field, we’re here to simplify the hiring
+          process and ensure successful partnerships every step of the  way.
         </p>
         {/* cards section text  */}
         <p className="text-xl font-medium mt-8">Meet The Team </p>
@@ -46,16 +46,16 @@ function AboutUs() {
 
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
                 <div className="flex flex-col mb-6">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      alt="asd asd"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>
@@ -66,16 +66,16 @@ function AboutUs() {
 
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
                 <div className="flex flex-col mb-6">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
                       alt="image description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>
@@ -84,16 +84,16 @@ function AboutUs() {
               {/* Card 3 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
                 <div className="flex flex-col mb-6">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
                       alt="image description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>
@@ -103,16 +103,16 @@ function AboutUs() {
               {/* Card 4 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
                 <div className="flex flex-col mb-2">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
                       alt="image description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>
@@ -122,16 +122,16 @@ function AboutUs() {
               {/* Card 5 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
                 <div className="flex flex-col mb-2">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
                       alt="image description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>
@@ -141,16 +141,16 @@ function AboutUs() {
               {/* Card 6 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
                 <div className="flex flex-col mb-2">
-                  <figure class="max-w-lg">
+                  <figure className="max-w-lg">
                     <img
-                      class="h-auto max-w-full rounded-lg"
+                      className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
                       alt="image description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
                     </h2>
-                    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+                    <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
                       Image caption Bonnie Green
                     </figcaption>
                   </figure>

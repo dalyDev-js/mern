@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [verifiedStatus, setVerifiedStatus] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
@@ -33,7 +34,8 @@ export default function Navbar() {
         // Set user name, role, and verification status in state
         setUserName(fullName);
         setUserRole(role);
-        setVerifiedStatus(...user?.payload?.verifiedStatus); // Set verification status
+        setUserId(id);
+        setVerifiedStatus(...(user?.payload?.verifiedStatus || "pending")); // Set verification status
       } else {
         // Clear user data if token is not found
         setUserName(null);
@@ -150,7 +152,9 @@ export default function Navbar() {
                 {userName ? (
                   <>
                     <div className="flex items-center">
-                      <span className="mr-2">Hello, {userName}</span>
+                      <Link to={`/profile/${userId}`} className="mr-2">
+                        Hello, {userName}
+                      </Link>
 
                       {/* Warning Icon with tooltip positioned to the left */}
                       <div className="relative group">

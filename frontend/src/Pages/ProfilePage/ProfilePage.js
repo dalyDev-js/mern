@@ -21,19 +21,19 @@ function ProfilePage() {
               <ProfileHeader />
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              {/* <ProfileSummary /> */}
+              <ProfileSummary />
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              {/* <ProfileSkills /> */}
+              <ProfileSkills />
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              {/* <ProfilePortfolio /> */}
+              <ProfilePortfolio />
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              {/* <ProfileCertifications /> */}
+              <ProfileCertifications />
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
-              {/* <ProfileEducation /> */}
+              <ProfileEducation />
             </div>
           </div>
         </div>
