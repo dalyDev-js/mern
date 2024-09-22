@@ -100,18 +100,18 @@ export const submitProposal = createAsyncThunk(
 
 // Async thunk to save a job to the engineer's saved jobs
 export const saveJob = createAsyncThunk(
-  "engineerlist/saveJob",
-  async ({ serviceId }, { rejectWithValue }) => {
+  "engineerlist/saveJob", // Corrected the name
+  async ({ serviceId, engineerId }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("Token");
+      const token = localStorage.getItem("Token"); // Get token from localStorage
       const response = await axios.post(
-        "/api/v1/engineer/savejob",
-        { serviceId },
+        "/api/v1/engineer/savejob", // URL without serviceId or engineerId as parameters
+        { serviceId, engineerId }, // Send both serviceId and engineerId in the request body
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` }, // Include token in the request header
         }
       );
-      return response.data.data.engineer; // Assuming response returns the updated engineer
+      return response.data.savedJobs; // Return the updated saved jobs array
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : "Unknown error"
@@ -119,7 +119,26 @@ export const saveJob = createAsyncThunk(
     }
   }
 );
-// In engineersSlice.js
+export const removeSavedJob = createAsyncThunk(
+  "engineerlist/removeSavedJob",
+  async ({ serviceId, engineerId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token"); // Get token from localStorage
+      const response = await axios.post(
+        "/api/v1/engineer/removejob", // URL to remove saved job
+        { serviceId, engineerId }, // Send both serviceId and engineerId in the body
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in the request header
+        }
+      );
+      return response.data.savedJobs; // Return the updated saved jobs array
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
 
 export const fetchSubmittedProposals = createAsyncThunk(
   "engineerlist/fetchSubmittedProposals",

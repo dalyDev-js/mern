@@ -6,11 +6,12 @@ import moment from "moment";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import {
   fetchEngineerById,
+  removeSavedJob,
   saveJob,
   submitProposal,
 } from "../../redux/slices/engineersSlice";
 import { useLoading } from "../../utils/LoadingContext";
-import { jwtDecode } from "jwt-decode"; // Fix this import
+import { jwtDecode } from "jwt-decode"; // Fixed the import
 import { ProposalModa } from "../../Components/ProposalModal/ProposalModal";
 
 function JobDetail() {
@@ -25,8 +26,12 @@ function JobDetail() {
   const [engineerId, setEngineerId] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
-  const [submittedProposals, setSubmittedProposals] = useState([]);
+  const [engineerSubmittedProposals, setEngineerSubmittedProposals] = useState(
+    []
+  );
   const [isProposalSubmitted, setIsProposalSubmitted] = useState(false);
+  const [selectedJob, setSelectedJob] = useState({});
+  const [isJobSaved, setIsJobSaved] = useState(false); // Local state for saved job
 
   useEffect(() => {
     const loadData = async () => {
@@ -39,16 +44,22 @@ function JobDetail() {
           const userId = decodedToken.id;
 
           // Fetch the job by id from params, and the user (engineer)
-          const [serviceResponse, userResponse] = await Promise.all([
-            dispatch(fetchServiceById(id)), // Fetch the job using params
-            dispatch(fetchUserById(userId)), // Fetch user info
-          ]);
+          const [serviceResponse, userResponse, engineerResponse] =
+            await Promise.all([
+              dispatch(fetchServiceById(id)), // Fetch the job using params
+              dispatch(fetchUserById(userId)), // Fetch user info
+              dispatch(fetchEngineerById(userId)), // Fetch engineer using userId
+            ]);
 
-          const job = serviceResponse.payload; // Fetched job from service response
-          const engineerResponse = await dispatch(fetchEngineerById(userId)); // Fetch engineer using userId
+          setSelectedJob(serviceResponse.payload);
 
-          const engineer = engineerResponse.payload;
+          const engineer = engineerResponse?.payload;
           setEngineerId(engineer._id); // Store engineer's ID for later
+
+          // Log the engineerId, userId, and selected job (job id)
+          console.log("Engineer ID:", engineer._id);
+          console.log("User ID:", userId);
+          console.log("Selected Job ID:", serviceResponse.payload._id);
 
           // Check if engineer is verified
           const [verifiedStatus] = userResponse?.payload?.verifiedStatus || [];
@@ -56,11 +67,19 @@ function JobDetail() {
 
           // Set the engineer's submitted proposals
           const proposals = engineer?.submittedProposals || [];
-          setSubmittedProposals(proposals);
+          setEngineerSubmittedProposals(proposals);
 
           // Check if the current job has already been submitted by this engineer
-          const alreadySubmitted = proposals.includes(id); // Check against job id in params
-          setIsProposalSubmitted(alreadySubmitted);
+          const isAlreadySubmitted = proposals.some(
+            (proposal) => proposal.service === serviceResponse.payload._id
+          );
+          setIsProposalSubmitted(isAlreadySubmitted); // Update the state after all data is loaded
+
+          // Check if the current job is already saved
+          const isJobAlreadySaved = savedJobs.some(
+            (job) => job._id === serviceResponse.payload._id
+          );
+          setIsJobSaved(isJobAlreadySaved); // Update the state for saved job check
 
           setDataLoaded(true);
         }
@@ -72,15 +91,20 @@ function JobDetail() {
     };
 
     loadData();
-  }, [dispatch, id, setIsLoading]);
+  }, [dispatch, id, setIsLoading, savedJobs]);
 
   const handleSubmitProposal = async (proposalData) => {
+    if (!selectedJob._id) {
+      console.error("Selected job ID is not available.");
+      return;
+    }
+
     console.log("Submitting proposal:", proposalData);
 
     const response = await dispatch(
       submitProposal({
-        engineerId: engineerId, // Use the engineer's ID here
-        service: id, // Use the job id from URL params
+        engineerId: engineerId,
+        service: selectedJob?._id, // Use the job ID after ensuring it's loaded
         content: proposalData.content,
         budget: proposalData.budget,
       })
@@ -92,23 +116,50 @@ function JobDetail() {
       setIsSuccessModalVisible(true);
 
       // Update local state to reflect the submitted proposal
-      setSubmittedProposals((prev) => [...prev, id]);
+      setEngineerSubmittedProposals((prev) => [...prev, selectedJob._id]);
     } else {
       console.log("Failed to submit proposal:", response);
     }
   };
 
-  const handleSaveJob = async () => {
+  const handleToggleSaveJob = async () => {
     if (isVerified) {
-      console.log("Saving job with ID:", id);
-      await dispatch(saveJob({ serviceId: id }));
+      try {
+        if (isJobSaved) {
+          // If the job is already saved, remove it from saved jobs
+          const response = await dispatch(
+            removeSavedJob({
+              serviceId: selectedJob._id, // Pass the serviceId (job ID)
+              engineerId: engineerId, // Pass the engineerId from the component state
+            })
+          );
+          console.log("Job removed from saved jobs:", response);
+          setIsJobSaved(false); // Update the local state to reflect the removal
+        } else {
+          // If the job is not saved, save it
+          const response = await dispatch(
+            saveJob({
+              serviceId: selectedJob._id, // Pass the serviceId (job ID)
+              engineerId: engineerId, // Pass the engineerId from the component state
+            })
+          );
+          console.log("Job saved:", response);
+          setIsJobSaved(true); // Update the local state to reflect the save
+        }
+      } catch (error) {
+        console.error("Error saving or removing job:", error);
+      }
+    } else {
+      console.log("User is not verified, cannot save or remove job.");
     }
   };
-
-  const isJobSaved = savedJobs.some((job) => job._id === id);
-
   if (!dataLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+        <p className="ml-4">Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -145,35 +196,47 @@ function JobDetail() {
       )}
 
       {/* Display the job details */}
+
       <div className="col-span-2 p-8">
+        <p className="text-gray-600">
+          {/* Display the relative time from selectedJob.createdAt */}
+          Posted {moment(selectedJob?.createdAt).fromNow()}
+        </p>
         <h1 className="job-title text-2xl text-amber-600 font-bold mb-4">
           {/* Use job title fetched from the server */}
-          Job Title Here {/* Update this with actual job title from response */}
+          {selectedJob?.title}
         </h1>
+        <hr />
+        <h2 className="font-bold text-lg mt-4">Description:</h2>
 
-        <p className="text-gray-600">
-          {/* Replace this with actual posting time */}
-          Posted {moment().fromNow()}
+        <p className="job-description text-gray-700 mb-4">
+          {/* Display the job description */}
+          {selectedJob?.description}
         </p>
 
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-        <p className="job-description mb-4">
-          {/* Replace with job description */}
-          Job Description Here
-        </p>
 
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Budget:</span>
           <span className="job-budget text-amber-400">
             {/* Replace with actual budget */}
-            1000 USD
+            {selectedJob?.budget} USD
           </span>
         </div>
+
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
 
         <div className="mt-8">
           <h2 className="font-bold text-lg">Skills and Expertise</h2>
-          <p className="mt-2">{/* Replace with skills */} Skillset Here</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {selectedJob?.skills.map((skill, index) => (
+              <div
+                key={index}
+                className="bg-amber-300 text-black rounded-full px-4 py-1 text-sm font-medium">
+                {skill}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -192,15 +255,18 @@ function JobDetail() {
         </button>
 
         <button
-          onClick={handleSaveJob}
+          onClick={handleToggleSaveJob} // Handle both saving and removing
           className={`relative w-full inline-flex outline-none border-none items-center justify-center mb-2 me-2 overflow-hidden text-sm font-medium rounded-lg group ${
             isVerified
-              ? "bg-white hover:bg-amber-400 hover:text-black text-black"
+              ? isJobSaved
+                ? "bg-white   hover:text-black text-black" // Show as "Save Job" when the job is not saved
+                : "bg-amber-300 text-black hover:bg-amber-400" // Show as "Saved" when the job is already saved
               : "bg-gray-400 cursor-not-allowed"
           }`}
-          disabled={!isVerified || isJobSaved}>
+          disabled={!isVerified}>
           <span className="relative w-full flex items-center justify-center px-5 py-2.5 transition-all ease-in duration-75 rounded-md">
-            {isJobSaved ? "Job Saved" : "Save Job"}
+            {isJobSaved ? "Saved" : "Save Job"}{" "}
+            {/* Toggle text based on state */}
           </span>
         </button>
 
