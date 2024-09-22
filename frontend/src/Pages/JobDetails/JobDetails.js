@@ -18,7 +18,7 @@ function JobDetail() {
   const { id } = useParams(); // job id from URL params
   const dispatch = useDispatch();
 
-  const { savedJobs = [] } = useSelector((state) => state.engineerlist);
+  // const { savedJobs = [] } = useSelector((state) => state.engineerlist);
   const { setIsLoading } = useLoading();
 
   const [showForm, setShowForm] = useState(false);
@@ -26,13 +26,15 @@ function JobDetail() {
   const [engineerId, setEngineerId] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [engineerSubmittedProposals, setEngineerSubmittedProposals] = useState(
     []
   );
   const [isProposalSubmitted, setIsProposalSubmitted] = useState(false);
   const [selectedJob, setSelectedJob] = useState({});
-  const [isJobSaved, setIsJobSaved] = useState(false); // Local state for saved job
+  const [savedJobs, setSavedJobs] = useState([]);
 
+  const [isJobSaved, setIsJobSaved] = useState(false); // Local state for saved job
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -46,40 +48,36 @@ function JobDetail() {
           // Fetch the job by id from params, and the user (engineer)
           const [serviceResponse, userResponse, engineerResponse] =
             await Promise.all([
-              dispatch(fetchServiceById(id)), // Fetch the job using params
-              dispatch(fetchUserById(userId)), // Fetch user info
-              dispatch(fetchEngineerById(userId)), // Fetch engineer using userId
+              dispatch(fetchServiceById(id)),
+              dispatch(fetchUserById(userId)),
+              dispatch(fetchEngineerById(userId)),
             ]);
 
           setSelectedJob(serviceResponse.payload);
-
+          setSavedJobs(engineerResponse?.payload?.savedJobs);
+          console.log(
+            "Saved Jobs from backend:",
+            engineerResponse.payload.savedJobs
+          );
           const engineer = engineerResponse?.payload;
           setEngineerId(engineer._id); // Store engineer's ID for later
 
-          // Log the engineerId, userId, and selected job (job id)
-          console.log("Engineer ID:", engineer._id);
-          console.log("User ID:", userId);
-          console.log("Selected Job ID:", serviceResponse.payload._id);
-
-          // Check if engineer is verified
           const [verifiedStatus] = userResponse?.payload?.verifiedStatus || [];
           setIsVerified(verifiedStatus === "accepted");
-
+          console.log(savedJobs);
           // Set the engineer's submitted proposals
           const proposals = engineer?.submittedProposals || [];
           setEngineerSubmittedProposals(proposals);
 
-          // Check if the current job has already been submitted by this engineer
           const isAlreadySubmitted = proposals.some(
             (proposal) => proposal.service === serviceResponse.payload._id
           );
-          setIsProposalSubmitted(isAlreadySubmitted); // Update the state after all data is loaded
+          setIsProposalSubmitted(isAlreadySubmitted);
 
-          // Check if the current job is already saved
-          const isJobAlreadySaved = savedJobs.some(
-            (job) => job._id === serviceResponse.payload._id
+          const isJobAlreadySaved = engineerResponse.payload.savedJobs.some(
+            (job) => job.service === serviceResponse.payload._id
           );
-          setIsJobSaved(isJobAlreadySaved); // Update the state for saved job check
+          setIsJobSaved(isJobAlreadySaved);
 
           setDataLoaded(true);
         }
@@ -91,7 +89,7 @@ function JobDetail() {
     };
 
     loadData();
-  }, [dispatch, id, setIsLoading, savedJobs]);
+  }, [dispatch, id, setIsLoading]);
 
   const handleSubmitProposal = async (proposalData) => {
     if (!selectedJob._id) {
@@ -104,7 +102,7 @@ function JobDetail() {
     const response = await dispatch(
       submitProposal({
         engineerId: engineerId,
-        service: selectedJob?._id, // Use the job ID after ensuring it's loaded
+        service: selectedJob._id, // Use the job ID after ensuring it's loaded
         content: proposalData.content,
         budget: proposalData.budget,
       })
@@ -124,6 +122,7 @@ function JobDetail() {
 
   const handleToggleSaveJob = async () => {
     if (isVerified) {
+      setIsSaving(true); // Disable the button while saving/removing the job
       try {
         if (isJobSaved) {
           // If the job is already saved, remove it from saved jobs
@@ -148,11 +147,14 @@ function JobDetail() {
         }
       } catch (error) {
         console.error("Error saving or removing job:", error);
+      } finally {
+        setIsSaving(false); // Re-enable the button after the request is complete
       }
     } else {
       console.log("User is not verified, cannot save or remove job.");
     }
   };
+
   if (!dataLoaded) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -237,6 +239,15 @@ function JobDetail() {
               </div>
             ))}
           </div>
+        </div>
+        <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+
+        <div className="flex items-center mb-4">
+          <span className="font-bold mr-2">Proposals Submitted:</span>
+          <span className="job-proposals text-amber-400">
+            {/* Replace with actual number of proposals */}
+            {selectedJob?.proposals?.length || 0}
+          </span>
         </div>
       </div>
 
