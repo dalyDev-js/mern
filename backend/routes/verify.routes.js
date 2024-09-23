@@ -1,5 +1,5 @@
 import express from "express";
-import { updateVerifiedStatus } from "../controllers/verify.controller";
+import { updateVerifiedStatus } from "../controllers/verify.controller.js";
 
 const verifyRouter = express.Router();
 

@@ -189,8 +189,8 @@ export const getContractById = catchAsync(async (req, res, next) => {
   const contract = await Contract.findById(req.params.id)
     .populate("service")
     .populate("engineer")
-    .populate("client");
-
+    .populate("user");
+  console.log(req.params.id);
   if (!contract) {
     return next(new AppError("No contract found with this ID", 404));
   }

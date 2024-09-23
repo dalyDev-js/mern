@@ -1,8 +1,8 @@
 import express from "express";
 import { requestVerification } from "../controllers/verification.js";
 
-const verifyRouter = express.Router();
+const requestVerifyRouter = express.Router();
 
-verifyRouter.post("/", requestVerification);
+requestVerifyRouter.post("/", requestVerification);
 
-export default verifyRouter;
+export default requestVerifyRouter;

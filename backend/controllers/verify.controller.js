@@ -1,4 +1,4 @@
-import User from "../model/userModel";
+import User from "../model/userModel.js";
 
 // Controller to update verifiedStatus
 export const updateVerifiedStatus = async (req, res) => {

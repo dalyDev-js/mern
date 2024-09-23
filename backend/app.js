@@ -12,9 +12,11 @@ import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
 import paymentRouter from "./routes/paymnet.routes.js";
-import verifyRouter from "./routes/requestVerification.js";
+
 import clientRouter from "./routes/client.routes.js";
 import contractRouter from "./routes/contract.routes.js";
+import verifyRouter from "./routes/verify.routes.js";
+import requestVerifyRouter from "./routes/requestVerification.js";
 const app = express();
 
 app.use(
@@ -41,6 +43,7 @@ app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/engineer", engineerRouters);
 app.use("/api/v1/verify", verifyRouter);
+app.use("/api/v1/requestVerify", requestVerifyRouter);
 app.use("/api/vi/payment", paymentRouter);
 
 app.all("*", (req, res, next) => {
