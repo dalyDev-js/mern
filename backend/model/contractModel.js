@@ -14,7 +14,7 @@ const contractSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false,
   },
   contractTitle: {
     type: String,
@@ -28,7 +28,7 @@ const contractSchema = new mongoose.Schema({
   paymentOption: {
     type: String,
     required: true,
-    enum: ["fixed price", "pay per week"],
+    enum: ["fixed", "weekly"],
   },
   startDate: {
     type: Date,
@@ -41,7 +41,11 @@ const contractSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ["active", "completed", "cancelled"],
+    enum: ["pending", "active", "completed", "cancelled"],
+  },
+  description: {
+    type: String,
+    required: true,
   },
 });
 

@@ -21,8 +21,14 @@ const clientSchema = new mongoose.Schema({
   ],
   activeContracts: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Contract",
+      contract: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Contract",
+      },
+      service: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Service",
+      },
     },
   ],
 });
