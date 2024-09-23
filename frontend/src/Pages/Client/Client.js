@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux"; // Import useDispatch to dispatch Redux actions
-import { postJob } from "../../redux/slices/jobSlice"; // Import the Redux action to post the job
+import { fetchMyJobs, postJob } from "../../redux/slices/jobSlice"; // Import the Redux action to post the job
 import eng1 from "../../assets/engineer1.png";
 import eng2 from "../../assets/engineer2.png";
 import eng3 from "../../assets/engineer3.png";
@@ -11,23 +11,56 @@ import network from "../../assets/network.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../../utils/LoadingContext";
+import { jwtDecode } from "jwt-decode";
+import { fetchUserById } from "../../redux/slices/userSlice";
+import { fetchClientById } from "../../redux/slices/clientSlice";
 export default function Client() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const { setIsLoading } = useLoading();
+  const [jobs, setJobs] = useState([]);
 
-  // Form state to hold the job data
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const loadClientData = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem("Token");
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.id;
+
+          const [userResponse, jobResponse] = await Promise.all([
+            dispatch(fetchUserById(userId)),
+            dispatch(fetchMyJobs(userId)),
+          ]);
+          const [verifiedStatus] = userResponse?.payload?.verifiedStatus || [];
+
+          setIsVerified(verifiedStatus === "accepted");
+          setJobs(jobResponse?.payload);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to load client data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    loadClientData();
+  }, [dispatch, setIsLoading]);
+
   const [jobData, setJobData] = useState({
     title: "",
     budget: "",
     description: "",
     skills: [],
     level: " ",
-    client: "66e6fb684b5878794bcadf9b",
+    client: "",
   });
 
-  // Error state for validation
   const [errors, setErrors] = useState({
     title: "",
     budget: "",
@@ -35,9 +68,6 @@ export default function Client() {
     skills: "",
   });
 
-  const dispatch = useDispatch(); // Hook to dispatch actions
-
-  // Function to handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -59,7 +89,6 @@ export default function Client() {
     });
   };
 
-  // Validate the form
   const validateForm = () => {
     let formValid = true;
     let newErrors = {
@@ -93,7 +122,6 @@ export default function Client() {
     return formValid;
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -101,18 +129,28 @@ export default function Client() {
       return;
     }
 
-    // Proceed if validation passes
     try {
-      const response = await dispatch(postJob(jobData)).unwrap();
-      setResponseMessage(`Job posted successfully: ${response.message}`);
-      setIsSuccessModalVisible(true);
+      const token = localStorage.getItem("Token");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const clientId = decodedToken.id; // Get client ID from the token
+
+        const response = await dispatch(
+          postJob({
+            ...jobData,
+            client: clientId, // Include client ID in the job data
+          })
+        ).unwrap();
+
+        setResponseMessage(`Job posted successfully: ${response.message}`);
+        setIsSuccessModalVisible(true);
+      }
     } catch (error) {
       setResponseMessage(`Error posting job: ${error.message}`);
     }
     setIsFormVisible(false);
   };
 
-  // Function to toggle the form visibility
   const handlePostJobClick = () => {
     setIsFormVisible(true);
   };
@@ -120,19 +158,21 @@ export default function Client() {
   const handleCancelClick = () => {
     setIsFormVisible(false);
   };
+
   const navigate = useNavigate();
   const handleSuccessModalOkClick = () => {
     setIsSuccessModalVisible(false);
     navigate("/recent-posts");
   };
+
   useEffect(() => {
     setIsLoading(true);
 
-    // Simulate loading completion after 1.5 seconds
     setTimeout(() => {
       setIsLoading(false);
     }, 1500);
   }, [setIsLoading]);
+
   return (
     <>
       {isSuccessModalVisible && (
@@ -189,7 +229,7 @@ export default function Client() {
                     <div className="job-budget w-1/3">
                       <label className="font-medium">Job Budget</label>
                       <input
-                        type="text"
+                        type="number"
                         name="budget"
                         className="w-full my-3 rounded-md"
                         placeholder="$20/hr"
@@ -252,7 +292,7 @@ export default function Client() {
                     </button>
                     <button
                       type="submit"
-                      className="p-1 px-7 bg-amber-600 hover:bg-amber-700 text-lg text-white rounded-md">
+                      className="p-1 px-7 bg-amber-300 hover:bg-amber-400 text-lg text-black rounded-md">
                       Post Job
                     </button>
                   </div>
@@ -304,13 +344,18 @@ export default function Client() {
             <div className="post-job w-1/3  flex justify-end">
               <button
                 onClick={handlePostJobClick}
-                className="post-job-button bg-amber-500 h-fit p-2 px-5 rounded-lg text-lg font-medium text-white ">
-                <i class="fa-solid fa-plus"></i> Post a job
+                className={`post-job-button h-fit p-2 px-5 rounded-lg text-lg font-medium ${
+                  isVerified
+                    ? "bg-amber-300 text-black hover:bg-amber-400"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+                disabled={!isVerified}>
+                <i className="fa-solid fa-plus"></i> Post a job
               </button>
             </div>
           </div>
           <div className="post-tips flex gap-3">
-            <div className="post-job-1 w-1/4 h-80 flex flex-col justify-between py-4 border-2 border-dashed border-gray-300 rounded-xl">
+            <div className="post-job-1 w-1/4 h-80  flex flex-col justify-between py-4 border-2 border-dashed border-gray-300 rounded-xl">
               <div className="first-top mx-7 text-center flex flex-col items-center">
                 <i class="text-4xl fa-solid fa-circle-plus"></i>
                 <p className="mt-3 text-gray-500 font-semibold">
@@ -323,13 +368,20 @@ export default function Client() {
               <div className="second-bottom mx-6">
                 <button
                   onClick={handlePostJobClick}
-                  className="p-2 w-full font-medium text-amber-600 border-2 border-amber-400 rounded-lg ">
-                  Post a new job{" "}
+                  className={`p-2 w-full font-medium  rounded-lg ${
+                    isVerified
+                      ? "text-black bg-amber-300 hover:bg-amber-400 "
+                      : "text-gray-500   cursor-not-allowed"
+                  }`}
+                  disabled={!isVerified}>
+                  Post a new job
                 </button>
               </div>
             </div>
-            <div className="post-job-2 w-1/4 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
-              <div className="first-top mx-7  flex flex-col ">
+            <Link
+              to={"/recent-posts"}
+              className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
+              <div className="first-top  mx-7  flex flex-col ">
                 <div className="flex w-full justify-start">
                   {" "}
                   <span>
@@ -337,19 +389,16 @@ export default function Client() {
                   </span>{" "}
                   <span className="text-lg font-medium"> Quick tips</span>
                 </div>
-                <p className="text-2xl mt-2 font-medium">Pay with Confidence</p>
-                <p className="mt-2 text-gray-500">
-                  Talent look for clients with verified billing method. There is
-                  no cost until you hire.
-                </p>
+                <p className="text-2xl mt-2 font-medium">My Posts</p>
+                <p className="mt-2 text-gray-500">See Posts and Proposals</p>
               </div>
               <div className="second-bottom mx-6">
                 <p className="text-amber-600 text-lg">
-                  Learn more about payments
+                  You have {jobs?.length} job posts
                 </p>
               </div>
-            </div>{" "}
-            <div className="post-job-2 w-1/4 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
+            </Link>{" "}
+            <div className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
               <div className="first-top mx-7  flex flex-col ">
                 <div className="flex w-full justify-start">
                   {" "}
@@ -370,7 +419,7 @@ export default function Client() {
                 </p>
               </div>
             </div>{" "}
-            <div className="post-job-1 w-1/4 h-80 flex flex-col justify-between py-4 border-2 border-dashed border-gray-300 rounded-xl">
+            <div className="post-job-1 w-1/4 h-80 flex  hover:cursor-pointer hover:scale-95 duration-75  flex-col justify-between py-4 border-2 border-dashed border-gray-300 rounded-xl">
               <div className="first-top mx-7 text-center flex flex-col items-center">
                 <i class="text-4xl fa-regular fa-comments"></i>{" "}
                 <p className="mt-3 text-gray-500 font-semibold">

@@ -36,6 +36,25 @@ export const checkSubmittedProposal = createAsyncThunk(
   }
 );
 
+export const fetchProposalsByServiceId = createAsyncThunk(
+  "proposal/fetchProposalsByServiceId",
+  async (serviceId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/proposals/service/${serviceId}`,
+
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data.data.proposals;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
+
 // Proposal slice
 const proposalSlice = createSlice({
   name: "proposal",
@@ -69,6 +88,18 @@ const proposalSlice = createSlice({
         state.submitted = action.payload;
       })
       .addCase(checkSubmittedProposal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchProposalsByServiceId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProposalsByServiceId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.proposals = action.payload;
+      })
+      .addCase(fetchProposalsByServiceId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

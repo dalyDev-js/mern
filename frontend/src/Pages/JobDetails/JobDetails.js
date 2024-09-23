@@ -61,7 +61,7 @@ function JobDetail() {
           );
           const engineer = engineerResponse?.payload;
           setEngineerId(engineer._id); // Store engineer's ID for later
-
+          console.log(userResponse.payload._id);
           const [verifiedStatus] = userResponse?.payload?.verifiedStatus || [];
           setIsVerified(verifiedStatus === "accepted");
           console.log(savedJobs);
@@ -112,7 +112,7 @@ function JobDetail() {
       console.log("Proposal submitted successfully:", response.payload);
       setShowForm(false);
       setIsSuccessModalVisible(true);
-
+      setIsProposalSubmitted(true);
       // Update local state to reflect the submitted proposal
       setEngineerSubmittedProposals((prev) => [...prev, selectedJob._id]);
     } else {

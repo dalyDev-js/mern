@@ -62,7 +62,7 @@ let routers = createBrowserRouter([
       { path: "/job-details/:id", element: <JobDetail /> }, // job details -- engineer view
       { path: "/engineer-details", element: <Profile /> }, // engineer details -- client view
       { path: "/engineer-details/:id", element: <Profile /> }, // engineer details -- client view
-      { path: "/hiring", element: <HiringProcess /> }, // sending proposal -- engineer view
+      { path: "/hiring/:service/:id", element: <HiringProcess /> }, // sending proposal -- engineer view
       { path: "/verify", element: <Verify /> },
       {
         path: "/client",
@@ -79,7 +79,7 @@ let routers = createBrowserRouter([
       { path: "/engineers-list", element: <EngineersList /> }, // job posting client viewwwwwwwwwwwwwwwwwwwwwwwwwwwww
       { path: "/saved-jobs", element: <SaveJobs /> }, // job posting client view
       { path: "/recent-posts", element: <MyJobsPosts /> }, // jobs already posted client view
-      { path: "/job-proposals", element: <JobProposals /> }, // job posting
+      { path: "/job-proposals/:id", element: <JobProposals /> }, // job posting
       { path: "/proposals-status", element: <ProposalsStatus /> }, // job posting
       { path: "*", element: <NotFound /> },
     ],

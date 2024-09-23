@@ -3,27 +3,55 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMyJobs, deleteJob } from "../../redux/slices/jobSlice";
 import { Link } from "react-router-dom";
 import DeleteConfirmationModal from "../../Components/deleteModal/DeleteConfirmationModal";
+import { useLoading } from "../../utils/LoadingContext";
+import { jwtDecode } from "jwt-decode";
+import { fetchClientById } from "../../redux/slices/clientSlice";
 
 export default function MyJobsPosts() {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
-
+  const { setIsLoading } = useLoading();
   // Select jobs and status from Redux state
-  const { jobs = [], status, error } = useSelector((state) => state.job);
+  const [jobs, setJobs] = useState([]);
 
+  const [dataLoaded, setDataLoaded] = useState(false);
   // Fetch jobs when component mounts
   useEffect(() => {
-    dispatch(fetchMyJobs());
-  }, [dispatch]);
+    const loadMyJobs = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem("Token");
+        if (token) {
+          const decodedToken = jwtDecode(token); // Decode token to get clientId
+          const clientId = decodedToken.id;
+
+          // Fetch the client's jobs using the clientId
+          const [myJobResoponse] = await Promise.all([
+            dispatch(fetchMyJobs(clientId)),
+          ]);
+          setJobs(myJobResoponse?.payload);
+          console.log(myJobResoponse);
+          setDataLoaded(true);
+        }
+      } catch (error) {
+        console.error("Failed to fetch jobs:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMyJobs();
+  }, [dispatch, setIsLoading]);
 
   // Handle loading and error states
-  if (status === "loading") {
-    return <p>Loading jobs...</p>;
-  }
-
-  if (error) {
-    return <p>Error fetching jobs: {error.message || JSON.stringify(error)}</p>;
+  if (!dataLoaded) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+        <p className="ml-4">Loading...</p>
+      </div>
+    );
   }
 
   const handleDeleteClick = (jobId) => {

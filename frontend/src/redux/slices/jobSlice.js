@@ -22,7 +22,12 @@ export const postJob = createAsyncThunk(
   "job/postJob",
   async (jobData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/v1/services", jobData);
+      const token = localStorage.getItem("Token");
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/services",
+        jobData,
+        { headers: { Authorization: `Bearer ${token}` } } // Pass token in the headers
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -47,11 +52,10 @@ export const fetchServiceById = createAsyncThunk(
 // Async thunk to fetch jobs by client
 export const fetchMyJobs = createAsyncThunk(
   "job/fetchMyJobs",
-  async (_, { rejectWithValue }) => {
+  async (clientId, { rejectWithValue }) => {
     try {
-      const hardcodedClientId = "66e6fb684b5878794bcadf9b";
       const response = await axios.post("/api/v1/services/my-jobs", {
-        clientId: hardcodedClientId,
+        clientId, // Use the passed clientId
       });
       return response.data.data.services;
     } catch (error) {

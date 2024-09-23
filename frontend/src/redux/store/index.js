@@ -5,6 +5,8 @@ import authReducer from "../slices/authSlice";
 import engineerReducer from "../slices/engineersSlice";
 import verificationReducer from "../slices/requestVerify";
 import userSlice from "../slices/userSlice";
+import clientSlice from "../slices/clientSlice";
+import contractSlice from "../slices/contractSlice";
 export const store = configureStore({
   reducer: {
     job: jobReducer,
@@ -12,6 +14,8 @@ export const store = configureStore({
     user: userSlice,
     verification: verificationReducer,
     engineerlist: engineerReducer,
+    client: clientSlice,
+    contract: contractSlice,
   },
 });
 

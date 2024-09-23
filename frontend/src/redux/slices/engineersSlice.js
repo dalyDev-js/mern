@@ -37,6 +37,24 @@ export const fetchEngineerById = createAsyncThunk(
     }
   }
 );
+
+export const fetchEngineerByEngineerId = createAsyncThunk(
+  "engineerlist/fetchEngineerById",
+  async (engineerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/api/v1/engineer/engineerId/${engineerId}`
+      );
+      console.log(response);
+
+      return response.data.data.engineer;
+    } catch (error) {
+      return rejectWithValue(
+        error.response ? error.response.data : "Unknown error"
+      );
+    }
+  }
+);
 // update engineer details
 export const updateEngineerName = createAsyncThunk(
   "engineerlist/updateEngineerName",
