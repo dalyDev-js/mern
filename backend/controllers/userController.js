@@ -8,7 +8,7 @@ import catchAsync from "../utils/catchAsync.js";
 export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id); // Fetch user by ID
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({
@@ -71,3 +71,35 @@ export const deleteMe = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+export const getUsersPendingVerification = catchAsync(
+  async (req, res, next) => {
+    try {
+      const users = await User.find({
+        verifiedStatus: "pending",
+        requestVerifiedStatus: true,
+      });
+
+      if (!users.length) {
+        return res.status(404).json({
+          status: "fail",
+          message: "No users found with pending verification status",
+        });
+      }
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          users,
+        },
+      });
+    } catch (error) {
+      next(
+        new AppError(
+          "Error fetching users with pending verification status",
+          500
+        )
+      );
+    }
+  }
+);

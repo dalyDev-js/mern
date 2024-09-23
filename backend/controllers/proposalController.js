@@ -3,6 +3,7 @@ import { Proposal } from "../model/proposalModel.js";
 import Service from "../model/serviceModel.js";
 
 import catchAsync from "../utils/catchAsync.js";
+
 const addProposal = catchAsync(async (req, res, next) => {
   const { content, budget, service, engineerId } = req.body;
   console.log("Received Proposal Data:", req.body);
@@ -84,4 +85,45 @@ const getProposalsByUserId = catchAsync(async (req, res, next) => {
   res.status(200).json({ proposals });
 });
 
-export { addProposal, updateProposal, getProposalsByUserId };
+const getProposalsByServiceId = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  // Validate input
+  if (!id) {
+    return res.status(400).json({ message: "Service ID is required" });
+  }
+
+  // Find the service and populate its proposals
+  const service = await Service.findById(id).populate({
+    path: "proposals",
+    populate: {
+      path: "engineer", // Populate the engineer details for each proposal
+      select: "name profilePic", // Example: only return name and profile picture
+    },
+  });
+
+  if (!service) {
+    return res.status(404).json({ message: "Service not found" });
+  }
+
+  // Check if the service has any proposals
+  if (!service.proposals || service.proposals.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No proposals found for this service" });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      proposals: service.proposals,
+    },
+  });
+});
+
+export {
+  addProposal,
+  updateProposal,
+  getProposalsByUserId,
+  getProposalsByServiceId,
+};

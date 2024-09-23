@@ -32,9 +32,6 @@ const engineerSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  profilePic: {
-    type: String,
-  },
   savedJobs: [
     {
       service: {
@@ -47,12 +44,18 @@ const engineerSchema = new mongoose.Schema({
   submittedProposals: [
     {
       service: {
-        type: mongoose.Schema.Types.ObjectId, // Assuming service is an ObjectId
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Service",
         required: true,
       },
     },
-  ], // Add this to track submitted proposals
+  ],
+  activeContracts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Contract",
+    },
+  ],
 });
 
 export const Engineer = mongoose.model("Engineer", engineerSchema);

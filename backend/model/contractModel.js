@@ -1,7 +1,9 @@
+import mongoose from "mongoose";
+
 const contractSchema = new mongoose.Schema({
-  project: {
+  service: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Project",
+    ref: "Service",
     required: true,
   },
   engineer: {
@@ -9,10 +11,24 @@ const contractSchema = new mongoose.Schema({
     ref: "Engineer",
     required: true,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  contractTitle: {
+    type: String,
+    required: true,
+  },
   paymentAmount: {
     type: Number,
     required: true,
     min: 0,
+  },
+  paymentOption: {
+    type: String,
+    required: true,
+    enum: ["fixed price", "pay per week"],
   },
   startDate: {
     type: Date,
@@ -28,3 +44,7 @@ const contractSchema = new mongoose.Schema({
     enum: ["active", "completed", "cancelled"],
   },
 });
+
+const Contract = mongoose.model("Contract", contractSchema);
+
+export default Contract;

@@ -3,17 +3,11 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import User from "../model/userModel.js";
 
-// const getAllEngineers = (async(req,res,next)=>{
-//     let engineers = await Engineer.find()
-//     res.status(200).json({message:"Success",engineers})
-// })
-
 const getAllEngineers = catchAsync(async (req, res, next) => {
-  // Populate 'user' and filter only users whose role is 'engineer'
   const engineers = await Engineer.find().populate({
     path: "user",
-    select: "fullName email role", // Select relevant fields
-    match: { role: "engineer" }, // Only include users with role 'engineer'
+    select: "fullName email role",
+    match: { role: "engineer" },
   });
 
   // Filter out any engineers where the user didn't match (role isn't 'engineer')
@@ -33,13 +27,34 @@ const getAllEngineers = catchAsync(async (req, res, next) => {
 const getEngineerById = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
 
-  console.log("User ID received:", userId); // Debugging: Check if userId is passed
+  console.log("User ID received:", userId);
 
-  // Attempt to find an engineer by the user ID and populate the user data
   const engineer = await Engineer.findOne({ user: userId }).populate("user");
 
   if (!engineer) {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
+    return next(new AppError("Engineer not found with this user ID", 404));
+  }
+
+  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      engineer,
+    },
+  });
+});
+
+const getEngineerByEngineerId = catchAsync(async (req, res, next) => {
+  const { engineerId } = req.params;
+
+  console.log("User ID received:", engineerId);
+
+  const engineer = await Engineer.findOne({ _id: engineerId }).populate("user");
+
+  if (!engineer) {
+    console.log("Engineer not found for user ID:", engineerId); // Debugging: Log if no engineer is found
     return next(new AppError("Engineer not found with this user ID", 404));
   }
 
@@ -271,4 +286,5 @@ export {
   getSavedJobs,
   saveJob,
   getEngineerById,
+  getEngineerByEngineerId,
 };

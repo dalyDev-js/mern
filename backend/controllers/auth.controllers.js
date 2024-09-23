@@ -7,12 +7,16 @@ import AppError from "../utils/appError.js";
 import sendEmail from "../utils/email.js";
 import crypto from "crypto";
 import { Engineer } from "../model/engineerModel.js";
+import { Client } from "../model/clientModel.js";
 
 export const signup = catchAsync(async (req, res, next) => {
   // Step 1: Create the user
   const newUser = await createUser(req.body);
 
   let engineer = null;
+  let client = null;
+
+  // Step 2: Create an engineer or client based on the user's role
   if (newUser.role === "engineer") {
     engineer = await Engineer.create({
       user: newUser._id,
@@ -26,6 +30,12 @@ export const signup = catchAsync(async (req, res, next) => {
       skills: req.body.skills || [],
       profilePic: req.body.profilePic || "", // Set profilePic if available
     });
+  } else if (newUser.role === "client") {
+    client = await Client.create({
+      user: newUser._id,
+      overview: req.body.overview || "A client overview",
+      postedProjects: [], // Initialize with an empty array since no projects are posted initially
+    });
   }
 
   // Step 3: Generate JWT token
@@ -34,8 +44,8 @@ export const signup = catchAsync(async (req, res, next) => {
   // Step 4: Set token in cookie
   setTokenInCookie(token, res);
 
-  // Step 5: Send response including the user and engineer data (if engineer)
-  sendResponse(res, 201, token, { user: newUser, engineer });
+  // Step 5: Send response including the user and engineer/client data (if applicable)
+  sendResponse(res, 201, token, { user: newUser, engineer, client });
 });
 
 export const login = catchAsync(async (req, res, next) => {

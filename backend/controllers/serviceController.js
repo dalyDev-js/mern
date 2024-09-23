@@ -1,3 +1,4 @@
+import { Client } from "../model/clientModel.js";
 import Service from "../model/serviceModel.js";
 import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -46,10 +47,29 @@ export const getServiceById = catchAsync(async (req, res, next) => {
 });
 
 export const createService = catchAsync(async (req, res, next) => {
-  console.log("Request Body:", req.body);
-  console.log("hello");
-  const newService = await Service.create(req.body);
-  res.status(200).json({
+  const { client, title, budget, description, skills, level } = req.body;
+
+  // Check if the client ID is provided
+  if (!client) {
+    return next(new AppError("Client ID is required to post a service", 400));
+  }
+
+  // Create the service/job
+  const newService = await Service.create({
+    title,
+    budget,
+    description,
+    skills,
+    level,
+    client, // Attach the client ID to the service
+  });
+
+  // Push the service to the client's postedProjects array
+  await Client.findByIdAndUpdate(client, {
+    $push: { postedProjects: { service: newService._id } },
+  });
+
+  res.status(201).json({
     status: "success",
     data: {
       service: newService,

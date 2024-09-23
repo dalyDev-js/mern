@@ -13,6 +13,8 @@ import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
 import paymentRouter from "./routes/paymnet.routes.js";
 import verifyRouter from "./routes/requestVerification.js";
+import clientRouter from "./routes/client.routes.js";
+import contractRouter from "./routes/contract.routes.js";
 const app = express();
 
 app.use(
@@ -29,7 +31,8 @@ app.use(cookieParser());
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/services", servicesRouter);
-// app.use("/api/v1/services/my-jobs", servicesRouter);
+app.use("/api/v1/client", clientRouter);
+app.use("/api/v1/contract", contractRouter);
 app.use("/api/v1/portfolios", portfolioRouter);
 app.use("/api/v1/request-verification", verifyRouter);
 app.use("/api/v1/certificates", certificateRouter);
@@ -37,6 +40,7 @@ app.use("/api/v1/experiences", experienceRouter);
 app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/engineer", engineerRouters);
+app.use("/api/v1/verify", verifyRouter);
 app.use("/api/vi/payment", paymentRouter);
 
 app.all("*", (req, res, next) => {
