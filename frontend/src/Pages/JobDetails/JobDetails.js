@@ -204,7 +204,7 @@ function JobDetail() {
           {/* Display the relative time from selectedJob.createdAt */}
           Posted {moment(selectedJob?.createdAt).fromNow()}
         </p>
-        <h1 className="job-title text-2xl text-amber-600 font-bold mb-4">
+        <h1 className="job-title text-3xl text-amber-300  font-bold mb-4">
           {/* Use job title fetched from the server */}
           {selectedJob?.title}
         </h1>

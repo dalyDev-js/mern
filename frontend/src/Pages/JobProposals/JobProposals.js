@@ -26,10 +26,10 @@ export default function JobProposals() {
         setSelectedJob(jobResponse?.payload);
         setProposals(proposalResponse?.payload);
 
+        console.log(jobResponse);
         const userIds = proposalResponse?.payload.map(
-          (proposal) => proposal.engineer._id // Get user ID from engineer object in proposal
+          (proposal) => proposal.engineer._id || [] // Get user ID from engineer object in proposal
         );
-
         // Fetch user names for all userIds and only set dataLoaded to true once all is complete
         await fetchUserNames(userIds);
       } catch (err) {
@@ -67,6 +67,9 @@ export default function JobProposals() {
   }, [dispatch, serviceId]);
 
   // Show loading state until data is fully loaded
+
+  // If no job or proposals are found
+
   if (!dataLoaded) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -75,12 +78,9 @@ export default function JobProposals() {
       </div>
     );
   }
-
-  // If no job or proposals are found
   if (!selectedJob || proposals.length === 0) {
     return <p>No proposals found for this job.</p>;
   }
-
   return (
     <>
       <div className="jobs-proposals w-3/5 mx-auto">

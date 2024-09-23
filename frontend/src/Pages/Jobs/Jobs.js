@@ -47,11 +47,11 @@ function JobSearch() {
     <div className=" pb-8 items-center  mt-10">
       <div className="jobs-page w-4/5 mx-auto flex gap-2">
         <div className="left-content w-2/3">
-          <div className="big-label w-full p-6 rounded-lg shadow-lg bg-amber-600 h-60 mb-4 mt-4  ">
-            <p className="text-slate-100 text-2xl">
+          <div className="big-label w-full p-6 rounded-lg shadow-lg bg-amber-300 text-black h-60 mb-4 mt-4  ">
+            <p className="text-black text-2xl">
               Rise to the top of the client's list
             </p>
-            <p className="text-white text-3xl w-2/3">
+            <p className="text-black text-3xl w-2/3">
               Boosted Proposals deliver 10x more earnings on ad spend
             </p>
             <button className="mt-7 bg-white rounded-md p-2 px-5">

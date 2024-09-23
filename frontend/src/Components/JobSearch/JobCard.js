@@ -32,14 +32,14 @@ function JobCard({
           <span className="text-neutral-400">{timeAgo}</span>
 
           <div className="first-part flex items-center justify-between">
-            <h3 className="job-title mb-1 text-xl font-semibold text-amber-600">
+            <h3 className="job-title mb-1 text-2xl font-semibold text-black">
               {title}
             </h3>
             <i
               className={`text-xl ${
                 liked
-                  ? "fa-solid fa-heart cursor-pointer text-red-600"
-                  : "fa-regular fa-heart text-amber-600 cursor-pointer"
+                  ? "fa-solid fa-heart cursor-pointer text-red-300"
+                  : "fa-regular fa-heart text-amber-300 cursor-pointer"
               }`}
               onClick={handleToggle}></i>
           </div>
@@ -53,7 +53,7 @@ function JobCard({
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="skill p-1 px-3 text-sm rounded-xl bg-slate-300">
+                className="skill p-1 px-3 text-sm rounded-xl bg-amber-300">
                 {skill}
               </div>
             ))}
