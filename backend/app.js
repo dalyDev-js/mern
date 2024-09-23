@@ -45,6 +45,7 @@ app.use("/api/v1/engineer", engineerRouters);
 app.use("/api/v1/verify", verifyRouter);
 app.use("/api/v1/requestVerify", requestVerifyRouter);
 app.use("/api/vi/payment", paymentRouter);
+app.use("/api/v1/admin-auth", adminRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`, 404));

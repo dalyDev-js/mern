@@ -7,6 +7,12 @@ export const generateToken = (id, fullName, role) => {
   });
 };
 
+export const generateAdminToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES,
+  });
+};
+
 export const setTokenInCookie = (token, res) => {
   const expiryDateInMS = process.env.JWT_COOKIES_EXPIRES * 24 * 60 * 60 * 1000;
   res.cookie("jwt", token, {
