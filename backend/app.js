@@ -13,6 +13,7 @@ import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
 import paymentRouter from "./routes/paymnet.routes.js";
 import verifyRouter from "./routes/requestVerification.js";
+import adminRouter from "./routes/adminRoute.js";
 const app = express();
 
 app.use(
@@ -38,6 +39,7 @@ app.use("/api/v1/proposals", proposalRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/engineer", engineerRouters);
 app.use("/api/vi/payment", paymentRouter);
+app.use("/api/v1/admin-auth", adminRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`, 404));
