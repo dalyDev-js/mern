@@ -17,6 +17,7 @@ import clientRouter from "./routes/client.routes.js";
 import contractRouter from "./routes/contract.routes.js";
 import verifyRouter from "./routes/verify.routes.js";
 import requestVerifyRouter from "./routes/requestVerification.js";
+import adminRouter from "./routes/adminRoute.js";
 const app = express();
 
 app.use(

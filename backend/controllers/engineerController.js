@@ -112,14 +112,15 @@ const addSkill = catchAsync(async (req, res, next) => {
 // frontend will update the skills array and save them in the database
 
 const addOverview = async (req, res, next) => {
-  let engineerId = req.user.id;
+  let { id } = req.params;
+  console.log(id);
   const { profileOverview } = req.body;
 
   if (!profileOverview) {
     return res.status(400).json({ message: "Profile Overview is required." });
   }
   await Engineer.findByIdAndUpdate(
-    engineerId,
+    id,
     { overview: req.body.overview },
     { new: true }
   );
@@ -138,7 +139,7 @@ const addEducation = catchAsync(async (req, res, next) => {
   const engineerId = req.user.id;
 
   const updatedEngineer = await Engineer.findByIdAndUpdate(
-    engineerId,
+    id,
     {
       education: {
         title,

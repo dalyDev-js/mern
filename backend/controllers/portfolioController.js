@@ -4,17 +4,17 @@ import catchAsync from "../utils/catchAsync.js";
 const addPortofolio = catchAsync(async (req, res, next) => {
   const { title, description, url } = req.body;
 
-  let user = req.user.id; //user id from token
+  let { id } = req.params; //user id from token
 
   // TODO : upload l file to cloud storage
   // delete it from the tmp storage
 
   await Portfolio.create({
-    user,
+    id,
     title,
     description,
     image: req.file.filename,
-    url
+    url,
   });
 
   res.status(200).json({ message: "Portfolio added successfully" });
