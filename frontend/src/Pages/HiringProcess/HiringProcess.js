@@ -37,7 +37,7 @@ const HiringProcess = () => {
   useEffect(() => {
     const fetchEngineerData = async () => {
       const token = localStorage.getItem("Token");
-      const clientId = jwtDecode(token).id;
+      setClientId(jwtDecode(token).id);
       console.log("Client ID:", clientId);
       setLoading(true);
 
