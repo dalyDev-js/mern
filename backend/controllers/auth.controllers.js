@@ -12,7 +12,7 @@ import { Client } from "../model/clientModel.js";
 export const signup = catchAsync(async (req, res, next) => {
   // Step 1: Create the user
   const newUser = await createUser(req.body);
-
+  console.log(newUser);
   let engineer = null;
   let client = null;
 
