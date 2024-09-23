@@ -257,7 +257,7 @@ export default function SignUpClient() {
             {loading || isLoading ? (
               <i className="fa fa-spin fa-spinner"></i>
             ) : (
-              "Create Freelancer Account"
+              "Create Client Account"
             )}
           </button>
 

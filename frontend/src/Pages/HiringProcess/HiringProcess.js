@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice";
-import { createContract } from "../../redux/slices/contractSlice";
+import {
+  checkExistingContract,
+  checkIfContractExists,
+  createContract,
+} from "../../redux/slices/contractSlice";
 import { jwtDecode } from "jwt-decode";
 
 const HiringProcess = () => {
@@ -21,40 +25,64 @@ const HiringProcess = () => {
   const [endDateError, setendDateError] = useState("");
   const [termsError, setTermsError] = useState("");
   const [loading, setLoading] = useState(true);
-  // const [serviceId, setServiceId] = useState("");
-
+  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const [isVerificationPending, setIsVerificationPending] = useState(false);
   const { service: serviceId, id: engineerId } = useParams();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [clientId, setClientId] = useState("");
+  const [isContractExists, setIsContractExists] = useState(false);
 
   useEffect(() => {
     const fetchEngineerData = async () => {
       const token = localStorage.getItem("Token");
       const clientId = jwtDecode(token).id;
-      console.log(clientId);
+      console.log("Client ID:", clientId);
       setLoading(true);
+
       try {
+        // Fetch engineer details
         const engineerResponse = await dispatch(
           fetchEngineerByEngineerId(engineerId)
         ).unwrap();
-        setEngineerFullName(
-          engineerResponse?.user?.fullName || "Unknown Engineer"
-        );
-        console.log(serviceId);
-        setClientId(clientId);
+        const engineerFullName =
+          engineerResponse?.user?.fullName || "Unknown Engineer";
+        setEngineerFullName(engineerFullName);
+
+        // Fetch the actual `engineerUserId` from the response
+        const engineerUserId = engineerResponse?.user?._id;
+
+        if (!engineerUserId) {
+          console.error("Engineer User ID is undefined.");
+          return;
+        }
+
+        console.log("Engineer User ID:", engineerUserId);
+
+        // Check if a contract already exists using `engineerUserId`
+        const contractExists = await dispatch(
+          checkIfContractExists({ serviceId, engineerUserId, clientId })
+        ).unwrap();
+
+        setIsContractExists(contractExists); // Update state based on contract existence
+
+        if (contractExists) {
+          setIsVerificationPending(true);
+        }
+
+        console.log("Contract exists:", contractExists); // Log the result for debugging
       } catch (err) {
-        console.error("Failed to load engineer data:", err);
-        setEngineerFullName("Error loading name");
+        console.error("Failed to load engineer data or check contract:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (engineerId) {
-      fetchEngineerData();
+    if (engineerId && serviceId) {
+      fetchEngineerData(); // Only call the function if `engineerId` and `serviceId` are defined
     }
-  }, [dispatch, engineerId]);
+  }, [dispatch, engineerId, serviceId]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -118,7 +146,7 @@ const HiringProcess = () => {
     }
 
     const contractData = {
-      title: contractTitle,
+      contractTitle: contractTitle,
       description: contractDescription,
       paymentAmount,
       service: serviceId,
@@ -136,11 +164,15 @@ const HiringProcess = () => {
     try {
       // Dispatch create contract action
       await dispatch(createContract(contractData)).unwrap();
-      alert("Contract created successfully!");
-      navigate("/contracts");
+      setSuccessModalVisible(true);
     } catch (error) {
       console.error("Error creating contract:", error);
     }
+  };
+
+  const handleSuccessModalOkClick = () => {
+    setSuccessModalVisible(false);
+    navigate("/contracts");
   };
 
   if (loading) {
@@ -152,6 +184,19 @@ const HiringProcess = () => {
     );
   }
 
+  if (isVerificationPending) {
+    return (
+      <div className="flex flex-col items-center">
+        <p className="text-lg font-semibold mb-4">
+          Your offer has already been sent...
+        </p>
+        <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+        <p className="text-gray-600 mt-4">
+          Please wait while we complete the review and verification process.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="bg-gray-50 p-8 min-h-screen flex flex-col items-center">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
@@ -344,6 +389,26 @@ const HiringProcess = () => {
           </div>
         </form>
       </div>
+      {isSuccessModalVisible && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-35">
+          <div
+            className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
+            style={{
+              animation: "fadeInScale 0.3s ease-out",
+            }}>
+            <div className="flex justify-center mb-4">
+              <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
+            </div>
+            <p className="text-2xl font-semibold mb-2">Success</p>
+            <p className="text-gray-600 mb-4">Offer sent successfully.</p>
+            <button
+              onClick={handleSuccessModalOkClick}
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

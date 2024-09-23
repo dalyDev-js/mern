@@ -32,6 +32,7 @@ import SignUpEngineer from "./Pages/SignUp/SignUpEngineer";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Verify from "./Pages/Verify/Verify";
 import { LoadingProvider } from "./utils/LoadingContext";
+import Contract from "./Pages/Contract/Contract";
 
 let routers = createBrowserRouter([
   {
@@ -63,6 +64,7 @@ let routers = createBrowserRouter([
       { path: "/engineer-details", element: <Profile /> }, // engineer details -- client view
       { path: "/engineer-details/:id", element: <Profile /> }, // engineer details -- client view
       { path: "/hiring/:service/:id", element: <HiringProcess /> }, // sending proposal -- engineer view
+      { path: "/contracts", element: <Contract /> },
       { path: "/verify", element: <Verify /> },
       {
         path: "/client",

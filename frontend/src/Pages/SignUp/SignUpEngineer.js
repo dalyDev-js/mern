@@ -95,7 +95,7 @@ export default function SignUpEngineer() {
         style={{ minHeight: "650px" }} // Fixed height
       >
         <h2 className="text-2xl font-bold text-center mb-6">
-          Sign up as Client
+          Sign up as Freelancer
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-10">

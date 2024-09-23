@@ -95,6 +95,77 @@ export const deleteContract = createAsyncThunk(
   }
 );
 
+export const fetchContractsByClientId = createAsyncThunk(
+  "contract/fetchContractsByClientId",
+  async (clientId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.get(`${baseURL}/client/${clientId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.data.contracts;
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data || "Failed to fetch contracts by client"
+      );
+    }
+  }
+);
+
+// Fetch contracts by engineer ID
+export const fetchContractsByEngineerId = createAsyncThunk(
+  "contract/fetchContractsByEngineerId",
+  async (engineerId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.get(`${baseURL}/engineer/${engineerId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.data.contracts;
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data || "Failed to fetch contracts by engineer"
+      );
+    }
+  }
+);
+export const fetchContracts = createAsyncThunk(
+  "contract/fetchContracts",
+  async ({ role, userId }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const endpoint =
+        role === "client" ? `client/${userId}` : `engineer/${userId}`;
+      const response = await axios.get(`${baseURL}/${endpoint}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.data.contracts; // Return the contracts
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch contracts"
+      );
+    }
+  }
+);
+
+export const checkIfContractExists = createAsyncThunk(
+  "contracts/checkIfContractExists",
+  async ({ serviceId, engineerUserId, clientId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/v1/contract/check`, {
+        params: {
+          service: serviceId,
+          engineer: engineerUserId,
+          client: clientId,
+        },
+      });
+      return response.data.exists;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Contract slice
 const contractSlice = createSlice({
   name: "contract",
