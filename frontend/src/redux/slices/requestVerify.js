@@ -38,7 +38,7 @@ export const requestVerification = (userId) => async (dispatch) => {
   try {
     // Make the request to the backend with userId
     const response = await axios.post(
-      "http://localhost:8000/api/v1/request-verification",
+      "http://localhost:8000/api/v1/requestVerify",
       { userId }
     );
 

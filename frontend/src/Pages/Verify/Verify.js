@@ -33,6 +33,13 @@ const Verify = () => {
         if (verifiedStatus && verifiedStatus.includes("pending") && requested) {
           setIsVerificationPending(true);
         }
+        if (
+          verifiedStatus &&
+          verifiedStatus.includes("rejected") &&
+          requested
+        ) {
+          setIsVerificationPending(true);
+        }
       } else {
         console.error("No user ID found in the token");
       }
@@ -157,8 +164,7 @@ const Verify = () => {
                   onChange={handleCountryChange}
                   className={`w-full border-2 p-2 rounded-lg focus:outline-none focus:border-amber-300 ${
                     country ? "border-amber-300" : "border-gray-300"
-                  }`}
-                >
+                  }`}>
                   <option value="Egypt">Egypt</option>
                   <option value="UAE">UAE</option>
                   <option value="USA">USA</option>
@@ -173,8 +179,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("passport")}
-                >
+                  onClick={() => handleOptionSelect("passport")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/passport.png"
@@ -192,8 +197,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("idCard")}
-                >
+                  onClick={() => handleOptionSelect("idCard")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/id-card.png"
@@ -211,8 +215,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("driversLicense")}
-                >
+                  onClick={() => handleOptionSelect("driversLicense")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/driving-license-icon.png"
@@ -229,14 +232,12 @@ const Verify = () => {
               <div className="flex justify-between">
                 <button
                   onClick={() => console.log("Go back")}
-                  className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400"
-                >
+                  className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
                   Cancel
                 </button>
                 <button
                   onClick={handleContinue}
-                  className="bg-amber-300 text-black py-2 px-4 rounded-lg hover:bg-amber-400"
-                >
+                  className="bg-amber-300 text-black py-2 px-4 rounded-lg hover:bg-amber-400">
                   Continue
                 </button>
               </div>
@@ -261,8 +262,7 @@ const Verify = () => {
               <div className="flex justify-center">
                 <button
                   onClick={handleRequestVerification}
-                  className="bg-amber-300 text-black py-2 px-6 rounded-lg hover:bg-amber-400"
-                >
+                  className="bg-amber-300 text-black py-2 px-6 rounded-lg hover:bg-amber-400">
                   Request Verification
                 </button>
               </div>

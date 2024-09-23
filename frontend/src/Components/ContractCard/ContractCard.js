@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ContractCard = ({ contract, role }) => {
   // Access nested contract data
@@ -13,11 +14,9 @@ const ContractCard = ({ contract, role }) => {
       </p>
       <p className="text-gray-600 mb-2">Status: {contractData.status}</p>
       <p className="text-gray-600 mb-2">
-        {/* Dynamically show engineer or client based on role */}
-        {role === "client"
+        {/* {role === "client"
           ? `Engineer ID: ${contractData.engineer}` // You can replace this with full name if available
-          : `Client ID: ${contractData.service.client}`}{" "}
-        {/* Replace with full name if available */}
+          : `Client ID: ${contractData.service.client}`}{" "} */}
       </p>
       <p className="text-gray-600 mb-2">
         Start Date: {new Date(contractData.startDate).toLocaleDateString()}
@@ -25,9 +24,11 @@ const ContractCard = ({ contract, role }) => {
       <p className="text-gray-600 mb-2">
         End Date: {new Date(contractData.endDate).toLocaleDateString()}
       </p>
-      <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-        View Details
-      </button>
+      <Link to={`/contract/${contract.contract._id}`}>
+        <button className="mt-4 px-4 py-2 bg-amber-300 text-black rounded">
+          View Details
+        </button>
+      </Link>
     </div>
   );
 };

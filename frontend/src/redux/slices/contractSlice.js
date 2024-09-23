@@ -30,9 +30,11 @@ export const fetchContractById = createAsyncThunk(
       const response = await axios.get(`${baseURL}/${contractId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      return response.data.data.contract;
+      return response.data.data.contract; // Return the contract details
     } catch (error) {
-      return rejectWithValue(error.response.data || "Failed to fetch contract");
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch contract"
+      );
     }
   }
 );
