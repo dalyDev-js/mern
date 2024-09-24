@@ -12,13 +12,15 @@ import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
 import paymentRouter from "./routes/paymnet.routes.js";
-
+import { app } from "./socket/socket.js";
 import clientRouter from "./routes/client.routes.js";
 import contractRouter from "./routes/contract.routes.js";
 import verifyRouter from "./routes/verify.routes.js";
 import requestVerifyRouter from "./routes/requestVerification.js";
 import adminRouter from "./routes/adminRoute.js";
-const app = express();
+import messageRouter from "./routes/message.routes.js";
+
+// const app = express();
 
 app.use(
   cors({
@@ -47,6 +49,7 @@ app.use("/api/v1/verify", verifyRouter);
 app.use("/api/v1/requestVerify", requestVerifyRouter);
 app.use("/api/vi/payment", paymentRouter);
 app.use("/api/v1/admin-auth", adminRouter);
+app.use("/api/v1/messages", messageRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`, 404));
