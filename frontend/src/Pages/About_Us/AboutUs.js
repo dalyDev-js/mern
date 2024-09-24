@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLoading } from "../../utils/LoadingContext";
+import logo from "../../assets/logo.png";
 
 function AboutUs() {
   const { setIsLoading } = useLoading();
@@ -18,18 +19,22 @@ function AboutUs() {
         <h1 className="text-4xl font-medium text-amber-300 mb-6">About us</h1>
 
         {/*  about us Section */}
-        <p className="text-s font-normal mb-4">
-          <span className="text-m font-bold ">At Handsly</span>, we bridge the
-          gap between skilled civil and architectural engineers and businesses
-          seeking top-notch talent for their projects. Our platform is designed
-          to connect industry professionals with a variety of opportunities,
-          from large-scale infrastructure projects to innovative architectural
-          designs. We provide a secure and efficient space where clients can
-          find qualified experts to bring their visions to life, while engineers
-          can grow their careers by working with global teams and contributing
-          to meaningful projects.
+
+        <p className="text-s font-normal mb-4 items-center">
+          <span className="font text-l font-semibold whitespace-nowrap mr-1">
+            at Handesly
+          </span>
+          , we bridge the gap between skilled civil and architectural engineers
+          and businesses seeking top-notch talent for their projects. Our
+          platform is designed to connect industry professionals with a variety
+          of opportunities, from large-scale infrastructure projects to
+          innovative architectural designs. We provide a secure and efficient
+          space where clients can find qualified experts to bring their visions
+          to life, while engineers can grow their careers by working with global
+          teams and contributing to meaningful projects.
         </p>
-        <p className="text-md font-semibold text-amber-500  ">
+
+        <p className="text-md font-semibold text-black ">
           Our mission is to empower engineers by offering a specialized
           marketplace that fosters collaboration, innovation, and growth.
           Whether you&apos;re an engineer seeking freelance work or a company in
@@ -160,18 +165,20 @@ function AboutUs() {
           </div>
         </div>
 
-        <h1 className="text-4xl font-medium text-amber-300 mb-6">
+        <h1 className="text-4xl font-medium text-black mb-6">
           Start your journey
         </h1>
         <span className="flex gap-7 ml-3">
           <a
             href="#"
-            className="text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
+            className="text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
+          >
             Find Talent
           </a>
           <a
             href="#"
-            className=" text-black bg-amber-300 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
+            className=" text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
+          >
             Find Work
           </a>
         </span>

@@ -114,9 +114,9 @@ function Payment() {
 
   return (
     <>
-      <div className="bg-gray-100 p-6 flex flex-col md:flex-row gap-1 max-w-5xl mx-auto">
+      <div className="bg-gray-50 p-6 my-28 flex flex-col md:flex-row gap-1 max-w-5xl mx-auto ">
         {/* Left Section  */}
-        <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md">
+        <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md ">
           <form onSubmit={handleSubmit}>
             {/* text  */}
             <div className="flex justify-between items-center mb-2">
@@ -127,7 +127,7 @@ function Payment() {
               </span>
               <button
                 type="button"
-                className=" w-32 h-12 mb-5 text-black border-2 border-amber-400 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5"
+                className=" w-32 h-12 mb-5 text-black border-2 border-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5"
               >
                 <Link to={"/client"}>Cancel</Link>
               </button>
@@ -176,7 +176,7 @@ function Payment() {
                     <div class="relative">
                       <input
                         type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                         placeholder="1234-1234-1234-1234"
                         value={cardNumber}
                         onChange={handleCardNumberChange}
@@ -210,7 +210,7 @@ function Payment() {
                       </label>
                       <input
                         type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                         placeholder="First Name"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
@@ -227,7 +227,7 @@ function Payment() {
                       </label>
                       <input
                         type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                         placeholder="Last Name"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
@@ -247,7 +247,7 @@ function Payment() {
                       </label>
                       <input
                         type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                         placeholder="MM/YYYY"
                         value={expirationDate}
                         onChange={(e) => setExpirationDate(e.target.value)}
@@ -264,7 +264,7 @@ function Payment() {
                       </label>
                       <input
                         type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                         placeholder="CVV"
                         value={cvv}
                         onChange={(e) => setCvv(e.target.value)}
@@ -283,7 +283,7 @@ function Payment() {
                       City
                     </label>
                     <select
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                     >
@@ -300,7 +300,7 @@ function Payment() {
                     <textarea
                       id="message"
                       rows="4"
-                      class=" mt-1 block p-2.5 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class=" mt-1 block p-2.5 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:border-amber-300 focus:ring-amber-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your Address here..."
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
@@ -313,34 +313,13 @@ function Payment() {
               </Accordion.Panel>
               <hr />
               {/*  PayPal Section */}
-              {/* <Accordion.Panel>
-                <Accordion.Title className="p-3">
-                  <span className="flex items-center justify-between w-full">
-                    
-
-                    <span className="flex items-center ">
-                      <span className="text-blue-800 test-xs">
-                        pay <span className="text-blue-400 test-xs">pal</span>
-                      </span>
-                    </span>
-
-                   
-                    <span className="ml-6 pr-5 text-black dark:text-gray-400">
-                      PayPal Method
-                    </span>
-                  </span>
-                </Accordion.Title>
-                <Accordion.Content>
-                  <p>content</p>
-                </Accordion.Content>
-              </Accordion.Panel> */}
             </Accordion>
 
             {/* Submit Button */}
             <div className="flex justify-end mt-6">
               <button
                 type="submit"
-                className="w-40 mb-5 text-black bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
+                className="w-40 mb-5 text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
               >
                 Save
               </button>
@@ -375,7 +354,7 @@ function Payment() {
               You'll be charged up to a
               <a
                 href="#"
-                class="font-medium pl-1 text-amber-400 dark:text-amber-500 hover:underline"
+                class="font-medium pl-1 text-amber-300 dark:text-amber-400 hover:underline"
               >
                 5% marketplace fee
               </a>
@@ -384,14 +363,14 @@ function Payment() {
 
             <button
               href="#"
-              className=" w-full mb-5 text-black bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
+              className=" w-full mb-5 text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-md px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
             >
               Fund Contract & Hire
             </button>
             {/* icon */}
             <span className="flex gap-2 pl-5">
               <svg
-                class="w-6 h-6 text-amber-400 dark:text-white"
+                class="w-6 h-6 text-amber-300 "
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -411,7 +390,7 @@ function Payment() {
               {/* text */}
 
               <p class="text-gray-500 dark:text-gray-400">
-                Upwork Payment Protection
+                Handesly Payment Protection
               </p>
             </span>
           </div>

@@ -181,7 +181,8 @@ export default function Client() {
             className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
             style={{
               animation: "fadeInScale 0.3s ease-out",
-            }}>
+            }}
+          >
             <div className="flex justify-center mb-4">
               <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
             </div>
@@ -189,7 +190,8 @@ export default function Client() {
             <p className="text-gray-600 mb-4">Job Posted successfully.</p>
             <button
               onClick={handleSuccessModalOkClick}
-              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
+            >
               OK
             </button>
           </div>
@@ -207,7 +209,7 @@ export default function Client() {
                       Bring your ideas to life! Post your project now and
                       connect with talented Engineers from all countries ready
                       to help you achieve your{" "}
-                      <span className="text-amber-500">goals.</span>
+                      <span className="text-amber-300">goals.</span>
                     </p>
                   </div>
                   <div className="job-title-budget flex gap-2 mt-3">
@@ -278,7 +280,8 @@ export default function Client() {
                       className="w-full rounded-md mt-3"
                       value={jobData.level}
                       onChange={handleChange}
-                      required>
+                      required
+                    >
                       <option value="entry">Entry</option>
                       <option value="intermediate">Intermediate</option>
                       <option value="expert">Expert</option>
@@ -287,12 +290,14 @@ export default function Client() {
                   <div className="proposal-action flex justify-between mt-4">
                     <button
                       className="p-1 px-7 bg-gray-800 hover:bg-gray-600 text-lg text-white rounded-md"
-                      onClick={handleCancelClick}>
+                      onClick={handleCancelClick}
+                    >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="p-1 px-7 bg-amber-300 hover:bg-amber-400 text-lg text-black rounded-md">
+                      className="p-1 px-7 bg-amber-300 hover:bg-amber-400 text-lg text-black rounded-md"
+                    >
                       Post Job
                     </button>
                   </div>
@@ -329,7 +334,7 @@ export default function Client() {
                   <p className="ms-7 text-sm text-gray-500">Required to hire</p>
                   <div className="add-billing flex mt-3">
                     <div className="billing-data flex gap-2 items-center w-3/4">
-                      <i className="text-xl text-amber-500 fa-sharp-duotone fa-solid fa-check"></i>
+                      <i className="text-xl text-amber-300 fa-sharp-duotone fa-solid fa-check"></i>
                       <p className="text-xl font-thin">
                         You Verified Email Address
                       </p>
@@ -349,7 +354,8 @@ export default function Client() {
                     ? "bg-amber-300 text-black hover:bg-amber-400"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
-                disabled={!isVerified}>
+                disabled={!isVerified}
+              >
                 <i className="fa-solid fa-plus"></i> Post a job
               </button>
             </div>
@@ -373,17 +379,18 @@ export default function Client() {
                       ? "text-black bg-amber-300 hover:bg-amber-400 "
                       : "text-gray-500   cursor-not-allowed"
                   }`}
-                  disabled={!isVerified}>
+                  disabled={!isVerified}
+                >
                   Post a new job
                 </button>
               </div>
             </div>
             <Link
               to={"/recent-posts"}
-              className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
+              className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl"
+            >
               <div className="first-top  mx-7  flex flex-col ">
                 <div className="flex w-full justify-start">
-                  {" "}
                   <span>
                     <i class="  fa-regular fa-lightbulb me-2 text-lg font-medium"></i>
                   </span>{" "}
@@ -393,18 +400,17 @@ export default function Client() {
                 <p className="mt-2 text-gray-500">See Posts and Proposals</p>
               </div>
               <div className="second-bottom mx-6">
-                <p className="text-amber-600 text-lg">
+                <p className="text-amber-300 text-lg">
                   You have {jobs?.length} job posts
                 </p>
               </div>
-            </Link>{" "}
+            </Link>
             <div className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
               <div className="first-top mx-7  flex flex-col ">
                 <div className="flex w-full justify-start">
-                  {" "}
                   <span>
                     <i class="  fa-regular fa-lightbulb me-2 text-lg font-medium"></i>
-                  </span>{" "}
+                  </span>
                   <span className="text-lg font-medium"> Quick tips</span>
                 </div>
                 <p className="text-2xl mt-2 font-medium">Stay Safe in Handas</p>
@@ -414,7 +420,7 @@ export default function Client() {
                 </p>
               </div>
               <div className="second-bottom mx-6">
-                <p className="text-amber-600 text-lg">
+                <p className="text-amber-300 text-lg">
                   Learn more about safety
                 </p>
               </div>
@@ -430,7 +436,7 @@ export default function Client() {
                 </p>
               </div>
               <div className="second-bottom mx-6">
-                <button className="p-2 w-full font-medium text-amber-600 border-2 border-amber-400 rounded-lg ">
+                <button className="p-2 w-full font-medium text-amber-300 border-2 border-amber-300 rounded-lg ">
                   Browse and Message talent{" "}
                 </button>
               </div>
@@ -440,7 +446,7 @@ export default function Client() {
             Find experts by Specialization
           </p>
           <div className="post-tips-3 mb-6 flex gap-3">
-            <div className="post-job-1-3 w-1/4 h-80 flex flex-col justify-between py-4 bg-amber-600 rounded-xl">
+            <div className="post-job-1-3 w-1/4 h-80 flex flex-col justify-between py-4 bg-amber-300 rounded-xl">
               <div className="first-top mx-7 mt-3  flex flex-col items-center">
                 <div className="flex w-full justify-start">
                   {" "}
@@ -452,7 +458,7 @@ export default function Client() {
                 </p>
               </div>
               <div className="second-bottom mx-6">
-                <button className="p-2 w-full font-medium text-amber-300 border-2 border-amber-200 rounded-lg ">
+                <button className="p-2 w-full font-medium text-amber-300 border-2 border-amber-300 rounded-lg ">
                   Learn more{" "}
                 </button>
               </div>
@@ -478,7 +484,7 @@ export default function Client() {
                 Get Started and connect with talent to get work done
               </p>
 
-              <button className="p-2 mt-5 px-7 border border-amber-600 text-amber-500 font-medium rounded-lg">
+              <button className="p-2 mt-5 px-7 border border-amber-300 text-amber-300 font-medium rounded-lg">
                 {" "}
                 Go Article
               </button>
