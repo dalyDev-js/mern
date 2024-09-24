@@ -14,9 +14,17 @@ import { useLoading } from "../../utils/LoadingContext";
 import { jwtDecode } from "jwt-decode";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import { fetchClientById } from "../../redux/slices/clientSlice";
+import { WithContext as ReactTags } from "react-tag-input";
+import Autosuggest from "react-autosuggest";
+import { engineeringSuggestions } from "../../utils/suggestion";
+import "./TagsInput.css";
+import { AiOutlineClose } from "react-icons/ai";
 export default function Client() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [tags, setTags] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const { setIsLoading } = useLoading();
@@ -41,6 +49,13 @@ export default function Client() {
 
           setIsVerified(verifiedStatus === "accepted");
           setJobs(jobResponse?.payload);
+
+          // Set the client ID in jobData once it's loaded
+          setJobData((prevData) => ({
+            ...prevData,
+            client: userId,
+          }));
+
           setIsLoading(false);
         }
       } catch (error) {
@@ -51,6 +66,13 @@ export default function Client() {
 
     loadClientData();
   }, [dispatch, setIsLoading]);
+
+  useEffect(() => {
+    setJobData((prevData) => ({
+      ...prevData,
+      skills: tags.map((tag) => tag.text), // Map tags to skills array
+    }));
+  }, [tags]);
 
   const [jobData, setJobData] = useState({
     title: "",
@@ -67,6 +89,18 @@ export default function Client() {
     description: "",
     skills: "",
   });
+
+  const handleAddition = () => {
+    const trimmedValue = inputValue.trim(); // Trim white spaces
+    if (trimmedValue && !tags.some((t) => t.text === trimmedValue)) {
+      setTags([...tags, { id: trimmedValue, text: trimmedValue }]);
+      setInputValue(""); // Clear input field
+    }
+  };
+
+  const handleDelete = (i) => {
+    setTags(tags.filter((tag, index) => index !== i));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +132,7 @@ export default function Client() {
       skills: "",
     };
 
-    if (jobData.title.length < 3) {
+    if (jobData.title.trim().length < 3) {
       newErrors.title = "Title must be at least 3 characters long.";
       formValid = false;
     }
@@ -108,13 +142,13 @@ export default function Client() {
       formValid = false;
     }
 
-    if (jobData.description.length < 3) {
+    if (jobData.description.trim().length < 3) {
       newErrors.description = "Description must be at least 3 characters long.";
       formValid = false;
     }
 
     if (jobData.skills.length === 0) {
-      newErrors.skills = "Skills cannot be empty.";
+      newErrors.skills = "Please add at least one skill.";
       formValid = false;
     }
 
@@ -124,6 +158,9 @@ export default function Client() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Console log the jobData to inspect before submitting
+    console.log("Job Data before submitting:", jobData);
 
     if (!validateForm()) {
       return;
@@ -146,6 +183,7 @@ export default function Client() {
         setIsSuccessModalVisible(true);
       }
     } catch (error) {
+      console.log("Error posting job:", error);
       setResponseMessage(`Error posting job: ${error.message}`);
     }
     setIsFormVisible(false);
@@ -181,8 +219,7 @@ export default function Client() {
             className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
             style={{
               animation: "fadeInScale 0.3s ease-out",
-            }}
-          >
+            }}>
             <div className="flex justify-center mb-4">
               <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
             </div>
@@ -190,8 +227,7 @@ export default function Client() {
             <p className="text-gray-600 mb-4">Job Posted successfully.</p>
             <button
               onClick={handleSuccessModalOkClick}
-              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
-            >
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
               OK
             </button>
           </div>
@@ -219,7 +255,7 @@ export default function Client() {
                         type="text"
                         name="title"
                         placeholder="Autocad Design for new building"
-                        className="w-full my-3 rounded-md"
+                        className="w-full my-3 rounded-md border  p-2 outline-none border-gray-700  focus:ring-amber-400  focus:border-amber-400 "
                         value={jobData.title}
                         onChange={handleChange}
                         required
@@ -233,7 +269,7 @@ export default function Client() {
                       <input
                         type="number"
                         name="budget"
-                        className="w-full my-3 rounded-md"
+                        className="w-full my-3 rounded-md border  p-2 outline-none border-gray-700  focus:ring-amber-400  focus:border-amber-400  "
                         placeholder="$20/hr"
                         value={jobData.budget}
                         onChange={handleChange}
@@ -250,7 +286,7 @@ export default function Client() {
                       name="description"
                       placeholder="I need ASAP autocad design for building contains..."
                       rows={3}
-                      className="w-full my-3 rounded-md"
+                      className="w-full my-3 rounded-md border      p-2 outline-none border-gray-700  focus:ring-amber-400  focus:border-amber-400   "
                       value={jobData.description}
                       onChange={handleChange}
                       required
@@ -259,29 +295,69 @@ export default function Client() {
                       <p className="text-red-500">{errors.description}</p>
                     )}
                   </div>
-                  <div className="job-skills mt-3">
-                    <label className="font-medium">Job Skills</label>
-                    <input
-                      type="text"
-                      name="skills"
-                      className="w-full rounded-md mt-3"
-                      value={jobData.skills.join(", ")}
-                      onChange={handleChange}
-                      required
-                    />
+                  <div className="skill-input-container">
+                    {/* Input Section */}
+                    <div className="w-full flex items-center mb-4 mt-8">
+                      {/* This is the input styled like Job Level */}
+                      <div className="w-full ">
+                        <input
+                          placeholder="Add new skill"
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          className="w-full    rounded-md    border  p-2 outline-none border-gray-700  focus:ring-amber-400 focus:border-2 focus:border-amber-400 " // Matching Job Level styling
+                        />
+                      </div>
+                      {/* Add Button */}
+                      <button
+                        type="button"
+                        className="ml-3 bg-amber-300 text-black px-4 py-2 rounded-md" // Button beside the input
+                        onClick={handleAddition}>
+                        Add
+                      </button>
+                    </div>
                     {errors.skills && (
                       <p className="text-red-500">{errors.skills}</p>
                     )}
+                    {/* Tags Section */}
+                    <div className="tags-list">
+                      {tags.map((tag, index) => (
+                        <span
+                          key={tag.id}
+                          className="bg-amber-300 text-black p-2 rounded-md mr-2 mb-2 inline-flex items-center">
+                          {tag.text}
+                          <AiOutlineClose
+                            className="ml-2 bg-black text-white rounded-full p-1 cursor-pointer"
+                            onClick={() => handleDelete(index)}
+                          />
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Suggestions */}
+                    {suggestions.length > 0 && (
+                      <div className="bg-white border border-gray-300 rounded-md w-1/2 mt-2">
+                        {suggestions.map((suggestion, index) => (
+                          <div
+                            key={index}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer hover:text-amber-400"
+                            onClick={() => {
+                              setInputValue(suggestion);
+                              setSuggestions([]);
+                            }}>
+                            {suggestion}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="job-level mt-3">
+                  <div className="job-level mt-4">
                     <label className="font-medium">Job Level</label>
                     <select
                       name="level"
-                      className="w-full rounded-md mt-3"
+                      className="w-full rounded-md mt-3 border  p-2 outline-none border-gray-700  focus:ring-amber-400  focus:border-amber-400 "
                       value={jobData.level}
                       onChange={handleChange}
-                      required
-                    >
+                      required>
                       <option value="entry">Entry</option>
                       <option value="intermediate">Intermediate</option>
                       <option value="expert">Expert</option>
@@ -290,14 +366,12 @@ export default function Client() {
                   <div className="proposal-action flex justify-between mt-4">
                     <button
                       className="p-1 px-7 bg-gray-800 hover:bg-gray-600 text-lg text-white rounded-md"
-                      onClick={handleCancelClick}
-                    >
+                      onClick={handleCancelClick}>
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="p-1 px-7 bg-amber-300 hover:bg-amber-400 text-lg text-black rounded-md"
-                    >
+                      className="p-1 px-7 bg-amber-300 hover:bg-amber-400 text-lg text-black rounded-md">
                       Post Job
                     </button>
                   </div>
@@ -354,8 +428,7 @@ export default function Client() {
                     ? "bg-amber-300 text-black hover:bg-amber-400"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
-                disabled={!isVerified}
-              >
+                disabled={!isVerified}>
                 <i className="fa-solid fa-plus"></i> Post a job
               </button>
             </div>
@@ -379,16 +452,14 @@ export default function Client() {
                       ? "text-black bg-amber-300 hover:bg-amber-400 "
                       : "text-gray-500   cursor-not-allowed"
                   }`}
-                  disabled={!isVerified}
-                >
+                  disabled={!isVerified}>
                   Post a new job
                 </button>
               </div>
             </div>
             <Link
               to={"/recent-posts"}
-              className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl"
-            >
+              className="post-job-2 w-1/4 hover:cursor-pointer hover:scale-95 duration-75 h-80 flex flex-col justify-between py-4 border-2  border-gray-300 rounded-xl">
               <div className="first-top  mx-7  flex flex-col ">
                 <div className="flex w-full justify-start">
                   <span>

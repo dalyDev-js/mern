@@ -92,8 +92,7 @@ export default function MyJobsPosts() {
                     width="24"
                     height="24"
                     fill="none"
-                    viewBox="0 0 24 24"
-                  >
+                    viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
                       stroke-linecap="round"
@@ -108,9 +107,11 @@ export default function MyJobsPosts() {
                   </p>
                 </span>
                 {/* Additional Action */}
-                <button className="mt-4 px-6 py-3 bg-amber-300 text-white rounded-lg hover:bg-amber-400">
-                  Create Job Post
-                </button>
+                <Link
+                  to={"/client"}
+                  className="mt-4 px-6 py-3 bg-amber-300 text-white rounded-lg hover:bg-amber-400">
+                  Go to dashboard
+                </Link>
                 {/* <a
                   href="#"
                   className=" text-black  px-6 py-3 mt-10 bg-amber-300  rounded-lg hover:bg-amber-400"
@@ -124,8 +125,7 @@ export default function MyJobsPosts() {
           jobs.map((job) => (
             <div
               key={job._id} // Ensure each job has a unique key
-              className="job w-full flex mt-5 p-7 bg-slate-100 hover:bg-slate-200 cursor-pointer rounded-lg"
-            >
+              className="job w-full flex mt-5 p-7 bg-slate-100 hover:bg-slate-200 cursor-pointer rounded-lg">
               <div className="job-data w-3/4">
                 <p className="job-name text-2xl font-medium text-amber-700">
                   {job.title}
@@ -137,8 +137,7 @@ export default function MyJobsPosts() {
                   {job.skills?.map((skill, index) => (
                     <div
                       key={index} // Unique key for each skill
-                      className="skill text-amber-900 w-24 h-8 flex justify-center items-center rounded-md font-medium p-2 bg-slate-300"
-                    >
+                      className="skill text-amber-900 w-24 h-8 flex justify-center items-center rounded-md font-medium p-2 bg-slate-300">
                       {skill}
                     </div>
                   ))}
@@ -153,8 +152,7 @@ export default function MyJobsPosts() {
                 </Link>
                 <button
                   onClick={() => handleDeleteClick(job._id)}
-                  className="view mt-4 w-full font-semibold p-2 rounded-md text-white bg-red-500 hover:bg-red-600"
-                >
+                  className="view mt-4 w-full font-semibold p-2 rounded-md text-white bg-red-500 hover:bg-red-600">
                   <i className="text-amber-100 fa-solid fa-trash"></i> Delete
                   Post
                 </button>
