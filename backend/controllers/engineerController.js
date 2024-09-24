@@ -43,8 +43,10 @@ const getEngineerById = catchAsync(async (req, res, next) => {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
     return next(new AppError("Engineer not found with this user ID", 404));
   }
-
-  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
+  engineer.user.profilePic =
+    engineer.user.profilePic !== "https://robohash.org/bali"
+      ? `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`
+      : engineer.user.profilePic;
 
   res.status(200).json({
     status: "success",

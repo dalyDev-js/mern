@@ -37,6 +37,8 @@ export default function SignIn() {
         setTimeout(() => {
           if (isMounted) {
             const userRole = result.payload.user.role;
+            console.log(userRole, "resulttttttttt");
+
             if (userRole === "client") {
               navigate("/client");
             } else if (userRole === "engineer") {
@@ -108,7 +110,8 @@ export default function SignIn() {
             <button
               type="submit"
               className="w-1/2 bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-8"
-              disabled={loading || isLoading}>
+              disabled={loading || isLoading}
+            >
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
 
