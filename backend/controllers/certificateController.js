@@ -1,15 +1,35 @@
 import { Certificate } from "../model/certificateModel.js";
+import { Engineer } from "../model/engineerModel.js";
+import User from "../model/userModel.js";
 import catchAsync from "../utils/catchAsync.js";
+
+const getCertificate = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const engineer = await Engineer.findOne({ user: id });
+  const certificates = (await Certificate.find({ engineer })).map((cert) => {
+    return {
+      _id: cert._id,
+      name: cert.name,
+      file: `http://localhost:8000/my-uploads/certificates/${cert.file}`,
+    };
+  });
+
+  res.status(200).json({ certificates });
+});
 
 const addCertificate = catchAsync(async (req, res) => {
   const { name } = req.body;
-  console.log({
+
+  let { id } = req.params;
+  const user = await User.findById(id);
+  const engineer = await Engineer.findOne({ user: user._id });
+  console.log({ name, file: req.file.filename, engineer: engineer._id });
+  await Certificate.create({
     name,
-    file: req.file,
+    file: req.file.filename,
+    engineer: engineer._id,
   });
-  // TODO : replace static id with the id extracted from tokwn sent in cookies
-  let engineer = "66eaf0bb855debafe88f9068";
-  await Certificate.create({ name, file: req.file.filename, engineer });
+
   res.status(200).json({ message: "Certificate added successfully" });
 });
 
@@ -41,4 +61,9 @@ const deleteCertificate = catchAsync(async (req, res) => {
   }
 });
 
-export { addCertificate, updatedCertificate, deleteCertificate };
+export {
+  addCertificate,
+  updatedCertificate,
+  deleteCertificate,
+  getCertificate,
+};

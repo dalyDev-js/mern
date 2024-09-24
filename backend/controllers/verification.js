@@ -2,7 +2,7 @@ import User from "../model/userModel.js";
 
 export const requestVerification = async (req, res) => {
   try {
-    const { userId, uploadedDoc } = req.body;
+    const { userId } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -14,8 +14,8 @@ export const requestVerification = async (req, res) => {
 
     // Update requestVerifiedStatus to true
     user.requestVerifiedStatus = true;
-    user.docID = uploadedDoc;
-    user.docID = await user.save();
+    user.docID = req.file.filename;
+    await user.save();
 
     res.status(200).json({
       status: "success",

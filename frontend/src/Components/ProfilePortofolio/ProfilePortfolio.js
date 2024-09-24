@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FaPlus, FaTrash } from "react-icons/fa";
+import axios from "axios";
 
 function ProfilePortfolio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('published');
+  const [activeTab, setActiveTab] = useState("published");
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
 
   const [projects, setProjects] = useState([]);
 
@@ -19,15 +19,21 @@ function ProfilePortfolio() {
 
   const fetchProjects = async () => {
     try {
-      const token = localStorage.getItem('token'); // Get token for authentication
-      const response = await axios.get('http://localhost:8000/api/v1/portfolio', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setProjects(response.data.portfolios); 
+      const token = localStorage.getItem("token"); // Get token for authentication
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/portfolios/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setProjects(response.data.portfolios);
     } catch (error) {
-      console.error('Error fetching portfolios:', error);
+      console.error("Error fetching portfolios:", error);
     }
   };
 
@@ -39,31 +45,61 @@ function ProfilePortfolio() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('url', url);
-    formData.append('image', file); // Append the image file
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("image", file); // Append the image file
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:8000/api/v1/portfolio', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert('Portfolio added successfully!');
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/portfolios/${user._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Portfolio added successfully!");
       toggleModal();
       // Clear form fields
-      setTitle('');
-      setDescription('');
-      setUrl('');
+      setTitle("");
+      setDescription("");
+      setUrl("");
       setFile(null);
       // Refresh the list of projects
       fetchProjects();
     } catch (error) {
-      console.error('Error adding portfolio:', error);
-      alert('Failed to add portfolio.');
+      console.error("Error adding portfolio:", error);
+      alert("Failed to add portfolio.");
+    }
+  };
+
+  // Handle delete project
+  const handleDeleteProject = async (projectId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+
+      await axios.delete(
+        `http://localhost:8000/api/v1/portfolios/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Portfolio deleted successfully!");
+      // Refresh the list of projects
+      fetchProjects();
+    } catch (error) {
+      console.error("Error deleting portfolio:", error);
+      alert("Failed to delete portfolio.");
     }
   };
 
@@ -83,43 +119,44 @@ function ProfilePortfolio() {
         <div className="flex border-b border-gray-200 mb-4">
           <button
             className={`mr-4 pb-2 ${
-              activeTab === 'published'
-                ? 'border-b-2 border-green-500 text-amber-500'
-                : 'text-gray-500'
+              activeTab === "published"
+                ? "border-b-2 border-green-500 text-amber-500"
+                : "text-gray-500"
             }`}
-            onClick={() => setActiveTab('published')}
+            onClick={() => setActiveTab("published")}
           >
             Published
-          </button>
-          <button
-            className={`pb-2 ${
-              activeTab === 'drafts'
-                ? 'border-b-2 border-green-500 text-amber-500'
-                : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('drafts')}
-          >
-            Drafts
           </button>
         </div>
 
         <div>
-          {activeTab === 'published' ? (
+          {activeTab === "published" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {projects.map((project, index) => (
-                <div key={index} className="border rounded-lg p-4">
+                <div key={index} className="border rounded-lg p-6 relative">
                   <img
-                    src={`http://localhost:8000/uploads/${project.image}`} // Adjust the path based on your backend
+                    src={project.image} // Adjust the path based on your backend
                     alt={project.title}
                     className="w-full h-48 object-cover rounded-md mb-2"
                   />
                   <h3 className="text-lg font-semibold">{project.title}</h3>
                   <p className="text-green-500">{project.description}</p>
                   {project.url && (
-                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500"
+                    >
                       View Project
                     </a>
                   )}
+                  <button
+                    onClick={() => handleDeleteProject(project._id)}
+                    className="absolute top-50 right-2 text-red-500 hover:text-red-700"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               ))}
             </div>
@@ -199,24 +236,6 @@ function ProfilePortfolio() {
                     placeholder="Project Description"
                     required
                   ></textarea>
-                </div>
-
-                <div className="col-span-2">
-                  <label
-                    htmlFor="url"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Project URL
-                  </label>
-                  <input
-                    type="text"
-                    name="url"
-                    id="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    placeholder="Project URL"
-                  />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">

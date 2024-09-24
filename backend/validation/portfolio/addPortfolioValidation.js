@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const schema = Joi.object({
+export const portfolioSchema = Joi.object({
   title: Joi.string().required().min(5).max(100).messages({
     "string.empty": "Project title is required.",
     "string.min": "Project title should be at least 5 characters long.",
@@ -14,4 +14,8 @@ const schema = Joi.object({
   url: Joi.string().allow(null),
 });
 
-export default schema;
+export const idSchema = Joi.object({
+  id: Joi.string().required().messages({
+    "string.empty": "Project title is required.",
+  }),
+});
