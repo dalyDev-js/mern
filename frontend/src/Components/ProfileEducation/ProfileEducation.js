@@ -10,19 +10,25 @@ function ProfileEducation() {
   const [educationData, setEducationData] = useState(null);
 
   // Fetch education details on component mount
-  // useEffect(() => {
-  //   fetchEducation();
-  // }, []);
+  useEffect(() => {
+    fetchEducation();
+  }, []);
 
   const fetchEducation = async () => {
     try {
       const token = localStorage.getItem("token"); // token from where ?
-      const response = await axios.get("http://localhost:8000/api/v1/engineers/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setEducationData(response.data.education); 
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/engineer/education/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response, "ttttttttttttttttttttttt");
+      setEducationData(response.data.education);
     } catch (error) {
       console.error("Error fetching education details:", error);
     }
@@ -37,8 +43,11 @@ function ProfileEducation() {
 
     try {
       const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+
       await axios.put(
-        "http://localhost:8000/api/v1/engineers/addeducation",
+        `http://localhost:8000/api/v1/engineer/addeducation/${user._id}`,
         {
           title: educationTitle,
           startDate,
@@ -52,7 +61,7 @@ function ProfileEducation() {
       );
       alert("Education added successfully!");
       toggleModal();
-      fetchEducation(); 
+      fetchEducation();
     } catch (error) {
       console.error("Error adding education:", error);
       alert("Failed to add education.");

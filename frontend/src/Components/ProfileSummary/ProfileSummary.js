@@ -9,15 +9,18 @@ function ProfileSummary() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch existing profile data on component mount
-  // useEffect(() => {
-  //   fetchProfile();
-  // }, []);
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("token"); // token from where ?
+      const userData = localStorage.getItem("User"); // Adjust based on how you store tokens
+      const user = JSON.parse(userData);
+
       const response = await axios.get(
-        "http://localhost:8000/api/v1/engineers",
+        `http://localhost:8000/api/v1/engineer/${user._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -26,8 +29,9 @@ function ProfileSummary() {
       );
 
       const data = response.data;
-      setTitle(data.title || "");
-      setProfileOverview(data.profileOverview || "");
+
+      setTitle(data.data.engineer.title || "");
+      setProfileOverview(data.data.engineer.overview || "");
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -45,12 +49,14 @@ function ProfileSummary() {
     setIsLoading(true);
 
     const token = localStorage.getItem("token"); // Adjust based on how you store tokens
+    const userData = localStorage.getItem("User"); // Adjust based on how you store tokens
+    const user = JSON.parse(userData);
 
     try {
       // Update Title
       if (title) {
         await axios.post(
-          "http://localhost:8000/api/v1/engineers/addtitle",
+          `http://localhost:8000/api/v1/engineer/addtitle/${user._id}`,
           { title },
           {
             headers: {
@@ -63,7 +69,7 @@ function ProfileSummary() {
       // Update Profile Overview
       if (profileOverview) {
         await axios.post(
-          "http://localhost:8000/api/v1/engineers/addoverview",
+          `http://localhost:8000/api/v1/engineer/addoverview/${user._id}`,
           { profileOverview },
           {
             headers: {
@@ -75,7 +81,7 @@ function ProfileSummary() {
 
       alert("Profile updated successfully!");
       toggleModal();
-      fetchProfile(); 
+      fetchProfile();
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile.");

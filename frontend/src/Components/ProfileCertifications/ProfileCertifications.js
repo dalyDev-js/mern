@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPen, FaPlus } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import axios from "axios";
 
 function ProfileCertifications() {
@@ -9,19 +9,24 @@ function ProfileCertifications() {
   const [certifications, setCertifications] = useState([]);
 
   // Fetch certifications on component mount
-  // useEffect(() => {
-  //   fetchCertifications();
-  // }, []);
+  useEffect(() => {
+    fetchCertifications();
+  }, []);
 
   const fetchCertifications = async () => {
     try {
-      const token = localStorage.getItem("token"); 
-      const response = await axios.get("http://localhost:8000/api/v1/certificates", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCertifications(response.data.certificates); 
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/certificates/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCertifications(response.data.certificates);
     } catch (error) {
       console.error("Error fetching certifications:", error);
     }
@@ -47,19 +52,48 @@ function ProfileCertifications() {
     formData.append("file", certificateFile);
 
     try {
-      const token = localStorage.getItem("token"); 
-      await axios.post("http://localhost:8000/api/v1/certificates", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:8000/api/v1/certificates/${user._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       alert("Certificate added successfully!");
       toggleModal();
-      fetchCertifications(); 
+      fetchCertifications();
     } catch (error) {
       console.error("Error adding certificate:", error);
       alert("Failed to add certificate.");
+    }
+  };
+
+  // Handle Delete Certificate
+  const handleDeleteCertificate = async (certificateId) => {
+    try {
+      const userData = localStorage.getItem("User");
+      const user = JSON.parse(userData);
+      const token = localStorage.getItem("token");
+
+      await axios.delete(
+        `http://localhost:8000/api/v1/certificates/${certificateId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Certificate deleted successfully!");
+      fetchCertifications(); // Refresh the list after deletion
+    } catch (error) {
+      console.error("Error deleting certificate:", error);
+      alert("Failed to delete certificate.");
     }
   };
 
@@ -81,16 +115,24 @@ function ProfileCertifications() {
             {certifications.length > 0 ? (
               <ul>
                 {certifications.map((cert, index) => (
-                  <li key={index} className="mb-2">
-                    <span className="text-gray-600">{cert.name}</span>
-                    <a
-                      href={`http://localhost:8000/uploads/${cert.file}`} // Adjust based on how the file is served
-                      className="text-blue-500 ml-2"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  <li key={index} className="mb-2 flex justify-between items-center">
+                    <div>
+                      <span className="text-gray-600">{cert.name}</span>
+                      <a
+                        href={cert.file} // Adjust based on how the file is served
+                        className="text-blue-500 ml-2"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Certificate
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteCertificate(cert._id)} // Call the delete handler
+                      className="text-red-500 hover:text-red-700 ml-3"
                     >
-                      View Certificate
-                    </a>
+                      <FaTrash />
+                    </button>
                   </li>
                 ))}
               </ul>
