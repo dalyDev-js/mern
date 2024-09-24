@@ -1,16 +1,30 @@
 import { Portfolio } from "../model/portofolioModel.js";
 import catchAsync from "../utils/catchAsync.js";
 
+const getPortfolios = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const portfolios = (await Portfolio.find({ user: id })).map((portfolio) => {
+    return {
+      _id: portfolio._id,
+      title: portfolio.title,
+      description: portfolio.description,
+      image: `http://localhost:8000/my-uploads/portfolios/${portfolio.image}`,
+    };
+  });
+
+  res.status(200).json({ portfolios });
+});
+
 const addPortofolio = catchAsync(async (req, res, next) => {
   const { title, description, url } = req.body;
-
+  console.log(title);
   let { id } = req.params; //user id from token
 
   // TODO : upload l file to cloud storage
   // delete it from the tmp storage
 
   await Portfolio.create({
-    id,
+    user: id,
     title,
     description,
     image: req.file.filename,
@@ -44,4 +58,4 @@ const deletePortfolio = catchAsync(async (req, res, next) => {
   res.json({ message: "Portfolio deleted successfully" });
 });
 
-export { addPortofolio, updatePortfolio, deletePortfolio };
+export { addPortofolio, updatePortfolio, deletePortfolio, getPortfolios };

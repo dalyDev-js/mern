@@ -3,6 +3,14 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import User from "../model/userModel.js";
 
+const getEducation = catchAsync(async (req, res, next) => {
+  const engineer = await Engineer.findOne({ user: req.params.id });
+
+  res.status(200).json({
+    education: engineer.education,
+  });
+});
+
 const getAllEngineers = catchAsync(async (req, res, next) => {
   const engineers = await Engineer.find().populate({
     path: "user",
@@ -88,13 +96,14 @@ const updateEducation = async (req, res, next) => {
 };
 
 const addTitle = async (req, res, next) => {
-  let engineerId = req.user.id;
-  let engineerTitle = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { title: req.body.title },
-    { new: true }
+  let id = req.params.id;
+  const user = await User.findById(id);
+  await Engineer.findOneAndUpdate(
+    { user: user._id },
+    { title: req.body.title }
   );
-  res.status(200).json({ message: "Title added successfully", engineerTitle });
+
+  res.status(200).json({ message: "Title added successfully" });
 };
 
 const addSkill = catchAsync(async (req, res, next) => {
@@ -113,22 +122,24 @@ const addSkill = catchAsync(async (req, res, next) => {
 
 const addOverview = async (req, res, next) => {
   let { id } = req.params;
-  console.log(id);
+
   const { profileOverview } = req.body;
 
   if (!profileOverview) {
     return res.status(400).json({ message: "Profile Overview is required." });
   }
-  await Engineer.findByIdAndUpdate(
-    id,
-    { overview: req.body.overview },
-    { new: true }
+  const user = await User.findById(id);
+  await Engineer.findOneAndUpdate(
+    { user: user._id },
+    { overview: profileOverview }
   );
+
   res.status(200).json({ message: "Overview added successfully" });
 };
 
 const addEducation = catchAsync(async (req, res, next) => {
   const { title, startDate, endDate } = req.body;
+  const { id } = req.params;
 
   if (!title || !startDate || !endDate) {
     return res
@@ -136,10 +147,10 @@ const addEducation = catchAsync(async (req, res, next) => {
       .json({ message: "Title, Start Date, and End Date are required." });
   }
 
-  const engineerId = req.user.id;
+  const engineer = await Engineer.findOne({ user: id });
 
   const updatedEngineer = await Engineer.findByIdAndUpdate(
-    id,
+    engineer._id,
     {
       education: {
         title,
@@ -288,4 +299,5 @@ export {
   saveJob,
   getEngineerById,
   getEngineerByEngineerId,
+  getEducation,
 };
