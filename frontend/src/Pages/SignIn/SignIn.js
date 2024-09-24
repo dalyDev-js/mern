@@ -18,7 +18,7 @@ export default function SignIn() {
     password: Yup.string()
       .required("Password is required")
       .min(5, "Password must be at least 5 characters")
-      .max(15, "Password cannot be more than 15 characters"),
+      .max(30, "Password cannot be more than 15 characters"),
   });
 
   const formik = useFormik({
@@ -108,8 +108,7 @@ export default function SignIn() {
             <button
               type="submit"
               className="w-1/2 bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-8"
-              disabled={loading || isLoading}
-            >
+              disabled={loading || isLoading}>
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
 
