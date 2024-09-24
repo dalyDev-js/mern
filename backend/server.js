@@ -1,6 +1,7 @@
+import app from "./app.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { server } from "./socket/socket.js";
+
 dotenv.config({ path: "./config.env" });
 
 const DB = process.env.DATABASE.replace(
@@ -14,6 +15,6 @@ mongoose.connect(DB).then(() => {
 
 const port = process.env.PORT || 3000;
 
-server.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
