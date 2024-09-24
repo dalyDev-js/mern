@@ -32,14 +32,17 @@ const verificationReducer = (state = initialState, action) => {
 };
 
 // Action creator for requesting verification
-export const requestVerification = (userId) => async (dispatch) => {
+export const requestVerification = (userId, file) => async (dispatch) => {
   dispatch({ type: VERIFICATION_REQUEST });
 
   try {
+    const data = new FormData();
+    data.append("image", file);
+    data.append("userId", userId);
     // Make the request to the backend with userId
     const response = await axios.post(
       "http://localhost:8000/api/v1/requestVerify",
-      { userId }
+      data
     );
 
     dispatch({
