@@ -89,12 +89,12 @@ export default function SignUpEngineer() {
       <p className="ml-4">Loading...</p>
     </div>
   ) : (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-16">
       <div
-        className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full"
+        className="bg-white w-full max-w-3xl min-h-[650px] p-16  rounded-lg shadow-lg "
         style={{ minHeight: "650px" }} // Fixed height
       >
-        <h2 className="text-2xl font-bold text-center mb-6">
+        <h2 className="text-2xl font-bold text-center mb-10">
           Sign up as Freelancer
         </h2>
         <form onSubmit={formik.handleSubmit}>
@@ -108,10 +108,19 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Full Name"
-                className="w-full p-4 border border-gray-300 rounded-lg"
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.fullName && formik.errors.fullName && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
                   {formik.errors.fullName}
                 </div>
               )}
@@ -126,10 +135,19 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Username"
-                className="w-full p-4 border border-gray-300 rounded-lg"
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.username && formik.errors.username && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
                   {formik.errors.username}
                 </div>
               )}
@@ -144,10 +162,19 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Email"
-                className="w-full p-4 border border-gray-300 rounded-lg"
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.email && formik.errors.email && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>{" "}
                   {formik.errors.email}
                 </div>
               )}
@@ -162,10 +189,19 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Password"
-                className="w-full p-4 border border-gray-300 rounded-lg"
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.password && formik.errors.password && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>{" "}
                   {formik.errors.password}
                 </div>
               )}
@@ -180,11 +216,20 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Confirm Password"
-                className="w-full p-4 border border-gray-300 rounded-lg"
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.passwordConfirm &&
                 formik.errors.passwordConfirm && (
-                  <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                  <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                    <svg
+                      class="flex-shrink-0 inline w-4 h-4 me-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
                     {formik.errors.passwordConfirm}
                   </div>
                 )}
@@ -197,13 +242,23 @@ export default function SignUpEngineer() {
                 value={formik.values.gender}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full p-4 border border-gray-300 rounded-lg">
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+              >
                 <option value="" label="Select your gender" />
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
               {formik.touched.gender && formik.errors.gender && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>{" "}
                   {formik.errors.gender}
                 </div>
               )}
@@ -216,7 +271,8 @@ export default function SignUpEngineer() {
                 value={formik.values.country}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full p-4 border border-gray-300 rounded-lg">
+                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+              >
                 <option value="" label="Select your country" />
                 <option value="Egypt">Egypt</option>
                 <option value="USA">USA</option>
@@ -224,7 +280,16 @@ export default function SignUpEngineer() {
                 {/* Add more countries as necessary */}
               </select>
               {formik.touched.country && formik.errors.country && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-0">
+                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
                   {formik.errors.country}
                 </div>
               )}
@@ -236,6 +301,7 @@ export default function SignUpEngineer() {
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
+                className="text-amber-300 border focus:border-amber-300 focus:ring-amber-300 "
                 name="terms"
                 checked={formik.values.terms}
                 onChange={handleCheckboxChange}
@@ -243,6 +309,15 @@ export default function SignUpEngineer() {
               <span>Agree to the terms and conditions</span>
               {formik.touched.terms && formik.errors.terms && (
                 <div className="text-red-500 text-sm mt-2">
+                  <svg
+                    class="flex-shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
                   {formik.errors.terms}
                 </div>
               )}
@@ -252,8 +327,9 @@ export default function SignUpEngineer() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-yellow-300 text-black py-3 px-4 rounded-lg mt-4"
-            disabled={loading || isLoading}>
+            className="w-full bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-4"
+            disabled={loading || isLoading}
+          >
             {loading || isLoading ? (
               <i className="fa fa-spin fa-spinner"></i>
             ) : (

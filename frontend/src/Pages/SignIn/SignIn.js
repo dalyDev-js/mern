@@ -18,7 +18,7 @@ export default function SignIn() {
     password: Yup.string()
       .required("Password is required")
       .min(5, "Password must be at least 5 characters")
-      .max(15, "Password cannot be more than 15 characters"),
+      .max(30, "Password cannot be more than 15 characters"),
   });
 
   const formik = useFormik({
@@ -57,8 +57,9 @@ export default function SignIn() {
     },
   });
 
-  const handleInputStyle = "w-full p-4 border border-gray-300 rounded-lg";
-  const handleErrorStyle = "text-red-500 text-sm mt-2";
+  const handleInputStyle =
+    "w-11/12 p-4 mx-10  border border-gray-300 rounded-lg bg-white focus:border-amber-300 focus:ring-amber-300";
+  const handleErrorStyle = "text-red-500 text-sm mt-2 mx-12";
 
   return isLoading ? (
     <div className="flex justify-center items-center h-screen">
@@ -66,9 +67,9 @@ export default function SignIn() {
       <p className="ml-4">Loading...</p>
     </div>
   ) : (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+    <div className="h-screen flex items-center justify-center bg-gray-100 p-4 ">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl min-h-[500px]">
+        <h2 className="text-2xl font-bold text-center mb-14 mt-8">Sign In</h2>
 
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-6">
@@ -79,7 +80,7 @@ export default function SignIn() {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                placeholder="Enter your Email"
+                placeholder="Email"
                 className={handleInputStyle}
               />
               {formik.touched.email && formik.errors.email && (
@@ -94,7 +95,7 @@ export default function SignIn() {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                placeholder="Enter your Password"
+                placeholder="Password"
                 className={handleInputStyle}
               />
               {formik.touched.password && formik.errors.password && (
@@ -106,7 +107,7 @@ export default function SignIn() {
           <div className="flex flex-col items-center">
             <button
               type="submit"
-              className="w-full bg-yellow-300 text-text py-3 px-4 rounded-lg mt-4"
+              className="w-1/2 bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-8"
               disabled={loading || isLoading}>
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>

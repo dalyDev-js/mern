@@ -18,9 +18,9 @@ function EngineersList() {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto px-20 py-10">
+    <div className="container mx-auto px-20 py-10 h-screen">
       {/* Title */}
-      <h1 className="text-4xl font-medium  text-amber-300 mb-3">
+      <h1 className="text-4xl font-medium  text-amber-300 mb-3 mt-10">
         Hire the best Engineers professionals
       </h1>
 
@@ -119,7 +119,7 @@ function EngineersList() {
                 ))}
               </div>
               {/* See More Button */}
-              <button className="text-xs mt-4 bg-amber-300 text-white px-3 py-1 rounded-md hover:bg-amber-400">
+              <button className="text-xs mt-4 bg-amber-300 text-black px-3 py-1 rounded-md hover:bg-amber-400">
                 <Link to={`/engineer-details/${engineer._id}`}>See more</Link>
               </button>
               {/* console.log({`id:${engineer._id}`}); */}
