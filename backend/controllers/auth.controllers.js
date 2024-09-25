@@ -28,7 +28,8 @@ export const signup = catchAsync(async (req, res, next) => {
       },
       overview: req.body.overview || "An engineer overview",
       skills: req.body.skills || [],
-      profilePic: req.body.profilePic || "", // Set profilePic if available
+      profilePic:
+        req.body.profilePic || "../../frontend/public/images/unknown.jpg", // Set profilePic if available
     });
   } else if (newUser.role === "client") {
     client = await Client.create({

@@ -14,7 +14,7 @@ const getEducation = catchAsync(async (req, res, next) => {
 const getAllEngineers = catchAsync(async (req, res, next) => {
   const engineers = await Engineer.find().populate({
     path: "user",
-    select: "fullName email role",
+    select: "fullName email role profilePic",
     match: { role: "engineer" },
   });
 
@@ -109,15 +109,27 @@ const addTitle = async (req, res, next) => {
 };
 
 const addSkill = catchAsync(async (req, res, next) => {
-  let engineerId = req.user.id;
-  let { skillsToAdd } = req.body;
-  const engineerSkill = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { skills: { skillsToAdd } },
-    { new: true }
-  );
+  const engineerId = req.params.id;
+  const { skillsToAdd } = req.body;
 
-  res.json({ message: "Skills:", engineerSkill });
+  // Find the engineer by ID
+  const engineer = await Engineer.findOne({ user: engineerId });
+
+  if (!engineer) {
+    return res.status(404).json({ message: "Engineer not found" });
+  }
+
+  // Merge skills and avoid duplicates
+  const updatedSkills = [...new Set([...engineer.skills, ...skillsToAdd])];
+
+  // Update the engineer's skills
+  engineer.skills = updatedSkills;
+  await engineer.save();
+
+  res.status(200).json({
+    message: "Skills updated successfully",
+    data: { skills: engineer.skills },
+  });
 });
 
 // frontend will update the skills array and save them in the database

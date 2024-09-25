@@ -31,14 +31,14 @@ const getClientById = catchAsync(async (req, res, next) => {
   console.log("User ID received:", userId); // Debugging: Check if userId is passed
 
   // Attempt to find a client by the user ID and populate the user data
-  const client = await Client.findOne({ _id: userId });
+  const client = await Client.findOne({ user: userId }).populate("user");
 
   if (!client) {
     console.log("Client not found for user ID:", userId); // Debugging: Log if no client is found
     return next(new AppError("Client not found with this user ID", 404));
   }
 
-  // client.user.profilePic = `http://localhost:8000/my-uploads/users/${client.user.profilePic}`;
+  client.user.profilePic = `http://localhost:8000/my-uploads/users/${client.user.profilePic}`;
 
   res.status(200).json({
     status: "success",
