@@ -139,7 +139,7 @@ function JobSearch() {
 
             <button
               type="button"
-              className="font px-5 py-2.5 text-white bg-amber-500 rounded border-white border-[none] font-[bold]">
+              className="font px-5 py-2.5 text-white bg-amber-400 hover:bg-amber-500 rounded border-white border-[none] font-[bold]">
               Search
             </button>
           </form>
