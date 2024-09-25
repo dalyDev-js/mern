@@ -14,7 +14,7 @@ const getEducation = catchAsync(async (req, res, next) => {
 const getAllEngineers = catchAsync(async (req, res, next) => {
   const engineers = await Engineer.find().populate({
     path: "user",
-    select: "fullName email role profilePic",
+    select: "fullName email role profilePic createdAt",
     match: { role: "engineer" },
   });
 
