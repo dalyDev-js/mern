@@ -10,13 +10,13 @@ function SearchBar() {
         type="text"
         id="jobSearch"
         placeholder="Search for jobs..."
-        className="p-2.5 rounded border border-solid border-neutral-300 grow-[2]"
+        className="p-2.5 rounded border border-solid border-neutral-300 grow-[2] focus:border-amber-300 focus:ring-amber-300"
       />
-      <select className="p-2.5 bg-white rounded border border-solid border-neutral-300">
+      <select className="p-2.5 bg-white rounded border border-solid border-neutral-300 focus:border-amber-300 focus:ring-amber-300">
         <option>Best Matches</option>
         <option>Most Recent</option>
       </select>
-      <button className="px-5 py-2.5 text-white bg-amber-500 rounded border-white border-[none] font-[bold]">
+      <button className="px-5 py-2.5 text-black bg-amber-300 hover:bg-amber-400 rounded border-white border-[none] font-[bold] ">
         Search
       </button>
     </form>

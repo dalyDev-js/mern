@@ -69,11 +69,20 @@ export default function SignIn() {
   ) : (
     <div className="h-screen flex items-center justify-center bg-gray-100 p-4 ">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl min-h-[500px]">
-        <h2 className="text-2xl font-bold text-center mb-14 mt-8">Sign In</h2>
+        {/* <h2 className="text-2xl font-bold text-center mb-14 mt-8"> */}
+        <h2 className="text-2xl  font-semibold text-center mb-12 mt-8">
+          Sign In{" "}
+          <span className="font self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
+            Handesly
+          </span>
+        </h2>
 
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-6">
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1 mx-10">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -89,6 +98,9 @@ export default function SignIn() {
             </div>
 
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1 mx-10">
+                Password
+              </label>
               <input
                 type="password"
                 name="password"

@@ -94,13 +94,16 @@ export default function SignUpEngineer() {
         className="bg-white w-full max-w-3xl min-h-[650px] p-16  rounded-lg shadow-lg "
         style={{ minHeight: "650px" }} // Fixed height
       >
-        <h2 className="text-2xl font-bold text-center mb-10">
+        <h2 className="text-3xl  font-semibold text-center mb-12">
           Sign up as Freelancer
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-10">
             {/* Full Name Input */}
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="fullName"
@@ -108,7 +111,7 @@ export default function SignUpEngineer() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Full Name"
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                className="w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
               {formik.touched.fullName && formik.errors.fullName && (
                 <div className="absolute text-red-500 text-sm -bottom-5 left-2">
@@ -125,101 +128,24 @@ export default function SignUpEngineer() {
                 </div>
               )}
             </div>
-
-            {/* Username Input */}
-            <div className="relative">
-              <input
-                type="text"
-                name="username"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Username"
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-              />
-              {formik.touched.username && formik.errors.username && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>
-                  {formik.errors.username}
-                </div>
-              )}
-            </div>
-
-            {/* Email Input */}
-            <div className="relative">
-              <input
-                type="email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Email"
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>{" "}
-                  {formik.errors.email}
-                </div>
-              )}
-            </div>
-
-            {/* Password Input */}
-            <div className="relative">
-              <input
-                type="password"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Password"
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className="absolute text-red-500 text-sm -bottom-5 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>{" "}
-                  {formik.errors.password}
-                </div>
-              )}
-            </div>
-
-            {/* Confirm Password Input */}
-            <div className="relative">
-              <input
-                type="password"
-                name="passwordConfirm"
-                value={formik.values.passwordConfirm}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Confirm Password"
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-              />
-              {formik.touched.passwordConfirm &&
-                formik.errors.passwordConfirm && (
+            {/* username & email */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Username Input */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                {/* w-11/12  */}
+                <input
+                  type="text"
+                  name="username"
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Username"
+                  className=" mt-1 block w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                />
+                {formik.touched.username && formik.errors.username && (
                   <div className="absolute text-red-500 text-sm -bottom-5 left-2">
                     <svg
                       class="flex-shrink-0 inline w-4 h-4 me-3"
@@ -230,19 +156,115 @@ export default function SignUpEngineer() {
                     >
                       <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
-                    {formik.errors.passwordConfirm}
+                    {formik.errors.username}
                   </div>
                 )}
-            </div>
+              </div>
 
+              {/* Email Input */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Email"
+                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                    <svg
+                      class="flex-shrink-0 inline w-4 h-4 me-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>{" "}
+                    {formik.errors.email}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* password */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Password Input */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Password"
+                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                    <svg
+                      class="flex-shrink-0 inline w-4 h-4 me-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>{" "}
+                    {formik.errors.password}
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password Input */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="passwordConfirm"
+                  value={formik.values.passwordConfirm}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Confirm Password"
+                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                />
+                {formik.touched.passwordConfirm &&
+                  formik.errors.passwordConfirm && (
+                    <div className="absolute text-red-500 text-sm -bottom-5 left-2">
+                      <svg
+                        class="flex-shrink-0 inline w-4 h-4 me-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                      </svg>
+                      {formik.errors.passwordConfirm}
+                    </div>
+                  )}
+              </div>
+            </div>
             {/* Gender Input */}
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Gender
+              </label>
               <select
                 name="gender"
                 value={formik.values.gender}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                className="w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               >
                 <option value="" label="Select your gender" />
                 <option value="male">Male</option>
@@ -266,12 +288,15 @@ export default function SignUpEngineer() {
 
             {/* Country Input */}
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Country
+              </label>
               <select
                 name="country"
                 value={formik.values.country}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-11/12  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                className="w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               >
                 <option value="" label="Select your country" />
                 <option value="Egypt">Egypt</option>

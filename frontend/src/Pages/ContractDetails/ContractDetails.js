@@ -63,7 +63,7 @@ const ContractDetails = () => {
   }
 
   return (
-    <div className="contract-details p-6">
+    <div className="contract-details p-6 h-screen">
       <h1 className="text-2xl font-bold">Contract Details</h1>
       {contract && (
         <>
