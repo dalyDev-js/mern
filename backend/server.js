@@ -1,6 +1,7 @@
 import app from "./app.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { server } from "./socket/socket.js";
 
 dotenv.config({ path: "./config.env" });
 
@@ -15,6 +16,6 @@ mongoose.connect(DB).then(() => {
 
 const port = process.env.PORT || 3000;
 
-const server = app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
