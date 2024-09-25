@@ -7,16 +7,16 @@ const userSchema = mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, "Please Provide your Fullname!"],
+      required: [true, "Please Prodive your Fullname!"],
     },
     username: {
       type: String,
-      required: [true, "Please Provide your username!"],
+      required: [true, "Please Prodive your username!"],
       unique: true,
     },
     email: {
       type: String,
-      required: [true, "Please Provide your email!"],
+      required: [true, "Please Prodive your email!"],
       unique: true,
       lowercase: true,
       validate: [validator.isEmail, "Please Provide a valid email"],
@@ -25,8 +25,7 @@ const userSchema = mongoose.Schema(
       type: String,
     },
     verifiedStatus: {
-      type: String,
-      enum: ["pending", "rejected", "accepted"],
+      type: ["pending", "rejected", "accepted"],
       default: "pending",
     },
     requestVerifiedStatus: {
@@ -35,7 +34,7 @@ const userSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      required: [true, "Please Provide your gender!"],
+      required: [true, "Please Prodive your gender!"],
       enum: ["male", "female"],
     },
     profilePic: {
