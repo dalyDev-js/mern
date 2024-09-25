@@ -35,6 +35,7 @@ import { LoadingProvider } from "./utils/LoadingContext";
 import Contract from "./Pages/Contract/Contract";
 import ContractDetails from "./Pages/ContractDetails/ContractDetails";
 import { Toaster } from "react-hot-toast";
+import Chat from "./Pages/home-chat/Chat";
 
 let routers = createBrowserRouter([
   {
@@ -86,6 +87,7 @@ let routers = createBrowserRouter([
       { path: "/recent-posts", element: <MyJobsPosts /> }, // jobs already posted client view
       { path: "/job-proposals/:id", element: <JobProposals /> }, // job posting
       { path: "/proposals-status", element: <ProposalsStatus /> }, // job posting
+      { path: "/chat", element: <Chat /> },
       { path: "*", element: <NotFound /> },
     ],
   },
