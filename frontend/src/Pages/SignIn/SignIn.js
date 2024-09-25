@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn } from "../../redux/slices/authSlice";
+import { signIn, clearError } from "../../redux/slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function SignIn() {
@@ -10,6 +10,14 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(clearError()); // Clear error when component mounts
+
+    return () => {
+      dispatch(clearError()); // Clear error when component unmounts
+    };
+  }, [dispatch]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -110,8 +118,7 @@ export default function SignIn() {
             <button
               type="submit"
               className="w-1/2 bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-8"
-              disabled={loading || isLoading}
-            >
+              disabled={loading || isLoading}>
               {loading ? <i className="fa fa-spin fa-spinner"></i> : "Sign In"}
             </button>
 
