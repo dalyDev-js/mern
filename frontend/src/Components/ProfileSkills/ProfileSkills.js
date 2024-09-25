@@ -130,7 +130,7 @@ export default function ProfileSkills() {
                 skills.map((skill, index) => (
                   <span
                     key={index}
-                    className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
+                    className="bg-amber-300 text-black px-3 py-1 rounded-full text-sm">
                     {skill}
                   </span>
                 ))

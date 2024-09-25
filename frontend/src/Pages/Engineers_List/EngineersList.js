@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllEngineers } from "../../redux/slices/engineersSlice";
 import { Link } from "react-router-dom";
@@ -6,16 +6,35 @@ import { Link } from "react-router-dom";
 function EngineersList() {
   const dispatch = useDispatch();
 
+  // State to hold the search query and search type
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("name"); // Default search type is "name"
+
   // Access engineers, loading status, and error from Redux
   const { engineers, status, error } = useSelector(
     (state) => state.engineerlist
   );
-  // console.log(engineers.map((engineer) => engineer._id));
 
   // Fetch all engineers when the component mounts
   useEffect(() => {
     dispatch(fetchAllEngineers());
   }, [dispatch]);
+
+  // Filter engineers based on search term and search type
+  const filteredEngineers = engineers.filter((engineer) => {
+    if (searchType === "name") {
+      // Search by name
+      return engineer.user.fullName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    } else if (searchType === "skill") {
+      // Search by skill
+      return engineer.skills.some((skill) =>
+        skill.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return false;
+  });
 
   return (
     <div className="container mx-auto px-20 py-10 h-screen my-10 ">
@@ -30,30 +49,55 @@ function EngineersList() {
         next job.
       </p>
 
+      {/* Search Bar */}
+      <div className="mb-6 flex gap-3">
+        {/* Dropdown to select search type */}
+        <select
+          className="p-2 border border-gray-300 rounded-md"
+          value={searchType}
+          onChange={(e) => setSearchType(e.target.value)}>
+          <option value="name">Search by Name</option>
+          <option value="skill">Search by Skill</option>
+        </select>
+
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder={
+            searchType === "name"
+              ? "Search by engineer's name..."
+              : "Search by skill..."
+          }
+          className="w-full p-2 border border-gray-300 rounded-md"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {/* Show loading, error or engineers list */}
       {status === "loading" && <p>Loading engineers...</p>}
       {status === "failed" && <p>Error: {error}</p>}
 
       {status === "succeeded" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {engineers.map((engineer, index) => (
+          {filteredEngineers.map((engineer, index) => (
             <div
               key={index}
               className="border rounded-lg pb-5 p-3 flex flex-col items-center text-center shadow-sm relative">
-              {/* Engineer Rate  */}
+              {/* Engineer Full Name */}
               <p className="absolute text-gray-600 top-4 right-2 text-sm px-2 py-1 ">
                 {engineer.user.fullname}
               </p>
-              <br></br>
+              <br />
               {/* Engineer Image */}
               <img
                 src={
                   engineer.user.profilePic === ""
-                    ? "/images/unkown.jpg"
+                    ? "/images/unknown.jpg"
                     : engineer.user.profilePic
                 }
                 alt={engineer.user.fullName}
-                className="w-24  object-cover h-24 rounded-full"
+                className="w-24 object-cover h-24 rounded-full"
               />
               {/* Engineer Name */}
               <h2 className="text-l mt-1 ">{engineer.user.fullName}</h2>
@@ -62,7 +106,6 @@ function EngineersList() {
               {/* Rating */}
               <p className="text-xs mt-3 text-gray-600 flex items-center">
                 <span className="ml-1" aria-hidden="true">
-                  {/* icon star */}
                   <svg
                     className="w-4 h-4 pr-1 text-amber-400 dark:text-white"
                     aria-hidden="true"
@@ -91,7 +134,6 @@ function EngineersList() {
               <button className="text-xs mt-4 bg-amber-300 text-black px-3 py-1 rounded-md hover:bg-amber-400">
                 <Link to={`/engineer-details/${engineer._id}`}>See more</Link>
               </button>
-              {/* console.log({`id:${engineer._id}`}); */}
             </div>
           ))}
         </div>

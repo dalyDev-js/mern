@@ -107,9 +107,11 @@ export default function MyJobsPosts() {
                   </p>
                 </span>
                 {/* Additional Action */}
-                <button className="mt-4 px-6 py-3 bg-amber-300 text-white rounded-lg hover:bg-amber-400">
+                <Link
+                  to={"/client"}
+                  className="mt-4 px-6 py-3 bg-amber-300 text-white rounded-lg hover:bg-amber-400">
                   go to dashboard{" "}
-                </button>
+                </Link>
                 {/* <a
                   href="#"
                   className=" text-black  px-6 py-3 mt-10 bg-amber-300  rounded-lg hover:bg-amber-400"

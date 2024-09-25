@@ -490,9 +490,11 @@ export default function Client() {
                 </p>
               </div>
               <div className="second-bottom mx-6">
-                <button className="p-2 w-full font-medium text-amber-300 border-2 border-amber-300 rounded-lg ">
+                <Link
+                  to={"/engineers-list"}
+                  className="p-2 w-full font-medium text-amber-300 border-2 border-amber-300 rounded-lg ">
                   Browse and Message talent{" "}
-                </button>
+                </Link>
               </div>
             </div>
           </div>
