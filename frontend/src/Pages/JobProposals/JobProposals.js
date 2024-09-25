@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import { fetchServiceById } from "../../redux/slices/jobSlice"; // Action to fetch job by ID
+import { fetchServiceById } from "../../redux/slices/jobSlice";
 import { fetchProposalsByServiceId } from "../../redux/slices/proposalSlice";
-import { fetchUserById } from "../../redux/slices/userSlice"; // Action to fetch user by ID
-import engPlaceholder from "../../assets/eng.jpg"; // Placeholder image for engineers without profile pic
 import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice";
+import engPlaceholder from "../../assets/eng.jpg"; // Placeholder image
 
 export default function JobProposals() {
   const { id: serviceId } = useParams(); // Get the job ID from the URL params
   const dispatch = useDispatch();
   const [selectedJob, setSelectedJob] = useState({});
   const [proposals, setProposals] = useState([]);
-  const [userNames, setUserNames] = useState({}); // Store user full names by userId
+  const [userNames, setUserNames] = useState({});
+  const [profilePics, setProfilePics] = useState({}); // Store profile pictures here
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -26,49 +26,45 @@ export default function JobProposals() {
         setSelectedJob(jobResponse?.payload);
         setProposals(proposalResponse?.payload);
 
-        console.log(jobResponse);
         const userIds = proposalResponse?.payload.map(
-          (proposal) => proposal.engineer._id || [] // Get user ID from engineer object in proposal
+          (proposal) => proposal.engineer._id || []
         );
-        // Fetch user names for all userIds and only set dataLoaded to true once all is complete
-        await fetchUserNames(userIds);
+        await fetchUserDetails(userIds);
       } catch (err) {
         console.error("Failed to load job data:", err);
       }
     };
 
-    const fetchUserNames = async (userIds) => {
+    const fetchUserDetails = async (userIds) => {
       try {
-        const names = await Promise.all(
+        const userDetails = await Promise.all(
           userIds.map(async (userId) => {
-            // Fetch the engineer by its ID and get the user's full name
             const userResponse = await dispatch(
               fetchEngineerByEngineerId(userId)
             );
-
-            return { userId, fullName: userResponse?.payload?.user?.fullName };
+            const { fullName, profilePic } = userResponse?.payload?.user || {};
+            return { userId, fullName, profilePic };
           })
         );
 
-        const nameMap = names.reduce((acc, { userId, fullName }) => {
-          acc[userId] = fullName; // Map userId to fullName
-          return acc;
-        }, {});
+        const nameMap = {};
+        const picMap = {};
+
+        userDetails.forEach(({ userId, fullName, profilePic }) => {
+          nameMap[userId] = fullName;
+          picMap[userId] = profilePic || engPlaceholder;
+        });
 
         setUserNames(nameMap);
-        console.log(userNames);
-        setDataLoaded(true); // Mark as fully loaded only after user names are set
+        setProfilePics(picMap);
+        setDataLoaded(true);
       } catch (err) {
-        console.error("Failed to load user names:", err);
+        console.error("Failed to load user details:", err);
       }
     };
 
     fetchJobData();
   }, [dispatch, serviceId]);
-
-  // Show loading state until data is fully loaded
-
-  // If no job or proposals are found
 
   if (!dataLoaded) {
     return (
@@ -78,9 +74,11 @@ export default function JobProposals() {
       </div>
     );
   }
+
   if (!selectedJob || proposals.length === 0) {
     return <p>No proposals found for this job.</p>;
   }
+
   return (
     <>
       <div className="jobs-proposals w-3/5 mx-auto">
@@ -118,18 +116,21 @@ export default function JobProposals() {
                 key={index}
                 className="proposal p-4 mt-4 bg-slate-50 hover:bg-white cursor-pointer hover:shadow-lg rounded-lg">
                 <div className="eng-name-image-view flex items-center justify-between gap-2">
-                  <div className="name-image flex items-center gap-2">
+                  <div className="name-image flex items-center gap-2 mb-4">
                     <img
-                      className="w-12 h-12 rounded-full"
-                      src={proposal.engineer.profilePic || engPlaceholder} // Use profilePic or placeholder
+                      className="w-12 h-12 object-cover rounded-full"
+                      src={profilePics[proposal.engineer._id] || profilePics}
                       alt="Engineer"
                     />
                     <p className="text-lg font-semibold">
-                      {userNames[proposal.engineer._id] || "Loading..."}{" "}
-                      {/* Fetch name from userNames */}
+                      {userNames[proposal.engineer._id] || "Loading..."}
                     </p>
                   </div>
-                  <Link to={`/hiring/${serviceId}/${proposal.engineer._id}`}>
+                  {/* Pass serviceId through Link state */}
+                  <Link
+                    to={`/engineer-details/${proposal.engineer._id}`}
+                    state={{ serviceId }} // Pass the serviceId through state
+                  >
                     <button className="View p-2 bg-amber-400 hover:bg-amber-500 rounded-md font-medium">
                       View Profile
                     </button>

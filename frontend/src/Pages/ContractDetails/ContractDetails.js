@@ -49,7 +49,7 @@ const ContractDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen ">
         <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
         <p className="ml-4">Loading contract details...</p>
       </div>
@@ -63,7 +63,7 @@ const ContractDetails = () => {
   }
 
   return (
-    <div className="contract-details p-6">
+    <div className="contract-details p-6 min-h-[80vh] flex items-center flex-col justify-center">
       <h1 className="text-2xl font-bold">Contract Details</h1>
       {contract && (
         <>

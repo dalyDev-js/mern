@@ -244,7 +244,7 @@ function JobDetail() {
 
         <div className="flex items-center mb-4">
           <span className="font-bold mr-2">Proposals Submitted:</span>
-          <span className="job-proposals text-amber-400">
+          <span className="job-proposals text-amber-400 font-bold text-lg">
             {/* Replace with actual number of proposals */}
             {selectedJob?.proposals?.length || 0}
           </span>

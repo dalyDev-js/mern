@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
-import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice"; // Action to fetch engineer by ID
-import engPlaceholder from "../../assets/eng.jpg"; // Placeholder image for engineers without profile pic
+import { useDispatch } from "react-redux";
+import { useParams, Link, useLocation } from "react-router-dom"; // Import useLocation to get the passed state
+import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice";
 
 const Profile = () => {
   const { id } = useParams(); // Get the engineer ID from the URL params
+  const { state } = useLocation(); // Access the state passed via Link
+  const { serviceId } = state || {}; // Extract serviceId from state
   const dispatch = useDispatch();
   const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -13,10 +14,9 @@ const Profile = () => {
   const [skills, setSkills] = useState([]);
   const [education, setEducation] = useState("");
   const [overview, setOverview] = useState("");
-  const [profilePic, setProfilePic] = useState(engPlaceholder);
+  const [profilePic, setProfilePic] = useState("/images/unknown.jpg");
 
   useEffect(() => {
-    // Fetch the engineer's details when the component mounts
     const fetchEngineerDetails = async () => {
       try {
         if (id) {
@@ -25,11 +25,12 @@ const Profile = () => {
           ).unwrap();
           setFullName(response?.user?.fullName || "Unknown Engineer");
           setSkills(response?.skills || []);
-          setEducation(response?.education || "No education details available");
-          setProfilePic(response?.profilePic || engPlaceholder);
+          setEducation(
+            response?.education?.title || "No education details available"
+          );
+          setProfilePic(response?.user?.profilePic || profilePic);
           setOverview(response?.overview || "No overview available");
           setDataLoaded(true);
-          console.log(response);
         }
       } catch (err) {
         console.error("Failed to load engineer details:", err);
@@ -39,7 +40,6 @@ const Profile = () => {
     fetchEngineerDetails();
   }, [dispatch, id]);
 
-  // Show loading state while fetching data
   if (!dataLoaded) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -56,7 +56,7 @@ const Profile = () => {
           <img
             src={profilePic}
             alt="Profile"
-            className="w-16 h-16 rounded-full border-2 border-amber-300"
+            className="w-24 h-24 object-cover rounded-full border-2 border-amber-300"
           />
           <div className="ml-4">
             <h1 className="text-xl font-semibold">{fullName}</h1>
@@ -64,8 +64,9 @@ const Profile = () => {
           </div>
         </div>
         <div className="flex items-center space-x-4">
+          {/* Use serviceId passed from state to build the URL */}
           <Link
-            to={`/hiring/${id}`}
+            to={`/hiring/${serviceId}/${id}`}
             className="px-10 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded-md">
             Hire
           </Link>
@@ -92,7 +93,7 @@ const Profile = () => {
 
       <div className="mt-6">
         <h2 className="text-lg font-semibold">Education</h2>
-        <p>{education.title}</p>
+        <p>{education}</p>
       </div>
     </div>
   );

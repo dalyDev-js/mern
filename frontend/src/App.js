@@ -62,7 +62,7 @@ let routers = createBrowserRouter([
         ),
       }, // update engineer profile -- engineer view
       { path: "/job-details/:id", element: <JobDetail /> }, // job details -- engineer view
-      { path: "/engineer-details", element: <Profile /> }, // engineer details -- client view
+      // { path: "/engineer-details", element: <Profile /> }, // engineer details -- client view
       { path: "/engineer-details/:id", element: <Profile /> }, // engineer details -- client view
       { path: "/hiring/:service/:id", element: <HiringProcess /> }, // sending proposal -- engineer view
       { path: "/contracts", element: <Contract /> },

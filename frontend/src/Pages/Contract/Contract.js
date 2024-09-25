@@ -76,8 +76,8 @@ const Contract = () => {
   }
 
   return (
-    <div className="contracts-page p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Your Contracts</h1>
+    <div className="contracts-page p-6 min-h-[100vh]">
+      <h1 className="text-3xl font-bold mb-6 text-center ">Your Contracts</h1>
 
       {/* Filter buttons */}
       <div className="filter-tabs mb-6 flex justify-center">

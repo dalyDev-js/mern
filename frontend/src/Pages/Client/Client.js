@@ -332,23 +332,6 @@ export default function Client() {
                         </span>
                       ))}
                     </div>
-
-                    {/* Suggestions */}
-                    {suggestions.length > 0 && (
-                      <div className="bg-white border border-gray-300 rounded-md w-1/2 mt-2">
-                        {suggestions.map((suggestion, index) => (
-                          <div
-                            key={index}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer hover:text-amber-400"
-                            onClick={() => {
-                              setInputValue(suggestion);
-                              setSuggestions([]);
-                            }}>
-                            {suggestion}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
                   <div className="job-level mt-4">
                     <label className="font-medium">Job Level</label>

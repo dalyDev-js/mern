@@ -11,6 +11,7 @@ const Verify = () => {
 
   const [step, setStep] = useState(1);
   const [isVerificationPending, setIsVerificationPending] = useState(false);
+  const [isVerificationAccepted, setIsVerificationAccepted] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const dispatch = useDispatch();
 
@@ -42,6 +43,9 @@ const Verify = () => {
         ) {
           setIsVerificationPending(true);
         }
+        if (verifiedStatus && verifiedStatus.includes("accepted")) {
+          setIsVerificationAccepted(true);
+        }
       } else {
         console.error("No user ID found in the token");
       }
@@ -68,14 +72,11 @@ const Verify = () => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    console.log("Uploaded file:", file);
-    console.log(file, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
     setDocFile(file);
   };
 
   const handleRequestVerification = () => {
     const userId = getUserIdFromToken();
-    console.log(docFile, "ggggggggggggggggggggggg");
     if (userId) {
       dispatch(requestVerification(userId, docFile)).then((res) => {
         if (res.error) {
@@ -97,15 +98,14 @@ const Verify = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg shadow-md min-h-[60vh]">
       {isSuccessModalVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-35">
           <div
             className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
             style={{
               animation: "fadeInScale 0.3s ease-out",
-            }}
-          >
+            }}>
             <div className="flex justify-center mb-4">
               <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
             </div>
@@ -117,8 +117,7 @@ const Verify = () => {
             </p>
             <button
               onClick={handleSuccessModalOkClick}
-              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
-            >
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
               OK
             </button>
           </div>
@@ -126,13 +125,23 @@ const Verify = () => {
       )}
 
       {isVerificationPending ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center justify-center h-[60vh] ">
           <p className="text-lg font-semibold mb-4">
             Your verification process is pending...
           </p>
           <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
           <p className="text-gray-600 mt-4">
             Please wait while we complete the review and verification process.
+          </p>
+        </div>
+      ) : isVerificationAccepted ? (
+        <div className="flex flex-col items-center h-[60vh] justify-center">
+          <div className="flex justify-center mb-4">
+            <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
+          </div>
+          <p className="text-2xl font-semibold mb-2">Success</p>
+          <p className="text-gray-600 mb-4">
+            Congratulations! Your account has been successfully verified.
           </p>
         </div>
       ) : (
@@ -171,8 +180,7 @@ const Verify = () => {
                   onChange={handleCountryChange}
                   className={`w-full border-2 p-2 rounded-lg focus:outline-none focus:border-amber-300 ${
                     country ? "border-amber-300" : "border-gray-300"
-                  }`}
-                >
+                  }`}>
                   <option value="Egypt">Egypt</option>
                   <option value="UAE">UAE</option>
                   <option value="USA">USA</option>
@@ -187,8 +195,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("passport")}
-                >
+                  onClick={() => handleOptionSelect("passport")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/passport.png"
@@ -206,8 +213,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("idCard")}
-                >
+                  onClick={() => handleOptionSelect("idCard")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/id-card.png"
@@ -225,8 +231,7 @@ const Verify = () => {
                       ? "border-amber-300"
                       : "border-gray-300"
                   }`}
-                  onClick={() => handleOptionSelect("driversLicense")}
-                >
+                  onClick={() => handleOptionSelect("driversLicense")}>
                   <div className="flex justify-center mb-2">
                     <img
                       src="/images/driving-license-icon.png"
@@ -243,14 +248,12 @@ const Verify = () => {
               <div className="flex justify-between">
                 <button
                   onClick={() => console.log("Go back")}
-                  className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400"
-                >
+                  className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
                   Cancel
                 </button>
                 <button
                   onClick={handleContinue}
-                  className="bg-amber-300 text-black py-2 px-4 rounded-lg hover:bg-amber-400"
-                >
+                  className="bg-amber-300 text-black py-2 px-4 rounded-lg hover:bg-amber-400">
                   Continue
                 </button>
               </div>
@@ -275,8 +278,7 @@ const Verify = () => {
               <div className="flex justify-center">
                 <button
                   onClick={handleRequestVerification}
-                  className="bg-amber-300 text-black py-2 px-6 rounded-lg hover:bg-amber-400"
-                >
+                  className="bg-amber-300 text-black py-2 px-6 rounded-lg hover:bg-amber-400">
                   Request Verification
                 </button>
               </div>

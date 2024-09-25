@@ -16,13 +16,13 @@ const HiringProcess = () => {
   const [contractDescription, setContractDescription] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [startDate, setStartDate] = useState(""); // Start Date input state
-  const [endDate, setendDate] = useState(""); // end Date input state
+  const [endDate, setEndDate] = useState(""); // End Date input state
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [paymentError, setPaymentError] = useState("");
   const [startDateError, setStartDateError] = useState("");
-  const [endDateError, setendDateError] = useState("");
+  const [endDateError, setEndDateError] = useState("");
   const [termsError, setTermsError] = useState("");
   const [loading, setLoading] = useState(true);
   const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
@@ -33,6 +33,11 @@ const HiringProcess = () => {
   const navigate = useNavigate();
   const [clientId, setClientId] = useState("");
   const [isContractExists, setIsContractExists] = useState(false);
+
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // Returns the current date in YYYY-MM-DD format
+  };
 
   useEffect(() => {
     const fetchEngineerData = async () => {
@@ -120,16 +125,22 @@ const HiringProcess = () => {
     if (!startDate) {
       setStartDateError("Start date is required.");
       hasError = true;
+    } else if (new Date(startDate) < new Date(getTodayDate())) {
+      setStartDateError("Please choose a current or future date.");
+      hasError = true;
     } else {
       setStartDateError("");
     }
 
     // Validate end date
     if (!endDate) {
-      setendDateError("end date is required.");
+      setEndDateError("End date is required.");
+      hasError = true;
+    } else if (new Date(endDate) < new Date(getTodayDate())) {
+      setEndDateError("Please choose a current or future date.");
       hasError = true;
     } else {
-      setendDateError("");
+      setEndDateError("");
     }
 
     // Validate terms acceptance
@@ -324,6 +335,7 @@ const HiringProcess = () => {
               type="date"
               className="block w-full p-2 border border-gray-300 rounded"
               value={startDate}
+              min={getTodayDate()} // Set the min attribute to today's date
               onChange={(e) => setStartDate(e.target.value)}
             />
             {startDateError && (
@@ -331,14 +343,15 @@ const HiringProcess = () => {
             )}
           </div>
 
-          {/* end Date */}
+          {/* End Date */}
           <div className="mb-8">
-            <label className="block text-sm font-medium mb-2">end Date</label>
+            <label className="block text-sm font-medium mb-2">End Date</label>
             <input
               type="date"
               className="block w-full p-2 border border-gray-300 rounded"
               value={endDate}
-              onChange={(e) => setendDate(e.target.value)}
+              min={getTodayDate()} // Set the min attribute to today's date
+              onChange={(e) => setEndDate(e.target.value)}
             />
             {endDateError && (
               <p className="text-red-500 text-sm">{endDateError}</p>

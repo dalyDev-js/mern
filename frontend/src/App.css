@@ -1,6 +1,6 @@
 @font-face {
   font-family: Orbitron;
-  src: url("../public/fonts/Orbitron.ttf");
+  src: url("../public/fonts/Poppins-Regular.ttf");
 }
 
 .font {
@@ -8,4 +8,8 @@
 }
 hr.solid {
   border-top: 1px solid #bbb;
+}
+
+* {
+  font-family: "Orbitron", sans-serif;
 }

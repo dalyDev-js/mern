@@ -59,7 +59,7 @@ function Sidebar() {
               <div className="flex flex-col mb-6">
                 <div className="flex justify-start gap-3 mb-1">
                   <img
-                    className="w-16 h-16 mb-2 rounded-full shadow-lg"
+                    className="w-24 h-24 object-cover mb-2 rounded-full shadow-lg"
                     // Use engineer.profilePic if available, else fallback to Link placeholder
                     src={
                       selectedEngineer?.user?.profilePic ||

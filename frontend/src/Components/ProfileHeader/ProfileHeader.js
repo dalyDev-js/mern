@@ -34,9 +34,10 @@ function ProfileHeader() {
 
   useEffect(() => {
     // Update avatar and full name once selectedEngineer is fetched
+    console.log(selectedEngineer);
     if (selectedEngineer) {
       setFullName(selectedEngineer?.user?.fullName || "Your Name");
-      setAvatar(selectedEngineer?.user?.profilePic || "avatar_url");
+      setAvatar(selectedEngineer?.user?.profilePic || "/images/unknown.jpg");
     }
   }, [selectedEngineer]);
 
@@ -94,9 +95,9 @@ function ProfileHeader() {
         <div className="flex items-center">
           <div className="relative">
             <img
-              src={avatar}
+              src={avatar || "images/uknown.jpg"}
               alt="Profile"
-              className="w-16 h-16 rounded-full"
+              className="w-24 h-24 object-cover rounded-full"
             />
             <div
               className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 cursor-pointer"
