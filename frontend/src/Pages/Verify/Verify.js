@@ -14,6 +14,7 @@ const Verify = () => {
   const [isVerificationRejected, setIsVerificationRejected] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(""); // For validation message
+  const [shouldPoll, setShouldPoll] = useState(true); // Control polling effect
   const dispatch = useDispatch();
 
   // Utility function to extract user ID from token
@@ -28,7 +29,7 @@ const Verify = () => {
 
   // Function to update user info and handle verification state
   const updateUserInfo = async () => {
-    if (isVerificationRejected) return; // Stop polling if verification is rejected
+    if (!shouldPoll) return; // Stop polling if shouldPoll is false
 
     const userId = getUserIdFromToken();
     if (userId) {
@@ -57,6 +58,8 @@ const Verify = () => {
 
   // Polling for localStorage changes and initial loading of user data
   useEffect(() => {
+    if (!shouldPoll) return; // Do not set up polling if shouldPoll is false
+
     // Initial call to set the user info when the component mounts
     updateUserInfo();
 
@@ -73,7 +76,7 @@ const Verify = () => {
       clearInterval(intervalId);
       window.removeEventListener("storage", updateUserInfo);
     };
-  }, [dispatch, isVerificationRejected]); // Only update when rejection state changes
+  }, [dispatch, shouldPoll]); // Now the effect runs only when `shouldPoll` is true
 
   // Handling ID type selection
   const handleOptionSelect = (option) => {
@@ -122,7 +125,7 @@ const Verify = () => {
           setIsVerificationPending(true);
           setIsVerificationAccepted(false);
           setIsVerificationRejected(false);
-
+          setShouldPoll(true); // Resume polling after requesting verification
           setIsSuccessModalVisible(true);
         }
       });
@@ -139,6 +142,7 @@ const Verify = () => {
   const handleBack = () => {
     setStep(1);
     setIsVerificationRejected(false); // Reset rejection state when going back
+    setShouldPoll(false); // Stop polling when user clicks "Upload New Document"
   };
 
   return (
