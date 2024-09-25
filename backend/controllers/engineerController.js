@@ -37,17 +37,30 @@ const getEngineerById = catchAsync(async (req, res, next) => {
 
   console.log("User ID received:", userId);
 
+  // Find engineer by user ID and populate the user field
   const engineer = await Engineer.findOne({ user: userId }).populate("user");
 
+  // If no engineer is found, return a 404 error
   if (!engineer) {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
     return next(new AppError("Engineer not found with this user ID", 404));
   }
-  engineer.user.profilePic =
-    engineer.user.profilePic !== "https://robohash.org/bali"
-      ? `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`
-      : engineer.user.profilePic;
 
+  // Set up the base URL, using an environment variable for production, fallback to localhost for development
+  const baseURL = process.env.BASE_URL || "http://localhost:8000";
+
+  // Check if profilePic exists and it's not the default RoboHash URL
+  if (
+    engineer.user.profilePic &&
+    engineer.user.profilePic !== "https://robohash.org/bali"
+  ) {
+    // If the profilePic is not an external URL, prepend the local server path
+    if (!engineer.user.profilePic.startsWith("http")) {
+      engineer.user.profilePic = `${baseURL}/my-uploads/users/${engineer.user.profilePic}`;
+    }
+  }
+
+  // Send the response with the engineer details
   res.status(200).json({
     status: "success",
     data: {
