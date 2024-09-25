@@ -2,6 +2,8 @@ import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import User from "../model/userModel.js";
+import { Certificate } from "../model/certificateModel.js";
+import { Portfolio } from "../model/portofolioModel.js";
 
 const getEducation = catchAsync(async (req, res, next) => {
   const engineer = await Engineer.findOne({ user: req.params.id });
@@ -38,8 +40,11 @@ const getEngineerById = catchAsync(async (req, res, next) => {
   console.log("User ID received:", userId);
 
   // Find engineer by user ID and populate the user field
-  const engineer = await Engineer.findOne({ user: userId }).populate("user");
 
+  const engineer = await Engineer.findOne({ _id: userId });
+  const certificates = await Certificate.find({ engineer: engineer._id });
+  const portfolios = await Portfolio.find({ user: engineer.user });
+  
   // If no engineer is found, return a 404 error
   if (!engineer) {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
@@ -65,6 +70,8 @@ const getEngineerById = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       engineer,
+      portfolios,
+      certificates,
     },
   });
 });
