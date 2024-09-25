@@ -1,12 +1,16 @@
+// ProfileSummary.js
 import React, { useState, useEffect } from "react";
-import { FaLink, FaPen, FaPlus } from "react-icons/fa";
+import { FaPen, FaPlus } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-hot-toast"; // Import react-hot-toast
 
 function ProfileSummary() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [profileOverview, setProfileOverview] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [titleError, setTitleError] = useState(""); // For title validation error
+  const [overviewError, setOverviewError] = useState(""); // For overview validation error
 
   // Fetch existing profile data on component mount
   useEffect(() => {
@@ -15,8 +19,12 @@ function ProfileSummary() {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("token"); // token from where ?
-      const userData = localStorage.getItem("User"); // Adjust based on how you store tokens
+      const token = localStorage.getItem("Token"); // Ensure token key matches
+      const userData = localStorage.getItem("User"); // Ensure User data is stored correctly
+      if (!token || !userData) {
+        toast.error("User not authenticated.");
+        return;
+      }
       const user = JSON.parse(userData);
 
       const response = await axios.get(
@@ -34,6 +42,7 @@ function ProfileSummary() {
       setProfileOverview(data.data.engineer.overview || "");
     } catch (error) {
       console.error("Error fetching profile:", error);
+      toast.error("Failed to fetch profile.");
     }
   };
 
@@ -44,12 +53,63 @@ function ProfileSummary() {
     }
   };
 
+  // Validation functions
+  const validateTitle = (title) => {
+    const regex = /^[A-Za-z\s]{3,}$/; // Only letters and spaces, at least 3 characters
+    return regex.test(title);
+  };
+
+  const validateOverview = (overview) => {
+    const isValidLength = overview.trim().length >= 10;
+    const isNotNumbersOnly = /\D/.test(overview);
+    return isValidLength && isNotNumbersOnly;
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    let hasError = false;
+
+    // Validate Title
+    if (!validateTitle(title)) {
+      setTitleError(
+        "Title must be at least 3 characters long and contain only letters and spaces."
+      );
+      toast.error(
+        "Title must be at least 3 characters long and contain only letters and spaces."
+      );
+      hasError = true;
+    } else {
+      setTitleError("");
+    }
+
+    // Validate Profile Overview
+    if (!validateOverview(profileOverview)) {
+      setOverviewError(
+        "Overview must be at least 10 characters long and cannot be numbers only."
+      );
+      toast.error(
+        "Overview must be at least 10 characters long and cannot be numbers only."
+      );
+      hasError = true;
+    } else {
+      setOverviewError("");
+    }
+
+    // If there are validation errors, return early
+    if (hasError) {
+      return;
+    }
+
     setIsLoading(true);
 
-    const token = localStorage.getItem("token"); // Adjust based on how you store tokens
-    const userData = localStorage.getItem("User"); // Adjust based on how you store tokens
+    const token = localStorage.getItem("Token"); // Ensure token key matches
+    const userData = localStorage.getItem("User"); // Ensure User data is stored correctly
+    if (!token || !userData) {
+      toast.error("User not authenticated.");
+      setIsLoading(false);
+      return;
+    }
     const user = JSON.parse(userData);
 
     try {
@@ -79,12 +139,12 @@ function ProfileSummary() {
         );
       }
 
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
       toggleModal();
       fetchProfile();
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
+      toast.error("Failed to update profile.");
     } finally {
       setIsLoading(false);
     }
@@ -108,6 +168,12 @@ function ProfileSummary() {
           <p className="text-gray-600 mt-2">
             {profileOverview || "Your Profile Overview"}
           </p>
+          {titleError && (
+            <p className="text-red-500 text-sm mt-1">{titleError}</p>
+          )}
+          {overviewError && (
+            <p className="text-red-500 text-sm mt-1">{overviewError}</p>
+          )}
         </div>
       </div>
 
@@ -159,7 +225,11 @@ function ProfileSummary() {
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className={`bg-gray-50 border ${
+                      titleError
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } text-gray-900 text-sm rounded-lg focus:ring-amber-300 focus:border-amber-300 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500`}
                     placeholder="Your Title"
                     required
                   />
@@ -177,7 +247,11 @@ function ProfileSummary() {
                     rows="4"
                     value={profileOverview}
                     onChange={(e) => setProfileOverview(e.target.value)}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border ${
+                      overviewError
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } focus:ring-amber-300 focus:border-amber-300 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500`}
                     placeholder="Profile Overview"
                     required
                   ></textarea>
