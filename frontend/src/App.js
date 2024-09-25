@@ -34,6 +34,7 @@ import Verify from "./Pages/Verify/Verify";
 import { LoadingProvider } from "./utils/LoadingContext";
 import Contract from "./Pages/Contract/Contract";
 import ContractDetails from "./Pages/ContractDetails/ContractDetails";
+import { Toaster } from "react-hot-toast";
 
 let routers = createBrowserRouter([
   {

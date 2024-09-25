@@ -1,3 +1,4 @@
+// ProfilePage.js
 import React from "react";
 import ProfileHeader from "../../Components/ProfileHeader/ProfileHeader";
 import ProfileSummary from "../../Components/ProfileSummary/ProfileSummary";
@@ -6,10 +7,14 @@ import ProfilePortfolio from "../../Components/ProfilePortofolio/ProfilePortfoli
 import ProfileSideBar from "../../Components/ProfileSideBar/ProfileSideBar";
 import ProfileCertifications from "../../Components/ProfileCertifications/ProfileCertifications";
 import ProfileEducation from "../../Components/ProfileEducation/ProfileEducation";
+import { Toaster } from "react-hot-toast";
 
 function ProfilePage() {
   return (
     <div className="App bg-gray-100 min-h-screen py-8">
+      {/* Toaster placed here to handle toast notifications */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <div className="container mx-auto px-10">
         <div className="flex flex-col lg:flex-row gap-12 px-10">
           <div className="w-full lg:w-4/4 flex flex-col gap-6">
