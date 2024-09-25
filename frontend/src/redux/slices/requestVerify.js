@@ -12,6 +12,32 @@ const VERIFICATION_REQUEST = "verification/VERIFICATION_REQUEST";
 const VERIFICATION_SUCCESS = "verification/VERIFICATION_SUCCESS";
 const VERIFICATION_FAILURE = "verification/VERIFICATION_FAILURE";
 
+// Action types for updating verification status
+const UPDATE_VERIFICATION_STATUS = "verification/UPDATE_VERIFICATION_STATUS";
+
+// Action creator for updating verification status to 'pending'
+export const updateVerificationStatus =
+  (userId, status) => async (dispatch) => {
+    try {
+      await axios.post(`http://localhost:8000/api/v1/verify/user/${userId}`, {
+        status,
+      });
+
+      // Dispatch an action to update the verification status in the store
+      dispatch({
+        type: UPDATE_VERIFICATION_STATUS,
+        payload: status,
+      });
+    } catch (error) {
+      dispatch({
+        type: VERIFICATION_FAILURE,
+        payload:
+          error.response?.data?.message ||
+          "Failed to update verification status.",
+      });
+    }
+  };
+
 // Reducer
 const verificationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -26,11 +52,12 @@ const verificationReducer = (state = initialState, action) => {
       };
     case VERIFICATION_FAILURE:
       return { ...state, loading: false, error: action.payload };
+    case UPDATE_VERIFICATION_STATUS:
+      return { ...state, verifiedStatus: action.payload };
     default:
       return state;
   }
 };
-
 // Action creator for requesting verification
 export const requestVerification = (userId, file) => async (dispatch) => {
   dispatch({ type: VERIFICATION_REQUEST });

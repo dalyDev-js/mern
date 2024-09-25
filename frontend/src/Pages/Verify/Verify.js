@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { requestVerification } from "../../redux/slices/requestVerify";
+import {
+  requestVerification,
+  updateVerificationStatus,
+} from "../../redux/slices/requestVerify";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import { jwtDecode } from "jwt-decode";
 
@@ -125,6 +128,10 @@ const Verify = () => {
           setIsVerificationPending(true);
           setIsVerificationAccepted(false);
           setIsVerificationRejected(false);
+
+          // Dispatch action to update the status to 'pending'
+          dispatch(updateVerificationStatus(userId, "pending"));
+
           setShouldPoll(true); // Resume polling after requesting verification
           setIsSuccessModalVisible(true);
         }
