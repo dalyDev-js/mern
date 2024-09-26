@@ -41,10 +41,12 @@ const getEngineerById = catchAsync(async (req, res, next) => {
 
   // Find engineer by user ID and populate the user field
 
-  const engineer = await Engineer.findOne({ _id: userId });
-  const certificates = await Certificate.find({ engineer: engineer._id });
-  const portfolios = await Portfolio.find({ user: engineer.user });
-  
+  const engineer = await Engineer.findOne({ user: userId }).populate("user");
+  const certificates = await Certificate.find({ engineer: userId });
+  const portfolios = await Portfolio.find({ user: userId });
+  console.log(engineer);
+  console.log(certificates);
+  console.log(portfolios);
   // If no engineer is found, return a 404 error
   if (!engineer) {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
@@ -61,7 +63,7 @@ const getEngineerById = catchAsync(async (req, res, next) => {
   ) {
     // If the profilePic is not an external URL, prepend the local server path
     if (!engineer.user.profilePic.startsWith("http")) {
-      engineer.user.profilePic = `${baseURL}/my-uploads/users/${engineer.user.profilePic}`;
+      engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
     }
   }
 
@@ -79,17 +81,20 @@ const getEngineerById = catchAsync(async (req, res, next) => {
 const getEngineerByEngineerId = catchAsync(async (req, res, next) => {
   const { engineerId } = req.params;
 
-  console.log("User ID received:", engineerId);
+  console.log("Engineer ID received:", engineerId);
 
-  const engineer = await Engineer.findOne({ _id: engineerId }).populate("user");
+  // Find the engineer by _id and populate the certificates and portfolios fields
+  const engineer = await Engineer.findOne({ _id: engineerId })
+    .populate("user")
+    .populate("certificates")
+    .populate("portfolios"); // Populate portfolios as well
 
   if (!engineer) {
-    console.log("Engineer not found for user ID:", engineerId); // Debugging: Log if no engineer is found
-    return next(new AppError("Engineer not found with this user ID", 404));
+    console.log("Engineer not found for ID:", engineerId);
+    return next(new AppError("Engineer not found with this ID", 404));
   }
 
-  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
-
+  // Respond with the engineer data, including populated certificates and portfolios
   res.status(200).json({
     status: "success",
     data: {
@@ -302,7 +307,7 @@ const updateEngineer = catchAsync(async (req, res, next) => {
 
   // Handle profilePic upload, if file exists
   if (req.file) {
-    data.profilePic = req.file.filename;
+    data.profilePic = `http://localhost:8000/my-uploads/users/${req.file.filename}`;
   }
   console.log(data);
   // Update the Engineer document

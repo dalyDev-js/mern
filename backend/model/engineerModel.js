@@ -6,6 +6,20 @@ const engineerSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  certificates: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Certificate", // Reference the Certificate model
+    },
+  ],
+  portfolios: [
+    // Adding portfolios array to store references
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Portfolio", // Reference the Portfolio model
+    },
+  ],
+
   title: {
     type: String,
     required: true,

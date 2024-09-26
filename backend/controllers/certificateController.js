@@ -10,7 +10,7 @@ const getCertificate = catchAsync(async (req, res) => {
     return {
       _id: cert._id,
       name: cert.name,
-      file: `http://localhost:8000/my-uploads/certificates/${cert.file}`,
+      file: `${cert.file}`,
     };
   });
 
@@ -19,16 +19,28 @@ const getCertificate = catchAsync(async (req, res) => {
 
 const addCertificate = catchAsync(async (req, res) => {
   const { name } = req.body;
+  const { id } = req.params; // This is the user ID
 
-  let { id } = req.params;
+  // Find the user and corresponding engineer
   const user = await User.findById(id);
   const engineer = await Engineer.findOne({ user: user._id });
-  console.log({ name, file: req.file.filename, engineer: engineer._id });
-  await Certificate.create({
+
+  if (!engineer) {
+    return res.status(404).json({ message: "Engineer not found" });
+  }
+
+  // Create a new certificate
+  const certificate = await Certificate.create({
     name,
-    file: req.file.filename,
+    file: `http://localhost:8000/my-uploads/certificates/${req.file.filename}`,
     engineer: engineer._id,
   });
+
+  // Push the certificate into the engineer's certificates array
+  engineer.certificates.push(certificate._id);
+
+  // Save the updated engineer document
+  await engineer.save();
 
   res.status(200).json({ message: "Certificate added successfully" });
 });
