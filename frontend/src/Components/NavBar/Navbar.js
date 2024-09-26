@@ -90,7 +90,7 @@ export default function Navbar() {
                     className="h-12 w-12 mr-2"
                     alt="Handas Logo"
                   />
-                  <span className="font self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                  <span className="font self-center text-xl hidden lg:block sm:hidden m:block font-semibold whitespace-nowrap dark:text-white">
                     Handesly
                   </span>
                 </Link>
@@ -101,9 +101,16 @@ export default function Navbar() {
                 {userName ? (
                   <>
                     <div className="flex items-center">
-                      <Link to={`/profile/${userId}`} className="mr-2">
-                        Hello, {userName}
-                      </Link>
+                      {userRole === "engineer" ? (
+                        <Link to={`/profile/${userId}`} className="mr-2">
+                          Hello, <span className="font-bold">{userName}</span>
+                        </Link>
+                      ) : (
+                        <Link to={`/client`} className="mr-2">
+                          Hello, <span className="font-bold">{userName}</span>
+                        </Link>
+                      )}
+
                       <div className="relative group">
                         {verifiedStatus === "pending" && (
                           <>
@@ -158,38 +165,40 @@ export default function Navbar() {
                   </>
                 )}
               </div>
-              <button
-                onClick={toggleMenu}
-                className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none">
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className={`w-6 h-6 ${isOpen ? "hidden" : "block"}`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fillRule="evenodd"
-                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                    clipRule="evenodd"></path>
-                </svg>
-                <svg
-                  className={`w-6 h-6 ${isOpen ? "block" : "hidden"}`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"></path>
-                </svg>
-              </button>
+              {userName && (
+                <button
+                  onClick={toggleMenu}
+                  className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none">
+                  <span className="sr-only">Open main menu</span>
+                  <svg
+                    className={`w-6 h-6 ${isOpen ? "hidden" : "block"}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fillRule="evenodd"
+                      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                      clipRule="evenodd"></path>
+                  </svg>
+                  <svg
+                    className={`w-6 h-6 ${isOpen ? "block" : "hidden"}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"></path>
+                  </svg>
+                </button>
+              )}
             </div>
 
             {/* Mobile Menu */}
             <div
-              className={`fixed top-0 right-0 w-1/2 h-full bg-white z-50 transition-transform duration-700 transform ${
+              className={`fixed top-0 right-0 h-full bg-white z-50 transition-transform duration-700 transform ${
                 isOpen ? "translate-x-0" : "translate-x-full"
-              }`}>
+              } w-1/2 sm:w-1/3 md:w-1/4`}>
               <button
                 className="absolute top-5 right-5 text-gray-500 focus:outline-none"
                 onClick={closeMenu}>
@@ -204,12 +213,12 @@ export default function Navbar() {
                     clipRule="evenodd"></path>
                 </svg>
               </button>
-              <ul className="flex flex-col mt-4 font-medium">
+              <ul className="flex flex-col mt-4 w-full items-center gap-5 font-medium">
                 <li>
                   <NavLink
                     to={""}
                     onClick={closeMenu}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100">
+                    className="block py-2 pl-3 pr-4 hover:scale-105 duration-200 text-black border-b border-gray-100">
                     Home
                   </NavLink>
                 </li>
@@ -218,7 +227,7 @@ export default function Navbar() {
                     <NavLink
                       to={`/profile/${userId}`}
                       onClick={closeMenu}
-                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100">
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
                       Profile
                     </NavLink>
                   </li>
@@ -227,7 +236,7 @@ export default function Navbar() {
                   <NavLink
                     to={"/contact"}
                     onClick={closeMenu}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
                     Contact
                   </NavLink>
                 </li>
@@ -235,7 +244,7 @@ export default function Navbar() {
                   <NavLink
                     to={"/about"}
                     onClick={closeMenu}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
                     About
                   </NavLink>
                 </li>
@@ -246,7 +255,7 @@ export default function Navbar() {
                         handleLogout();
                         closeMenu();
                       }}
-                      className="block w-full py-2 pl-3 pr-4 text-left text-black border-b border-gray-100">
+                      className="block w-full py-2 pl-3 pr-4 text-left hover:scale-105 duration-200 text-black border-b border-gray-100">
                       Logout
                     </button>
                   </li>
@@ -256,21 +265,20 @@ export default function Navbar() {
 
             {/* Original Nav Links */}
             <div
-              className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1`}>
-              <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+              className={`items-center justify-between w-full lg:hidden m:hidden sm:hidden hidden xl:flex xl:w-auto lg:order-1`}>
+              <ul className="flex flex-col mt-4 font-medium xl:flex-row xl:space-x-8 xl:mt-0">
                 <li>
                   <NavLink
                     to={""}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-400 xl:p-0">
                     Home
                   </NavLink>
                 </li>
-                {/* Hide Profile in desktop */}
                 {userRole === "client" ? (
                   <li>
                     <NavLink
                       to="/client"
-                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-400 lg:p-0">
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-400 xl:p-0">
                       Client Dashboard
                     </NavLink>
                   </li>
@@ -278,7 +286,7 @@ export default function Navbar() {
                   <li>
                     <NavLink
                       to="/jobs"
-                      className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-300 lg:p-0">
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
                       Find Work
                     </NavLink>
                   </li>
@@ -286,21 +294,21 @@ export default function Navbar() {
                 <li>
                   <Link
                     to={"/about"}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-300 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
                     Why Handesly
                   </Link>
                 </li>
                 <li>
                   <NavLink
                     to={"/contact"}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-300 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
                     Contact
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to={"/about"}
-                    className="block py-2 pl-3 pr-4 text-black border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-amber-300 lg:p-0">
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
                     About
                   </NavLink>
                 </li>

@@ -39,21 +39,15 @@ function EngineersList() {
   return (
     <div className="container mx-auto px-20 py-10 h-screen my-10 ">
       {/* Title */}
-      <h1 className="text-4xl font-medium  text-amber-300 mb-3 mt-10">
+      <h1 className="text-4xl font-medium  text-amber-400 mb-3 mt-10">
         Hire the best Engineers professionals
       </h1>
-
-      {/* Description */}
-      <p className="text-lg mb-6">
-        Check out Prospect Lists professionals with the skills you need for your
-        next job.
-      </p>
 
       {/* Search Bar */}
       <div className="mb-6 flex gap-3">
         {/* Dropdown to select search type */}
         <select
-          className="p-2 border border-gray-300 rounded-md"
+          className="p-2 border border-gray-300  outline-none focus:border-amber-300 focus:outline-none focus:ring-amber-300  rounded-md"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}>
           <option value="name">Search by Name</option>
@@ -68,7 +62,7 @@ function EngineersList() {
               ? "Search by engineer's name..."
               : "Search by skill..."
           }
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-2 border outline-none focus:border-amber-300 focus:outline-none focus:ring-amber-300 border-gray-300 rounded-md"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -94,7 +88,7 @@ function EngineersList() {
                 src={
                   engineer.user.profilePic === ""
                     ? "/images/unknown.jpg"
-                    : engineer.user.profilePic
+                    : engineer?.user?.profilePic
                 }
                 alt={engineer.user.fullName}
                 className="w-24 object-cover h-24 rounded-full"

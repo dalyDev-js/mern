@@ -8,6 +8,7 @@ function MessageContainer() {
   const { selectedConversation, setSelectedConversation } = useConversation();
 
   useEffect(() => {
+    console.log(selectedConversation);
     return () => setSelectedConversation(null);
   }, [setSelectedConversation]);
 

@@ -13,32 +13,52 @@ export default function JobProposals() {
   const [proposals, setProposals] = useState([]);
   const [userNames, setUserNames] = useState({});
   const [profilePics, setProfilePics] = useState({}); // Store profile pictures here
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [error, setError] = useState(null); // Track error state
 
   useEffect(() => {
     const fetchJobData = async () => {
       try {
+        // Start loading
+        setIsLoading(true);
+
+        // Fetch job details and proposals
         const jobResponse = await dispatch(fetchServiceById(serviceId));
         const proposalResponse = await dispatch(
           fetchProposalsByServiceId(serviceId)
         );
 
+        // If there are no proposals, handle it gracefully
+        if (
+          !proposalResponse?.payload ||
+          proposalResponse?.payload.length === 0
+        ) {
+          throw new Error("No proposals found for this job");
+        }
+
         setSelectedJob(jobResponse?.payload);
         setProposals(proposalResponse?.payload);
 
-        const userIds = proposalResponse?.payload.map(
-          (proposal) => proposal.engineer._id || []
+        // Get the engineer user IDs from the proposals
+        const userIds = proposalResponse?.payload?.map(
+          (proposal) => proposal?.engineer?._id || []
         );
         await fetchUserDetails(userIds);
+
+        // Stop loading
+        setIsLoading(false);
       } catch (err) {
+        // Handle errors
         console.error("Failed to load job data:", err);
+        setError(err.message);
+        setIsLoading(false);
       }
     };
 
     const fetchUserDetails = async (userIds) => {
       try {
         const userDetails = await Promise.all(
-          userIds.map(async (userId) => {
+          userIds?.map(async (userId) => {
             const userResponse = await dispatch(
               fetchEngineerByEngineerId(userId)
             );
@@ -57,7 +77,6 @@ export default function JobProposals() {
 
         setUserNames(nameMap);
         setProfilePics(picMap);
-        setDataLoaded(true);
       } catch (err) {
         console.error("Failed to load user details:", err);
       }
@@ -66,7 +85,7 @@ export default function JobProposals() {
     fetchJobData();
   }, [dispatch, serviceId]);
 
-  if (!dataLoaded) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
@@ -75,8 +94,24 @@ export default function JobProposals() {
     );
   }
 
-  if (!selectedJob || proposals.length === 0) {
-    return <p>No proposals found for this job.</p>;
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-white shadow-lg p-10 rounded-lg text-center max-w-md mx-auto">
+          <div className="mb-4">
+            <i className="fas fa-exclamation-circle text-6xl text-red-400"></i>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            No proposals submitted for this job
+          </h2>
+          <Link
+            to="/client"
+            className="bg-amber-400 text-white px-6 py-3 rounded-full hover:bg-amber-500 transition">
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -92,7 +127,7 @@ export default function JobProposals() {
                 {selectedJob.description}
               </p>
               <div className="skills flex gap-2 mt-5">
-                {selectedJob.skills.map((skill, index) => (
+                {selectedJob?.skills?.map((skill, index) => (
                   <div
                     key={index}
                     className="skill text-amber-900 w-24 h-8 flex justify-center items-center rounded-md font-medium p-2 bg-slate-300">
@@ -111,7 +146,7 @@ export default function JobProposals() {
           <p className="text-lg mt-4 font-medium">Job Proposals</p>
           <hr />
           <div className="proposals">
-            {proposals.map((proposal, index) => (
+            {proposals?.map((proposal, index) => (
               <div
                 key={index}
                 className="proposal p-4 mt-4 bg-slate-50 hover:bg-white cursor-pointer hover:shadow-lg rounded-lg">
@@ -126,7 +161,6 @@ export default function JobProposals() {
                       {userNames[proposal.engineer._id] || "Loading..."}
                     </p>
                   </div>
-                  {/* Pass serviceId through Link state */}
                   <Link
                     to={`/engineer-details/${proposal.engineer._id}`}
                     state={{ serviceId }} // Pass the serviceId through state

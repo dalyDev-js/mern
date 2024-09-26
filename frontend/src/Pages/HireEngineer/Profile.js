@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice";
-import { fetchCertificates } from "../../redux/slices/cerficateSlice";
-import { fetchPortfolios } from "../../redux/slices/portfolioSlice";
 
 const Profile = () => {
-  const { id } = useParams(); // Get the engineer ID from the URL params
-  const { state } = useLocation(); // Access the state passed via Link
-  const { serviceId } = state || {}; // Extract serviceId from state
+  const { id } = useParams();
+  const { state } = useLocation();
+  const { serviceId } = state || {};
   const dispatch = useDispatch();
 
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -17,22 +15,20 @@ const Profile = () => {
   const [education, setEducation] = useState("");
   const [overview, setOverview] = useState("");
   const [profilePic, setProfilePic] = useState("/images/unknown.jpg");
-  const [certifications, setCertifications] = useState([]); // Local state for certificates
-  const [portfolios, setPortfolios] = useState([]); // Local state for portfolios
+  const [certifications, setCertifications] = useState([]);
+  const [portfolios, setPortfolios] = useState([]);
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchEngineerDetails = async () => {
       try {
         if (id) {
-          // Fetch engineer details
           const engineerResponse = await dispatch(
             fetchEngineerByEngineerId(id)
           ).unwrap();
 
-          // Log full response for debugging
-          console.log("Fetched Engineer Data:", engineerResponse);
-
-          // Set individual fields from the engineer response
           setFullName(engineerResponse?.user?.fullName || "Unknown Engineer");
           setSkills(engineerResponse?.skills || []);
           setEducation(
@@ -41,20 +37,10 @@ const Profile = () => {
           );
           setProfilePic(engineerResponse?.user?.profilePic || profilePic);
           setOverview(engineerResponse?.overview || "No overview available");
+          setCertifications(engineerResponse?.certificates || []);
+          setPortfolios(engineerResponse?.portfolios || []);
 
-          // Fetch certificates and portfolios
-          const certificatesResponse = await dispatch(
-            fetchCertificates(id)
-          ).unwrap();
-          const portfoliosResponse = await dispatch(
-            fetchPortfolios(id)
-          ).unwrap();
-          console.log(engineerResponse);
-          // Set the fetched certificates and portfolios in local state
-          setCertifications(certificatesResponse || []);
-          setPortfolios(portfoliosResponse || []);
-
-          setDataLoaded(true); // Mark data as loaded
+          setDataLoaded(true);
         }
       } catch (err) {
         console.error("Failed to load engineer details:", err);
@@ -63,6 +49,16 @@ const Profile = () => {
 
     fetchEngineerDetails();
   }, [dispatch, id]);
+
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedItem(null);
+    setIsModalOpen(false);
+  };
 
   if (!dataLoaded) {
     return (
@@ -74,76 +70,148 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-20 p-6 bg-white rounded-3xl border shadow-md">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
+    <div className="max-w-6xl mx-auto my-16 p-10 bg-gradient-to-br from-white to-gray-100 rounded-xl shadow-lg">
+      {/* Profile Section */}
+      <div className="flex flex-col sm:flex-row items-center justify-between space-y-6 sm:space-y-0 sm:space-x-6">
+        <div className="flex items-center space-x-6">
           <img
             src={profilePic}
             alt="Profile"
-            className="w-24 h-24 object-cover rounded-full border-2 border-amber-300"
+            className="w-28 h-28 object-cover rounded-full border-4 border-amber-400 shadow-lg"
           />
-          <div className="ml-4">
-            <h1 className="text-xl font-semibold">{fullName}</h1>
-            <p className="text-gray-600">Giza, Egypt - 6:51 pm local time</p>
+          <div className="flex flex-col items-center sm:items-start">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+              {fullName}
+            </h1>
+            {/* <p className="text-sm text-gray-500">
+              Giza, Egypt - 6:51 PM local time
+            </p> */}
+            <p className="mt-2 text-lg text-amber-600">Available for hire</p>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Link
-            to={`/hiring/${serviceId}/${id}`}
-            className="px-10 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded-md">
-            Hire
-          </Link>
-          <button className="px-4 py-2 text-amber-300 border hover:text-amber-400 hover:border-amber-400 border-amber-300 rounded-md">
+        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+          {/* Conditionally render the "Hire Me" button only if serviceId is present */}
+          {serviceId && (
+            <Link
+              to={`/hiring/${serviceId}/${id}`}
+              className="px-8 py-2 bg-amber-300 text-black rounded-full shadow-lg hover:bg-amber-500 transition w-full sm:w-auto">
+              Hire Me
+            </Link>
+          )}
+          <button className="px-4 py-2 bg-white border border-amber-400 text-amber-400 rounded-full shadow-lg hover:bg-gray-100 transition w-full sm:w-auto">
             <i className="fas fa-heart"></i>
           </button>
         </div>
       </div>
 
-      <div className="mt-6">
-        <hr className="solid mb-8" />
-        <h2 className="text-lg font-semibold">Overview</h2>
-        <p>{overview}</p>
+      {/* Overview */}
+      <div className="mt-12">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">Overview</h2>
+        <p className="text-gray-600 text-justify leading-relaxed">{overview}</p>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Skills</h2>
-        <ul className="list-disc list-inside">
+      {/* Skills */}
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">Skills</h2>
+        <ul className="flex flex-wrap gap-4">
           {skills.length > 0 ? (
-            skills.map((skill, index) => <li key={index}>{skill}</li>)
+            skills.map((skill, index) => (
+              <li
+                key={index}
+                className="px-4 py-2 bg-amber-200 text-black rounded-full shadow-sm">
+                {skill}
+              </li>
+            ))
           ) : (
             <li>No skills provided</li>
           )}
         </ul>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Education</h2>
-        <p>{education}</p>
+      {/* Education */}
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">Education</h2>
+        <p className="text-gray-600">{education}</p>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Certifications</h2>
-        <ul className="list-disc list-inside">
+      {/* Certifications */}
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">
+          Certifications
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {certifications.length > 0 ? (
             certifications.map((cert, index) => (
-              <li key={index}>{cert.name}</li>
+              <div
+                key={index}
+                onClick={() => openModal(cert)}
+                className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transform transition duration-300">
+                <img
+                  src={cert.file}
+                  alt={cert.name}
+                  className="h-40 w-full object-cover"
+                />
+                <p className="p-4 text-center font-semibold text-gray-700">
+                  {cert.name}
+                </p>
+              </div>
             ))
           ) : (
-            <li>No certifications provided</li>
+            <p>No certifications provided</p>
           )}
-        </ul>
+        </div>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Portfolio</h2>
-        <ul className="list-disc list-inside">
+      {/* Portfolio */}
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">Portfolio</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {portfolios.length > 0 ? (
-            portfolios.map((item, index) => <li key={index}>{item.title}</li>)
+            portfolios.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => openModal(item)}
+                className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transform transition duration-300">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-40 w-full object-cover"
+                />
+                <p className="p-4 text-center font-semibold text-gray-700">
+                  {item.title}
+                </p>
+              </div>
+            ))
           ) : (
-            <li>No portfolio items available</li>
+            <p>No portfolio items available</p>
           )}
-        </ul>
+        </div>
       </div>
+
+      {/* Modal for certificates/portfolio */}
+      {isModalOpen && selectedItem && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+          onClick={closeModal}>
+          <div
+            className="bg-white rounded-lg p-6 shadow-lg relative max-w-2xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()}>
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={closeModal}>
+              <i className="fas fa-times text-2xl"></i>
+            </button>
+            <h3 className="text-2xl font-semibold mb-4">
+              {selectedItem.name || selectedItem.title}
+            </h3>
+            <img
+              src={selectedItem.file || selectedItem.image}
+              alt={selectedItem.name || selectedItem.title}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

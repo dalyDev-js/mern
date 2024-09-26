@@ -7,7 +7,7 @@ import {
   fetchEngineerById,
   updateEngineerName,
   updateEngineerProfilePic,
-} from "../../redux/slices/engineersSlice"; 
+} from "../../redux/slices/engineersSlice";
 import { toast } from "react-hot-toast"; // Import react-hot-toast
 
 function ProfileHeader() {
@@ -135,9 +135,7 @@ function ProfileHeader() {
             </div>
           </div>
           <div className="ml-4 flex items-center">
-            <h1 className="text-2xl font-bold flex items-center">
-              {fullName}
-            </h1>
+            <h1 className="text-2xl font-bold flex items-center">{fullName}</h1>
             <div
               className="ml-2 bg-white border border-gray-300 rounded-full p-1 cursor-pointer"
               onClick={toggleNameModal}>

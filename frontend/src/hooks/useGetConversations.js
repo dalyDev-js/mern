@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
+import { jwtDecode } from "jwt-decode";
 function useGetConversations() {
   const [loading, setLoading] = useState(false);
   const [conversations, setConversations] = useState([]);
+  const [decodedId, setDecodedId] = useState("");
 
   useEffect(() => {
     const getConversations = async () => {
+      const token = localStorage.getItem("Token");
+      const decodedId = jwtDecode(token).id;
       setLoading(true);
+      setDecodedId(decodedId);
+      console.log(decodedId);
       try {
-        const res = await fetch("/api/v1/users/getUsersSidebar");
+        const res = await fetch(
+          "http://localhost:8000/api/v1/users/getUsersSidebar",
+          { id: decodedId }
+        );
         const data = await res.json();
 
         if (res.status >= 400) {

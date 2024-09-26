@@ -1,7 +1,8 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUserById } from "../redux/slices/userSlice";
+
 import io from "socket.io-client";
+import { fetchUserById } from "../redux/slices/userSlice";
 
 const SocketContext = createContext();
 

@@ -125,15 +125,18 @@ const Verify = () => {
           console.error("Error requesting verification:", res.error);
         } else {
           // Set verifiedStatus to pending immediately after the request
-          setIsVerificationPending(true);
+
           setIsVerificationAccepted(false);
           setIsVerificationRejected(false);
 
           // Dispatch action to update the status to 'pending'
           dispatch(updateVerificationStatus(userId, "pending"));
 
-          setShouldPoll(true); // Resume polling after requesting verification
+          setShouldPoll(true);
           setIsSuccessModalVisible(true);
+          setTimeout(() => {
+            setIsVerificationPending(true);
+          }, 1500);
         }
       });
     }
@@ -142,6 +145,7 @@ const Verify = () => {
   // Success modal handling
   const handleSuccessModalOkClick = () => {
     setIsSuccessModalVisible(false);
+
     setIsVerificationPending(true);
   };
 
@@ -153,7 +157,7 @@ const Verify = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg shadow-md min-h-[60vh]">
+    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg z-30 shadow-md min-h-[60vh]">
       {isSuccessModalVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-35">
           <div
@@ -178,11 +182,11 @@ const Verify = () => {
       )}
 
       {isVerificationPending ? (
-        <div className="flex flex-col items-center justify-center h-[60vh] ">
+        <div className="flex flex-col items-center justify-center z-0 h-[60vh] ">
           <p className="text-lg font-semibold mb-4">
             Your verification process is pending...
           </p>
-          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 z-0 animate-spin"></div>
           <p className="text-gray-600 mt-4">
             Please wait while we complete the review and verification process.
           </p>
