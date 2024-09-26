@@ -6,9 +6,9 @@ import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 export const sendMessage = catchAsync(async (req, res, next) => {
-  const { message, senderId } = req.body;
+  const { message } = req.body;
   const { id: receiverId } = req.params;
-  // const senderId = req.user.body;
+  const senderId = req.user._id;
 
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, receiverId] },
@@ -25,7 +25,7 @@ export const sendMessage = catchAsync(async (req, res, next) => {
     receiverId,
     message,
   });
-  console.log(newMessage);
+
   if (newMessage) {
     conversation.messages.push(newMessage._id);
   }
@@ -62,3 +62,4 @@ export const getMessages = catchAsync(async (req, res, next) => {
 
   res.status(200).json(messages);
 });
+

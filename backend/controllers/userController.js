@@ -106,9 +106,10 @@ export const getUsersPendingVerification = catchAsync(
 );
 
 export const getUsersForSidebar = catchAsync(async (req, res, next) => {
-  const { id } = req.body;
-  console.log(id);
-  const filteredusers = await User.find({ _id: { $ne: id } });
+  const LoggedInuserId = req.user._id;
+  // console.log(id);
+  const filteredusers = await User.find({ _id: { $ne: LoggedInuserId } });
+  console.log(filteredusers);
 
   res.status(200).json({
     status: "success",

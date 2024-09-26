@@ -9,6 +9,9 @@ function Message({ message }) {
   const { selectedConversation } = useConversation();
   const dispatch = useDispatch();
 
+
+  console.log("auth user:", authUser);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 

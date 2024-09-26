@@ -16,9 +16,9 @@ export const SocketContextProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Get the token from localStorage
     const token = localStorage.getItem("token");
-
+    // Get the token from localStorage
+    console.log("TOKEN", token);
     if (token) {
       // Parse user ID from the token (Assuming JWT)
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
@@ -29,7 +29,7 @@ export const SocketContextProvider = ({ children }) => {
         const authUser = action.payload; // Assuming action returns the user data
 
         if (authUser) {
-          const socket = io("http://localhost:5000", {
+          const socket = io("http://localhost:8000", {
             query: {
               userId: authUser._id,
             },

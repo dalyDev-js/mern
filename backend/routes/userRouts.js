@@ -16,7 +16,7 @@ userRouter.get("/getUser/:id", getUserById);
 userRouter.patch("/updateMe", protect, updateMe);
 userRouter.delete("/deleteMe", deleteMe);
 userRouter.get("/pending-verification", getUsersPendingVerification);
-userRouter.get("/getUsersSidebar", getUsersForSidebar);
+userRouter.get("/getUsersSidebar", protect, getUsersForSidebar);
 userRouter.patch("/updateUser/:id", updateUserById);
 userRouter.delete("/deleteUser/:id", deleteUserById);
 

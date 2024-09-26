@@ -5,6 +5,8 @@ import { verifyToken } from "../utils/token.js";
 
 const readTokenFromCookie = (req, next) => {
   const token = req.cookies.jwt;
+
+  // console.log(token);
   if (!token) {
     return next(
       new AppError("You Are not logged in. Please loggin to get access!😭", 401)

@@ -20,6 +20,8 @@ function useGetConversations() {
         );
         const data = await res.json();
 
+        console.log("user for sidebar:", data);
+
         if (res.status >= 400) {
           const errorMessage = data.message || JSON.stringify(data.message);
           throw new Error(errorMessage);
