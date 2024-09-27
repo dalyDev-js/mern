@@ -78,7 +78,8 @@ export const payment = async (req, res) => {
       amount: Math.round(amount * 100),
       currency: "USD",
       payment_method: id,
-      confirm: true
+      confirm: true,
+      return_url: "http://localhost:3001/",
     });
     console.log("Payment", payment)
     res.json({
