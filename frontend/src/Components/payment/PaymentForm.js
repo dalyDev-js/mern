@@ -3,31 +3,14 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 
 const CARD_OPTIONS = {
-  iconStyle: "solid",
-  style: {
-    base: {
-      iconColor: "#c4f0ff",
-      color: "#374151", // Adjusted for Tailwind's default gray-700
-      fontWeight: 500,
-      fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-      fontSize: "16px",
-      fontSmoothing: "antialiased",
-      ":-webkit-autofill": {
-        color: "#fce883",
-      },
-      "::placeholder": {
-        color: "#9CA3AF", // Tailwind's default gray-400
-      },
-    },
-    invalid: {
-      iconColor: "#EF4444", // Tailwind's red-500
-      color: "#EF4444",
-    },
-  },
+  // Your existing CARD_OPTIONS
 };
 
 export default function PaymentForm() {
   const [success, setSuccess] = useState(false);
+  const [amount, setAmount] = useState(""); // State for amount
+  const [name, setName] = useState(""); // State for name
+  const [email, setEmail] = useState(""); // State for email
   const stripe = useStripe();
   const elements = useElements();
 
@@ -36,6 +19,10 @@ export default function PaymentForm() {
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
+      billing_details: {
+        name: name, // Include name in billing details
+        email: email, // Include email in billing details
+      },
     });
     if (!error) {
       try {
@@ -43,23 +30,22 @@ export default function PaymentForm() {
         const response = await axios.post(
           "http://localhost:8000/api/vi/payment",
           {
-            amount: 1000,
+            amount: parseInt(amount, 10), // Send amount to your server
             id,
+            name, // Send name to your server
+            email, // Send email to your server
           }
         );
         if (response.data.success) {
-          console.log("Successful payment");
           setSuccess(true);
         }
       } catch (error) {
-        console.log("Error", error);
+        console.error("Payment error:", error);
       }
     } else {
-      console.log(error.message);
+      console.error("Stripe error:", error.message);
     }
   };
-
-  console.log("success", success);
 
   return (
     <>
@@ -72,6 +58,52 @@ export default function PaymentForm() {
             <h2 className="text-2xl font-semibold text-center mb-6 text-gray-700">
               Payment Form
             </h2>
+
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="p-2 border border-gray-300 rounded-lg w-full"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="p-2 border border-gray-300 rounded-lg w-full"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="amount" className="block text-gray-700">
+                Amount
+              </label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="p-2 border border-gray-300 rounded-lg w-full"
+                required
+              />
+            </div>
+
             <fieldset className="FormGroup">
               <div className="FormRow mb-4">
                 <CardElement
@@ -80,6 +112,7 @@ export default function PaymentForm() {
                 />
               </div>
             </fieldset>
+
             <button
               type="submit"
               className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300"
