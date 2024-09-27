@@ -31,7 +31,10 @@ import { LoadingProvider } from "./utils/LoadingContext";
 import Contract from "./Pages/Contract/Contract";
 import ContractDetails from "./Pages/ContractDetails/ContractDetails";
 import { Toaster } from "react-hot-toast";
-import Chat from "./Pages/home-chat/Chat";
+
+import ChatPage from "./Pages/ChatPage/ChatPage";
+import { SocketProvider } from "./context/SocketContext";
+
 import StripeContainer from "./Components/payment/StripeContainer";
 
 let routers = createBrowserRouter([
