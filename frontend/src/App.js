@@ -16,11 +16,7 @@ import Payment from "./Pages/Payment_Pages/Payment";
 import Proposal from "./Pages/Proposal/Proposal";
 import ContactUs from "./Pages/Contact_Us/ContactUs";
 import Jobs from "./Pages/Jobs/Jobs";
-import ProfileCertifications from "./Components/ProfileCertifications/ProfileCertifications";
-import ProfileEducation from "./Components/ProfileEducation/ProfileEducation";
-import ProfileHeader from "./Components/ProfileHeader/ProfileHeader";
-import ProfilePortfolio from "./Components/ProfilePortofolio/ProfilePortfolio";
-import ProfileSideBar from "./Components/ProfileSideBar/ProfileSideBar";
+
 import AboutUs from "./Pages/About_Us/AboutUs";
 import EngineersList from "./Pages/Engineers_List/EngineersList";
 import SaveJobs from "./Pages/SaveJobs/SaveJobs";
@@ -35,7 +31,10 @@ import { LoadingProvider } from "./utils/LoadingContext";
 import Contract from "./Pages/Contract/Contract";
 import ContractDetails from "./Pages/ContractDetails/ContractDetails";
 import { Toaster } from "react-hot-toast";
-import Chat from "./Pages/home-chat/Chat";
+
+import ChatPage from "./Pages/ChatPage/ChatPage";
+import { SocketProvider } from "./context/SocketContext";
+import Chat from "./Pages/ChatPage/ChatPage";
 
 let routers = createBrowserRouter([
   {
@@ -87,7 +86,18 @@ let routers = createBrowserRouter([
       { path: "/recent-posts", element: <MyJobsPosts /> }, // jobs already posted client view
       { path: "/job-proposals/:id", element: <JobProposals /> }, // job posting
       { path: "/proposals-status", element: <ProposalsStatus /> }, // job posting
-      { path: "/chat", element: <Chat /> },
+      // { path: "/chat", element: <Chat /> },
+      {
+        path: "/chat/:receiverId",
+        element: (
+          <ProtectedRoute>
+            <ChatPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      { path: "/chat", element: <ChatPage /> },
+
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -95,9 +105,13 @@ let routers = createBrowserRouter([
 
 function App() {
   return (
-    <LoadingProvider>
-      <RouterProvider router={routers}></RouterProvider>
-    </LoadingProvider>
+    <>
+      <SocketProvider>
+        <LoadingProvider>
+          <RouterProvider router={routers}></RouterProvider>
+        </LoadingProvider>
+      </SocketProvider>
+    </>
   );
 }
 

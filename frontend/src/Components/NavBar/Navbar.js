@@ -312,6 +312,15 @@ export default function Navbar() {
                     About
                   </NavLink>
                 </li>
+                {userName && (
+                  <li>
+                    <NavLink
+                      to={"/chat"}
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
+                      Messages
+                    </NavLink>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

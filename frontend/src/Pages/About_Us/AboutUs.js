@@ -47,7 +47,7 @@ function AboutUs() {
         <div className="flex flex-col bg-white py-10 px-6 ">
           <div className="flex flex-col items-center bg-white ">
             <div className="grid grid-cols-1  items-center md:grid-cols-3 gap-10">
-              {/* Card 1 */}
+              {/* Card 2 */}
 
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
                 <div className="flex flex-col mb-6">
@@ -55,7 +55,7 @@ function AboutUs() {
                     <img
                       className="h-auto max-w-full rounded-lg"
                       src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="asd asd"
+                      alt="  description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
                       Bonnie Green
@@ -66,22 +66,20 @@ function AboutUs() {
                   </figure>
                 </div>
               </div>
-
-              {/* Card 2 */}
-
+              {/* Card 1 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
                 <div className="flex flex-col mb-6">
                   <figure className="max-w-lg">
                     <img
                       className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      src="/images/don.jpg"
+                      alt="asd asd"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Abdulrhman El-Daly
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Fullstack Developer
                     </figcaption>
                   </figure>
                 </div>
@@ -171,14 +169,12 @@ function AboutUs() {
         <span className="flex gap-7 ml-3">
           <a
             href="#"
-            className="text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
-          >
+            className="text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-bamber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
             Find Talent
           </a>
           <a
             href="#"
-            className=" text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300"
-          >
+            className=" text-black bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-amber-600 dark:hover:bg-amber-300 focus:outline-none dark:focus:ring-amber-300">
             Find Work
           </a>
         </span>

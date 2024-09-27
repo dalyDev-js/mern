@@ -80,7 +80,7 @@ export const signIn = (formData) => async (dispatch) => {
     // Save token and user to localStorage
     localStorage.setItem("Token", token);
     localStorage.setItem("User", JSON.stringify(user));
-
+    console.log(response.data);
     // Dispatch success action
     dispatch({
       type: AUTH_SUCCESS,

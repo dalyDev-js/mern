@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { fetchServiceById } from "../../redux/slices/jobSlice";
 import { fetchProposalsByServiceId } from "../../redux/slices/proposalSlice";
 import { fetchEngineerByEngineerId } from "../../redux/slices/engineersSlice";
 import engPlaceholder from "../../assets/eng.jpg"; // Placeholder image
+import axios from "axios";
 
 export default function JobProposals() {
   const { id: serviceId } = useParams(); // Get the job ID from the URL params
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [selectedJob, setSelectedJob] = useState({});
   const [proposals, setProposals] = useState([]);
   const [userNames, setUserNames] = useState({});
@@ -38,7 +40,7 @@ export default function JobProposals() {
 
         setSelectedJob(jobResponse?.payload);
         setProposals(proposalResponse?.payload);
-
+        console.log(proposalResponse?.payload);
         // Get the engineer user IDs from the proposals
         const userIds = proposalResponse?.payload?.map(
           (proposal) => proposal?.engineer?._id || []
@@ -84,6 +86,11 @@ export default function JobProposals() {
 
     fetchJobData();
   }, [dispatch, serviceId]);
+
+  // This function navigates to the chat page with the engineer as the active conversation
+  const handleStartConversation = (engineerId) => {
+    navigate(`/chat/${engineerId}`); // Redirect to chat with engineer
+  };
 
   if (isLoading) {
     return (
@@ -161,14 +168,24 @@ export default function JobProposals() {
                       {userNames[proposal.engineer._id] || "Loading..."}
                     </p>
                   </div>
-                  <Link
-                    to={`/engineer-details/${proposal.engineer._id}`}
-                    state={{ serviceId }} // Pass the serviceId through state
-                  >
-                    <button className="View p-2 bg-amber-400 hover:bg-amber-500 rounded-md font-medium">
-                      View Profile
+                  <div className="flex flex-col gap-3 mb-4">
+                    <Link
+                      to={`/engineer-details/${proposal.engineer._id}`}
+                      state={{ serviceId }} // Pass the serviceId through state
+                    >
+                      <button className="View p-2 bg-amber-400 hover:bg-amber-500 rounded-md font-medium">
+                        View Profile
+                      </button>
+                    </Link>
+                    {/* Add the Message button */}
+                    <button
+                      className="message p-2 bg-blue-400 hover:bg-blue-500 rounded-md font-medium"
+                      onClick={() =>
+                        handleStartConversation(proposal.engineer.user._id)
+                      }>
+                      Message
                     </button>
-                  </Link>
+                  </div>
                 </div>
                 <hr />
                 <div className="eng-proposal p-4 text-base font-medium text-gray-600">

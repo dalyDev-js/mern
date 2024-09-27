@@ -55,6 +55,23 @@ export const fetchProposalsByServiceId = createAsyncThunk(
   }
 );
 
+export const acceptProposal = createAsyncThunk(
+  "proposal/acceptProposal",
+  async (proposalId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.patch(
+        `http://localhost:8000/api/v1/proposals/accept/${proposalId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Proposal slice
 const proposalSlice = createSlice({
   name: "proposal",
@@ -100,6 +117,18 @@ const proposalSlice = createSlice({
         state.proposals = action.payload;
       })
       .addCase(fetchProposalsByServiceId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(acceptProposal.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(acceptProposal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accepted = true; // Set accepted flag to true
+      })
+      .addCase(acceptProposal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
