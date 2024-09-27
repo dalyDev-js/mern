@@ -16,7 +16,7 @@ export default function PaymentForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState({}); // Error messages for validation
+  const [errors, setErrors] = useState({});
   const stripe = useStripe();
   const elements = useElements();
 
@@ -27,7 +27,7 @@ export default function PaymentForm() {
         [type]: `${type} must be at least 3 characters long and can only contain letters.`,
       }));
     } else {
-      setErrors((prev) => ({ ...prev, [type]: "" })); // Clear the error
+      setErrors((prev) => ({ ...prev, [type]: "" }));
     }
   };
 
@@ -38,7 +38,7 @@ export default function PaymentForm() {
         email: "Please enter a valid email address.",
       }));
     } else {
-      setErrors((prev) => ({ ...prev, email: "" })); // Clear the error
+      setErrors((prev) => ({ ...prev, email: "" }));
     }
   };
 
@@ -54,7 +54,7 @@ export default function PaymentForm() {
         amount: "Amount cannot exceed $10,000.",
       }));
     } else {
-      setErrors((prev) => ({ ...prev, amount: "" })); // Clear the error
+      setErrors((prev) => ({ ...prev, amount: "" }));
     }
   };
 
@@ -68,7 +68,6 @@ export default function PaymentForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validation checks
     if (
       !firstName ||
       !lastName ||
@@ -124,14 +123,19 @@ export default function PaymentForm() {
     <>
       <Toaster />
       {!success ? (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
           <form
             onSubmit={handleSubmit}
             className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full"
           >
-            <h2 className="text-2xl font-semibold text-center mb-6 text-gray-700">
+            <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
               Payment Form
             </h2>
+
+            <p className="text-gray-600 text-sm mb-4 text-center">
+              You'll be charged up to a 5% marketplace fee. Taxes may also
+              apply.
+            </p>
 
             <div className="mb-4">
               <label htmlFor="firstName" className="block text-gray-700">
@@ -149,7 +153,7 @@ export default function PaymentForm() {
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-amber-300"
                 }`}
-                style={{ height: "40px" }} // Fixed height
+                style={{ height: "40px" }}
                 required
               />
               {errors.firstName && (
@@ -173,7 +177,7 @@ export default function PaymentForm() {
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-amber-300"
                 }`}
-                style={{ height: "40px" }} // Fixed height
+                style={{ height: "40px" }}
                 required
               />
               {errors.lastName && (
@@ -197,7 +201,7 @@ export default function PaymentForm() {
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-amber-300"
                 }`}
-                style={{ height: "40px" }} // Fixed height
+                style={{ height: "40px" }}
                 required
               />
               {errors.email && (
@@ -221,7 +225,7 @@ export default function PaymentForm() {
                     ? "border-red-500 focus:ring-red-400"
                     : "border-gray-300 focus:ring-amber-300"
                 }`}
-                style={{ height: "40px" }} // Fixed height
+                style={{ height: "40px" }}
                 required
               />
               {errors.amount && (
@@ -236,15 +240,15 @@ export default function PaymentForm() {
               />
             </div>
 
-            <button className="w-full text-white bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-md px-5 py-3">
+            <button className="w-full text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-md px-5 py-3 transition duration-300 ease-in-out">
               Pay Now
             </button>
           </form>
         </div>
       ) : (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
           <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full text-center">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               Payment Successful!
             </h2>
             <p className="text-gray-500">Thank you for your payment.</p>
