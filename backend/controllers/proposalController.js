@@ -97,8 +97,10 @@ const getProposalsByServiceId = catchAsync(async (req, res, next) => {
   const service = await Service.findById(id).populate({
     path: "proposals",
     populate: {
-      path: "engineer", // Populate the engineer details for each proposal
-      select: "name profilePic", // Example: only return name and profile picture
+      path: "engineer", // First populate the engineer details
+      populate: {
+        path: "user", // Then populate the user inside the engineer
+      },
     },
   });
 
@@ -118,6 +120,27 @@ const getProposalsByServiceId = catchAsync(async (req, res, next) => {
     data: {
       proposals: service.proposals,
     },
+  });
+});
+
+export const acceptProposal = catchAsync(async (req, res, next) => {
+  const { proposalId } = req.params;
+
+  // Find the proposal by ID
+  const proposal = await Proposal.findById(proposalId);
+
+  if (!proposal) {
+    return res.status(404).json({ message: "Proposal not found" });
+  }
+
+  // Mark the proposal as accepted
+  proposal.accepted = true;
+  await proposal.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Proposal accepted successfully",
+    data: proposal,
   });
 });
 

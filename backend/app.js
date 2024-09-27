@@ -19,6 +19,8 @@ import verifyRouter from "./routes/verify.routes.js";
 import requestVerifyRouter from "./routes/requestVerification.js";
 import adminRouter from "./routes/adminRoute.js";
 import messageRouter from "./routes/message.routes.js";
+import conversationRouter from "./routes/conversation.routes.js";
+import chatRouter from "./routes/chat.routes.js";
 
 // const app = express();
 
@@ -50,6 +52,8 @@ app.use("/api/v1/requestVerify", requestVerifyRouter);
 app.use("/api/vi/payment", paymentRouter);
 app.use("/api/v1/admin-auth", adminRouter);
 app.use("/api/v1/messages", messageRouter);
+app.use("/api/v1/conversations", conversationRouter);
+app.use("/api/v1/chat", chatRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`, 404));

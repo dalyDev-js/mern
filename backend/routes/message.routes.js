@@ -1,13 +1,9 @@
 import express from "express";
-import {
-  getMessages,
-  sendMessage,
-} from "../controllers/message.controllers.js";
-import { protect } from "../middleware/protectRoute.js";
+import { sendMessage } from "../controllers/message.controllers.js";
 
 const messageRouter = express.Router();
 
-messageRouter.post("/send/:id", protect, sendMessage);
-messageRouter.get("/:id", protect, getMessages);
+// Send a message and create conversation if it doesn't exist
+messageRouter.post("/send/:receiverId", sendMessage);
 
 export default messageRouter;
