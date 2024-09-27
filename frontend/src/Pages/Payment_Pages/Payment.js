@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Accordion } from "flowbite-react";
 import { Link } from "react-router-dom";
 
+import { useStripe, CardElement, useElements } from "@stripe/react-stripe-js";
+import toast from "react-hot-toast";
+
 // //////////////////////////////////////////  VALID PAYMANT //////////////////////////////////
 
 function Payment() {
@@ -16,6 +19,50 @@ function Payment() {
 
   // Error state
   const [errors, setErrors] = useState({});
+
+  const [donationAmount, setDonationAmount] = useState(0);
+  const [stripeError, setStripeError] = useState(null);
+  const elements = useElements();
+  const stripe = useStripe();
+
+  const handleStripePayment = async (event) => {
+    event.preventDefault();
+    // Check if donation amount is provided
+    if (!donationAmount) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Warning",
+        detail: "Please enter a donation amount.",
+        life: 3000,
+      });
+      return;
+    }
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    if (cardElement) {
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+      if (error) {
+        setStripeError(error.message);
+      } else {
+        toast.current.show({
+          severity: "success",
+          summary: "Thank you for your donation!",
+          detail: `You have donated by ${donationAmount} successfully!`,
+          life: 3000,
+        });
+        setDonationAmount("");
+      }
+    }
+  };
 
   // Function to format card number with hyphens
   const formatCardNumber = (value) => {
@@ -137,184 +184,49 @@ function Payment() {
               account activity, and subscriptions.
             </p>
             {/* dropdown */}
-            <Accordion>
-              <Accordion.Panel>
-                <Accordion.Title className="p-3">
-                  {/* icon */}
-                  <span className="flex gap-2 ">
-                    <svg
-                      class="w-8 h-8 text-amber-400 "
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Z"
-                      />
-                      <path
-                        fill="#ffffff"
-                        d="M15.643 9.382a3.314 3.314 0 0 0-1.158-.2c-1.276 0-2.177.643-2.184 1.566-.008.678.64 1.06 1.131 1.286.504.233.672.38.67.588-.003.317-.402.46-.772.46-.51 0-.789-.07-1.217-.248l-.159-.075-.18 1.063c.31.13.869.24 1.446.25 1.357 0 2.244-.64 2.255-1.621.01-.542-.34-.951-1.079-1.29-.449-.219-.727-.365-.727-.588 0-.197.238-.408.737-.408.332-.008.661.055.967.183l.12.053.181-1.026-.031.007Zm3.312-.114h-.997c-.31 0-.544.085-.68.393l-1.917 4.345h1.356l.272-.713 1.656.002c.039.166.158.71.158.71H20l-1.045-4.737Zm-8.49-.04h1.294l-.809 4.74H9.659l.807-4.742v.002Zm-3.282 2.613.134.658 1.264-3.231h1.37l-2.035 4.731H6.549L5.432 9.993a.27.27 0 0 0-.119-.159 5.543 5.543 0 0 0-1.27-.47l.018-.1h2.081c.283.012.51.1.586.402l.454 2.177.001-.002Zm10.177.483.515-1.326c-.006.014.106-.273.171-.451l.089.409.3 1.367h-1.076Z"
-                      />
-                    </svg>
-                    {/* text */}
-                    <p class="text-black dark:text-gray-400">Payment Card</p>
-                    <p class="text-xs pt-1  text-gray-500 dark:text-gray-400">
-                      Visa,MasterCard
-                    </p>
-                  </span>
-                </Accordion.Title>
-                <Accordion.Content>
-                  {/* Card Details */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Card Number
-                    </label>
-                    <div class="relative">
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                        placeholder="1234-1234-1234-1234"
-                        value={cardNumber}
-                        onChange={handleCardNumberChange}
-                        maxLength="19" // Max length to include 16 digits and 3 hyphens
-                      />
-                      <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                        <svg
-                          fill="none"
-                          class="h-6 text-amber-400 dark:text-white"
-                          viewBox="0 0 36 21"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M23.315 4.773c-2.542 0-4.813 1.3-4.813 3.705 0 2.756 4.028 2.947 4.028 4.332 0 .583-.676 1.105-1.832 1.105-1.64 0-2.866-.73-2.866-.73l-.524 2.426s1.412.616 3.286.616c2.78 0 4.966-1.365 4.966-3.81 0-2.913-4.045-3.097-4.045-4.383 0-.457.555-.957 1.708-.957 1.3 0 2.36.53 2.36.53l.514-2.343s-1.154-.491-2.782-.491zM.062 4.95L0 5.303s1.07.193 2.032.579c1.24.442 1.329.7 1.537 1.499l2.276 8.664h3.05l4.7-11.095h-3.043l-3.02 7.543L6.3 6.1c-.113-.732-.686-1.15-1.386-1.15H.062zm14.757 0l-2.387 11.095h2.902l2.38-11.096h-2.895zm16.187 0c-.7 0-1.07.37-1.342 1.016L25.41 16.045h3.044l.589-1.68h3.708l.358 1.68h2.685L33.453 4.95h-2.447zm.396 2.997l.902 4.164h-2.417l1.515-4.164z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.cardNumber && (
-                      <p className="text-red-500 text-sm">
-                        {errors.cardNumber}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Name Fields */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                        placeholder="First Name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                      />
-                      {errors.firstName && (
-                        <p className="text-red-500 text-sm">
-                          {errors.firstName}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                        placeholder="Last Name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
-                      {errors.lastName && (
-                        <p className="text-red-500 text-sm">
-                          {errors.lastName}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  {/* Expiration Date and CVV */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Expiration Date (MM/YYYY)
-                      </label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                        placeholder="MM/YYYY"
-                        value={expirationDate}
-                        onChange={(e) => setExpirationDate(e.target.value)}
-                      />
-                      {errors.expirationDate && (
-                        <p className="text-red-500 text-sm">
-                          {errors.expirationDate}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Security Code (CVV)
-                      </label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                        placeholder="CVV"
-                        value={cvv}
-                        onChange={(e) => setCvv(e.target.value)}
-                      />
-                      {errors.cvv && (
-                        <p className="text-red-500 text-sm">{errors.cvv}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Billing Address */}
-                  <div className="mb-6">
-                    <h2 className="text-lg font-bold mb-2">Billing Address</h2>
-
-                    <label className="block text-sm font-medium text-gray-700">
-                      City
-                    </label>
-                    <select
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-amber-300 focus:ring-amber-300 sm:text-sm"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    >
-                      <option>Cairo</option>
-                      <option>Beni Suef</option>
-                      <option>Minya</option>
-                    </select>
-                  </div>
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Address
-                    </label>
-
-                    <textarea
-                      id="message"
-                      rows="4"
-                      class=" mt-1 block p-2.5 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:border-amber-300 focus:ring-amber-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Write your Address here..."
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    ></textarea>
-                    {errors.address && (
-                      <p className="text-red-500 text-sm">{errors.address}</p>
-                    )}
-                  </div>
-                </Accordion.Content>
-              </Accordion.Panel>
-              <hr />
-              {/*  PayPal Section */}
-            </Accordion>
-
+            <form onSubmit={handleStripePayment}>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  placeholder="Enter your donation amount"
+                  value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Credit Card Information:</label>
+                <div className="border p-3 rounded">
+                  <CardElement
+                    options={{
+                      style: {
+                        base: {
+                          color: "#000",
+                          fontSize: "16px",
+                          fontFamily: "Arial, sans-serif",
+                          "::placeholder": {
+                            color: "#aab7c4",
+                          },
+                        },
+                        invalid: {
+                          color: "#fa755a",
+                          iconColor: "#fa755a",
+                        },
+                      },
+                    }}
+                  />
+                  {stripeError && (
+                    <div className="text-danger mt-2">{stripeError}</div>
+                  )}
+                </div>
+              </div>
+              <button
+                type="submit"
+                className={`btn btn-primary w-100`}
+                disabled={!stripe}
+              >
+                Donate with Stripe
+              </button>
+            </form>
             {/* Submit Button */}
             <div className="flex justify-end mt-6">
               <button

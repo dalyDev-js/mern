@@ -36,6 +36,7 @@ import Contract from "./Pages/Contract/Contract";
 import ContractDetails from "./Pages/ContractDetails/ContractDetails";
 import { Toaster } from "react-hot-toast";
 import Chat from "./Pages/home-chat/Chat";
+import StripeContainer from "./Components/payment/StripeContainer";
 
 let routers = createBrowserRouter([
   {
@@ -78,7 +79,7 @@ let routers = createBrowserRouter([
           </ProtectedRoute>
         ), // Only clients can access
       }, // job posting -- client view
-      { path: "/payment", element: <Payment /> }, // job payment for the engineer -- client view
+      { path: "/payment", element: <StripeContainer /> }, // job payment for the engineer -- client view
       { path: "/proposal", element: <Proposal /> }, // job posting client view
       { path: "/contact", element: <ContactUs /> }, // job posting client view
       { path: "/about", element: <AboutUs /> }, // job posting client view

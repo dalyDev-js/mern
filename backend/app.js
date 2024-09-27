@@ -20,6 +20,8 @@ import requestVerifyRouter from "./routes/requestVerification.js";
 import adminRouter from "./routes/adminRoute.js";
 import messageRouter from "./routes/message.routes.js";
 
+import bodyParser from "body-parser";
+
 // const app = express();
 
 app.use(
@@ -30,6 +32,9 @@ app.use(
 );
 
 app.use(express.static("tmp"));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(cookieParser());
