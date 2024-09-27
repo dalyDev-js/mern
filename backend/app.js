@@ -22,6 +22,8 @@ import messageRouter from "./routes/message.routes.js";
 import conversationRouter from "./routes/conversation.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 
+import bodyParser from "body-parser";
+
 // const app = express();
 
 app.use(
@@ -32,6 +34,9 @@ app.use(
 );
 
 app.use(express.static("tmp"));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(cookieParser());
