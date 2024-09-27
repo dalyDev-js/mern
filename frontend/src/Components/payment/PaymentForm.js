@@ -1,56 +1,130 @@
 import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
 
 const CARD_OPTIONS = {
   // Your existing CARD_OPTIONS
 };
 
+const isValidName = (name) => /^[A-Za-z]{3,}$/.test(name); // At least 3 characters
+const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
+
 export default function PaymentForm() {
   const [success, setSuccess] = useState(false);
-  const [amount, setAmount] = useState(""); // State for amount
-  const [name, setName] = useState(""); // State for name
-  const [email, setEmail] = useState(""); // State for email
+  const [amount, setAmount] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({}); // Error messages for validation
   const stripe = useStripe();
   const elements = useElements();
 
+  const validateName = (name, type) => {
+    if (!isValidName(name)) {
+      setErrors((prev) => ({
+        ...prev,
+        [type]: `${type} must be at least 3 characters long and can only contain letters.`,
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, [type]: "" })); // Clear the error
+    }
+  };
+
+  const validateEmail = () => {
+    if (!isValidEmail(email)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Please enter a valid email address.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, email: "" })); // Clear the error
+    }
+  };
+
+  const validateAmount = () => {
+    if (amount <= 0) {
+      setErrors((prev) => ({
+        ...prev,
+        amount: "Please enter a valid amount greater than $0.",
+      }));
+    } else if (amount > 10000) {
+      setErrors((prev) => ({
+        ...prev,
+        amount: "Amount cannot exceed $10,000.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, amount: "" })); // Clear the error
+    }
+  };
+
+  const handleBlur = (field) => {
+    if (field === "firstName") validateName(firstName, "firstName");
+    if (field === "lastName") validateName(lastName, "lastName");
+    if (field === "email") validateEmail();
+    if (field === "amount") validateAmount();
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardElement),
-      billing_details: {
-        name: name, // Include name in billing details
-        email: email, // Include email in billing details
-      },
-    });
-    if (!error) {
-      try {
-        const { id } = paymentMethod;
-        const response = await axios.post(
-          "http://localhost:8000/api/vi/payment",
-          {
-            amount: parseInt(amount, 10), // Send amount to your server
-            id,
-            name, // Send name to your server
-            email, // Send email to your server
-          }
-        );
-        if (response.data.success) {
-          setSuccess(true);
+
+    // Validation checks
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !amount ||
+      Object.values(errors).some((error) => error)
+    ) {
+      toast.error("Please correct the errors in the form.");
+      return;
+    }
+
+    const { error: stripeError, paymentMethod } =
+      await stripe.createPaymentMethod({
+        type: "card",
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: `${firstName} ${lastName}`,
+          email: email,
+        },
+      });
+
+    if (stripeError) {
+      console.error("Stripe error:", stripeError.message);
+      toast.error(stripeError.message);
+      return;
+    }
+
+    try {
+      const { id } = paymentMethod;
+      const response = await axios.post(
+        "http://localhost:8000/api/vi/payment",
+        {
+          amount: parseFloat(amount),
+          id,
+          firstName,
+          lastName,
+          email,
         }
-      } catch (error) {
-        console.error("Payment error:", error);
+      );
+      if (response.data.success) {
+        setSuccess(true);
+        toast.success("Payment Successful!");
+      } else {
+        toast.error("Payment failed. Please try again.");
       }
-    } else {
-      console.error("Stripe error:", error.message);
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
     }
   };
 
   return (
     <>
+      <Toaster />
       {!success ? (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
           <form
             onSubmit={handleSubmit}
             className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full"
@@ -60,18 +134,51 @@ export default function PaymentForm() {
             </h2>
 
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700">
-                Name
+              <label htmlFor="firstName" className="block text-gray-700">
+                First Name
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="p-2 border border-gray-300 rounded-lg w-full"
+                id="firstName"
+                name="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                onBlur={() => handleBlur("firstName")}
+                className={`p-2 border rounded-lg w-full focus:outline-none focus:ring-2 ${
+                  errors.firstName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-amber-300"
+                }`}
+                style={{ height: "40px" }} // Fixed height
                 required
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+              )}
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="lastName" className="block text-gray-700">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                onBlur={() => handleBlur("lastName")}
+                className={`p-2 border rounded-lg w-full focus:outline-none focus:ring-2 ${
+                  errors.lastName
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-amber-300"
+                }`}
+                style={{ height: "40px" }} // Fixed height
+                required
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -84,9 +191,18 @@ export default function PaymentForm() {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-2 border border-gray-300 rounded-lg w-full"
+                onBlur={validateEmail}
+                className={`p-2 border rounded-lg w-full focus:outline-none focus:ring-2 ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-amber-300"
+                }`}
+                style={{ height: "40px" }} // Fixed height
                 required
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -99,36 +215,40 @@ export default function PaymentForm() {
                 name="amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="p-2 border border-gray-300 rounded-lg w-full"
+                onBlur={validateAmount}
+                className={`p-2 border rounded-lg w-full focus:outline-none focus:ring-2 ${
+                  errors.amount
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-amber-300"
+                }`}
+                style={{ height: "40px" }} // Fixed height
                 required
+              />
+              {errors.amount && (
+                <p className="text-red-500 text-sm mt-1">{errors.amount}</p>
+              )}
+            </div>
+
+            <div className="mb-6">
+              <CardElement
+                options={CARD_OPTIONS}
+                className="p-4 border border-gray-300 rounded-lg w-full"
               />
             </div>
 
-            <fieldset className="FormGroup">
-              <div className="FormRow mb-4">
-                <CardElement
-                  options={CARD_OPTIONS}
-                  className="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </fieldset>
-
-            <button
-              type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300"
-            >
+            <button className="w-full text-white bg-amber-300 hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-md px-5 py-3">
               Pay Now
             </button>
           </form>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <h1 className="text-3xl font-bold text-green-600 mb-4">
-            Thank You for Your Payment!
-          </h1>
-          <p className="text-gray-700">
-            Your transaction was successful. We appreciate your support.
-          </p>
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full text-center">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+              Payment Successful!
+            </h2>
+            <p className="text-gray-500">Thank you for your payment.</p>
+          </div>
         </div>
       )}
     </>
