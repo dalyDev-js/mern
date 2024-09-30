@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const ContractCard = ({ contract, role }) => {
   // Access nested contract data
   const contractData = contract.contract;
+  console.log(contractData, "contract data");
 
   return (
     <div className="border p-4 rounded-lg shadow-md bg-white">

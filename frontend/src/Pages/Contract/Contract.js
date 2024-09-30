@@ -50,7 +50,7 @@ const Contract = () => {
         setFilteredContracts(contracts);
       } else {
         const filtered = contracts.filter((contract) => {
-          const contractStatus = contract.contract?.status?.toLowerCase(); // Adjusting the reference
+          const contractStatus = contract?.contract?.status?.toLowerCase(); // Adjusting the reference
           console.log(
             `Filtering by status: ${statusFilter}, Contract Status: ${contractStatus}`
           );

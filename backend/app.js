@@ -12,13 +12,19 @@ import proposalRouter from "./routes/proposalRoute.js";
 import cors from "cors";
 import engineerRouters from "./routes/engineerRoute.js";
 import paymentRouter from "./routes/paymnet.routes.js";
-
+import { app } from "./socket/socket.js";
 import clientRouter from "./routes/client.routes.js";
 import contractRouter from "./routes/contract.routes.js";
 import verifyRouter from "./routes/verify.routes.js";
 import requestVerifyRouter from "./routes/requestVerification.js";
 import adminRouter from "./routes/adminRoute.js";
-const app = express();
+import messageRouter from "./routes/message.routes.js";
+import conversationRouter from "./routes/conversation.routes.js";
+import chatRouter from "./routes/chat.routes.js";
+
+import bodyParser from "body-parser";
+
+// const app = express();
 
 app.use(
   cors({
@@ -28,6 +34,9 @@ app.use(
 );
 
 app.use(express.static("tmp"));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -47,6 +56,9 @@ app.use("/api/v1/verify", verifyRouter);
 app.use("/api/v1/requestVerify", requestVerifyRouter);
 app.use("/api/vi/payment", paymentRouter);
 app.use("/api/v1/admin-auth", adminRouter);
+app.use("/api/v1/messages", messageRouter);
+app.use("/api/v1/conversations", conversationRouter);
+app.use("/api/v1/chat", chatRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`, 404));

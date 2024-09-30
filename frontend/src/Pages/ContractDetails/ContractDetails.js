@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchContractById } from "../../redux/slices/contractSlice"; // Fetch contract by ID action
 import { fetchUserById } from "../../redux/slices/userSlice"; // Fetch user by ID action
+import { jwtDecode } from "jwt-decode";
 
 const ContractDetails = () => {
   const { id } = useParams(); // Contract ID from URL
@@ -18,11 +19,16 @@ const ContractDetails = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("Token");
+    const decodedToken = jwtDecode(token);
+    const userRole = decodedToken.role;
+    setUserRole(userRole); // Set the user role
     const fetchDetails = async () => {
       try {
         // Fetch contract details by ID
         const contractResponse = await dispatch(fetchContractById(id)).unwrap();
         setContract(contractResponse);
+        console.log(contractResponse, "res");
 
         // Fetch client name by user ID
         if (contractResponse.service.client) {
@@ -45,8 +51,8 @@ const ContractDetails = () => {
         // setUserRole(role);
 
         // Fetch user role based on the logged-in user or contract details
-        const userResponse = await dispatch(fetchUserById(id)).unwrap();
-        setUserRole(userResponse.role); // Make sure to set role here
+        // const userResponse = await dispatch(fetchUserById(id)).unwrap();
+        // setUserRole(userResponse.role); // Make sure to set role here
 
         ///////////////////////////
       } catch (err) {
@@ -61,7 +67,7 @@ const ContractDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen ">
         <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
         <p className="ml-4">Loading contract details...</p>
       </div>

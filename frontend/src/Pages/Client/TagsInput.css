@@ -1,0 +1,18 @@
+/* Tailwind classes for input and suggestions */
+.suggestions-container {
+  background-color: white;
+  border: 1px solid #ddd;
+  max-height: 150px;
+  overflow-y: auto;
+  width: 50%; /* Ensures the dropdown takes only half the input width */
+  z-index: 50;
+}
+
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tags-list {
+  margin-top: 1rem;
+}

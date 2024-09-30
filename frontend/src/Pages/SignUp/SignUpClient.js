@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp } from "../../redux/slices/authSlice"; // Update the path as necessary
+import { signUp, clearError } from "../../redux/slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function SignUpClient() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
-  const [isLoading, setIsLoading] = useState(false); // New loading state
-
   const { loading, error } = useSelector((state) => state.auth);
+
+  // Clear errors on component mount
+  useEffect(() => {
+    dispatch(clearError()); // Clear any previous errors when the component mounts
+  }, [dispatch]);
 
   const validationSchema = Yup.object().shape({
     fullName: Yup.string()
@@ -54,28 +57,16 @@ export default function SignUpClient() {
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      setIsLoading(true); // Show loading screen
       const formData = { ...values, role: "client" };
-      const result = await dispatch(signUp(formData));
+      const result = await dispatch(signUp(formData)); // Dispatching the signUp action
 
-      let isMounted = true;
       if (!result.payload?.error) {
+        setSuccessMessage("Account created successfully!");
         setTimeout(() => {
-          if (isMounted) {
-            resetForm(); // Clear form inputs on successful submission
-            setSuccessMessage("Account created successfully!"); // Show success message
-            navigate("/signin"); // Redirect to sign-in page
-          }
-          setIsLoading(false); // Hide loading screen after navigation
-        }, 3000); // 3-second delay
-      } else {
-        setIsLoading(false); // Hide loading screen on error
-        setSuccessMessage(""); // Reset success message in case of an error
+          resetForm();
+          navigate("/signin");
+        }, 3000); // Redirect to signin after success
       }
-
-      return () => {
-        isMounted = false;
-      };
     },
   });
 
@@ -83,7 +74,7 @@ export default function SignUpClient() {
     formik.setFieldValue("terms", e.target.checked);
   };
 
-  return isLoading ? (
+  return loading ? (
     <div className="flex justify-center items-center h-screen">
       <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
       <p className="ml-4">Loading...</p>
@@ -95,167 +86,155 @@ export default function SignUpClient() {
           Sign up as Client
         </h2>
         <form onSubmit={formik.handleSubmit}>
-          <div className="space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 space-y-4 md:space-y-0">
             {/* Full Name Input */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
+            <div className="relative w-full h-20">
               <input
+                id="fullName"
                 type="text"
                 name="fullName"
                 value={formik.values.fullName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                placeholder="Full Name"
-                className="w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+                className="peer w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               />
+              <label
+                htmlFor="fullName"
+                className={`absolute left-4 text-gray-500 transition-all transform origin-left pointer-events-none ${
+                  formik.values.fullName
+                    ? "top-0 -translate-y-6 scale-75"
+                    : "top-4"
+                } peer-focus:top-0 peer-focus:-translate-y-6 peer-focus:scale-75`}
+              >
+                Full Name
+              </label>
               {formik.touched.fullName && formik.errors.fullName && (
-                <div className="absolute text-red-500 text-sm mt-2 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>
+                <div className="absolute text-red-500 text-sm left-2">
                   {formik.errors.fullName}
                 </div>
               )}
             </div>
-            {/* Username & email */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {/* Username Input */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder="Username"
-                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-                />
-                {formik.touched.username && formik.errors.username && (
-                  <div className="absolute text-red-500 text-sm mt-2 left-2">
-                    <svg
-                      class="flex-shrink-0 inline w-4 h-4 me-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                    </svg>
-                    {formik.errors.username}
-                  </div>
-                )}
-              </div>
 
-              {/* Email Input */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder="Email"
-                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-                />
-                {formik.touched.email && formik.errors.email && (
-                  <div className="absolute text-red-500 text-sm mt-2 left-2">
-                    <svg
-                      class="flex-shrink-0 inline w-4 h-4 me-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                    </svg>
-                    {formik.errors.email}
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Password  */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {/* Password Input */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder="Password"
-                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-                />
-                {formik.touched.password && formik.errors.password && (
-                  <div className="absolute text-red-500 text-sm mt-2 left-2">
-                    <svg
-                      class="flex-shrink-0 inline w-4 h-4 me-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                    </svg>
-                    {formik.errors.password}
-                  </div>
-                )}
-              </div>
-
-              {/* Confirm Password Input */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  name="passwordConfirm"
-                  value={formik.values.passwordConfirm}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder="Confirm Password"
-                  className="mt-1 block w-full  p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
-                />
-                {formik.touched.passwordConfirm &&
-                  formik.errors.passwordConfirm && (
-                    <div className="absolute text-red-500 text-sm mt-2 left-2">
-                      <svg
-                        class="flex-shrink-0 inline w-4 h-4 me-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                      </svg>
-                      {formik.errors.passwordConfirm}
-                    </div>
-                  )}
-              </div>
-            </div>
-            {/* Gender Input */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Gender
+            {/* Username Input */}
+            <div className="relative w-full h-20">
+              <input
+                id="username"
+                type="text"
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="peer w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+              />
+              <label
+                htmlFor="username"
+                className={`absolute left-4  text-gray-500 transition-all transform origin-left pointer-events-none ${
+                  formik.values.username
+                    ? "top-0 -translate-y-6 scale-75"
+                    : "top-4"
+                } peer-focus:top-0 peer-focus:-translate-y-6 peer-focus:scale-75`}
+              >
+                Username
               </label>
+              {formik.touched.username && formik.errors.username && (
+                <div className="absolute text-red-500 text-sm left-2">
+                  {formik.errors.username}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Email Input */}
+          <div className="relative w-full mt-6 h-20">
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="peer w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+            />
+            <label
+              htmlFor="email"
+              className={`absolute left-4 text-gray-500 transition-all transform origin-left pointer-events-none ${
+                formik.values.email ? "top-0 -translate-y-6 scale-75" : "top-4"
+              } peer-focus:top-0 peer-focus:-translate-y-6 peer-focus:scale-75`}
+            >
+              Email
+            </label>
+            {formik.touched.email && formik.errors.email && (
+              <div className="absolute text-red-500 text-sm left-2">
+                {formik.errors.email}
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 mt-6">
+            {/* Password Input */}
+            <div className="relative w-full h-20">
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="peer w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+              />
+              <label
+                htmlFor="password"
+                className={`absolute left-4 text-gray-500 transition-all transform origin-left pointer-events-none ${
+                  formik.values.password
+                    ? "top-0 -translate-y-6 scale-75"
+                    : "top-4"
+                } peer-focus:top-0 peer-focus:-translate-y-6 peer-focus:scale-75`}
+              >
+                Password
+              </label>
+              {formik.touched.password && formik.errors.password && (
+                <div className="absolute text-red-500 text-sm left-2">
+                  {formik.errors.password}
+                </div>
+              )}
+            </div>
+
+            {/* Confirm Password Input */}
+            <div className="relative w-full h-20">
+              <input
+                id="passwordConfirm"
+                type="password"
+                name="passwordConfirm"
+                value={formik.values.passwordConfirm}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="peer w-full p-4 border  border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
+              />
+              <label
+                htmlFor="passwordConfirm"
+                className={`absolute left-4 transition-all text-gray-500 transform origin-left pointer-events-none ${
+                  formik.values.passwordConfirm
+                    ? "top-0 -translate-y-6 scale-75"
+                    : "top-4"
+                } peer-focus:top-0 peer-focus:-translate-y-6 peer-focus:scale-75`}
+              >
+                Confirm Password
+              </label>
+              {formik.touched.passwordConfirm &&
+                formik.errors.passwordConfirm && (
+                  <div className="absolute text-red-500 text-sm left-2">
+                    {formik.errors.passwordConfirm}
+                  </div>
+                )}
+            </div>
+          </div>
+
+          {/* Gender and Country Inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 mt-6">
+            {/* Gender Input */}
+            <div className="relative w-full h-20">
               <select
+                id="gender"
                 name="gender"
                 value={formik.values.gender}
                 onChange={formik.handleChange}
@@ -266,51 +245,46 @@ export default function SignUpClient() {
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
+              <label
+                htmlFor="gender"
+                className="absolute left-4 top-0 -translate-y-6 text-gray-500 scale-75 text-gray-500 transition-all transform origin-left pointer-events-none"
+              >
+                Gender
+              </label>
               {formik.touched.gender && formik.errors.gender && (
-                <div className="absolute text-red-500 text-sm mt-2 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>
+                <div className="absolute text-red-500 text-sm left-2">
                   {formik.errors.gender}
                 </div>
               )}
             </div>
 
             {/* Country Input */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Country
-              </label>
+            <div className="relative w-full h-20">
               <select
+                id="country"
                 name="country"
                 value={formik.values.country}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="w-full p-4 border border-gray-300 rounded-lg focus:border-amber-300 focus:ring-amber-300"
               >
-                <option value="" label="Select your country" />
+                <option
+                  value=""
+                  label="Select your country"
+                  className="text-gray-500"
+                />
                 <option value="Egypt">Egypt</option>
                 <option value="USA">USA</option>
                 <option value="UAE">UAE</option>
-                {/* Add more countries as necessary */}
               </select>
+              <label
+                htmlFor="country"
+                className="absolute left-4 top-0 -translate-y-6   scale-75 text-gray-500 transition-all transform origin-left pointer-events-none"
+              >
+                Country
+              </label>
               {formik.touched.country && formik.errors.country && (
-                <div className="absolute text-red-500 text-sm mt-2 left-2">
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>{" "}
+                <div className="absolute text-red-500 text-sm left-2">
                   {formik.errors.country}
                 </div>
               )}
@@ -318,11 +292,11 @@ export default function SignUpClient() {
           </div>
 
           {/* Terms and Conditions */}
-          <div className="mt-8 ">
-            <label className="flex items-center space-x-2  ">
+          <div className="mt-8">
+            <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                className="text-amber-300 border focus:border-amber-300 focus:ring-amber-300 "
+                className="text-amber-300 border focus:border-amber-300 focus:ring-amber-300"
                 name="terms"
                 checked={formik.values.terms}
                 onChange={handleCheckboxChange}
@@ -331,15 +305,6 @@ export default function SignUpClient() {
             </label>
             {formik.touched.terms && formik.errors.terms && (
               <div className="text-red-500 text-sm mt-2">
-                <svg
-                  class="flex-shrink-0 inline w-4 h-4 me-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                </svg>{" "}
                 {formik.errors.terms}
               </div>
             )}
@@ -349,16 +314,21 @@ export default function SignUpClient() {
           <button
             type="submit"
             className="w-full bg-amber-300 hover:bg-amber-400 text-black py-3 px-4 rounded-lg mt-4"
-            disabled={loading || isLoading}
+            disabled={loading}
           >
-            {loading || isLoading ? (
+            {loading ? (
               <i className="fa fa-spin fa-spinner"></i>
             ) : (
               "Create Client Account"
             )}
           </button>
 
-          {error && <div className="text-red-800 text-sm mt-4">{error}</div>}
+          {/* Display error messages */}
+          {error && (
+            <div className="text-red-500 text-m mt-4 text-center">{error}</div>
+          )}
+
+          {/* Display success message */}
           {successMessage && (
             <div className="text-green-500 text-sm mt-4 font-semibold">
               {successMessage} Please{" "}

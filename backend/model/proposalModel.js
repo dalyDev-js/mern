@@ -19,6 +19,11 @@ const proposalSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  accepted: {
+    // New field
+    type: Boolean,
+    default: false, // Default to false until the client accepts it
+  },
 });
 
 export const Proposal = mongoose.model("Proposal", proposalSchema);

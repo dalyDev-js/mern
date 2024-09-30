@@ -1,6 +1,8 @@
+// ProfileCertifications.js
 import React, { useState, useEffect } from "react";
-import { FaPen, FaPlus } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-hot-toast"; // Import react-hot-toast
 
 function ProfileCertifications() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,58 +10,165 @@ function ProfileCertifications() {
   const [certificateFile, setCertificateFile] = useState(null);
   const [certifications, setCertifications] = useState([]);
 
+  // Validation error states
+  const [nameError, setNameError] = useState("");
+  const [fileError, setFileError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // For loading state
+
   // Fetch certifications on component mount
-  // useEffect(() => {
-  //   fetchCertifications();
-  // }, []);
+  useEffect(() => {
+    fetchCertifications();
+  }, []);
 
   const fetchCertifications = async () => {
     try {
-      const token = localStorage.getItem("token"); 
-      const response = await axios.get("http://localhost:8000/api/v1/certificates", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCertifications(response.data.certificates); 
+      const token = localStorage.getItem("Token"); // Ensure token key matches
+      const userData = localStorage.getItem("User");
+      if (!token || !userData) {
+        toast.error("User not authenticated.");
+        return;
+      }
+      const user = JSON.parse(userData);
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/certificates/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCertifications(response.data.certificates);
     } catch (error) {
       console.error("Error fetching certifications:", error);
+      toast.error("Failed to fetch certifications.");
     }
   };
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    if (!isModalOpen) {
+      // Reset form fields and errors when opening the modal
+      setCertificateName("");
+      setCertificateFile(null);
+      setNameError("");
+      setFileError("");
+    }
   };
 
-  const handleCertificateFileChange = (e) => {
-    setCertificateFile(e.target.files[0]);
+  // Validation functions
+  const validateCertificateName = (name) => {
+    const regex = /^[A-Za-z\s]{3,}$/; // Only letters and spaces, min 3 characters
+    return regex.test(name);
+  };
+
+  const validateFile = (file) => {
+    if (!file) return false;
+    const allowedExtensions = ["png", "jpg", "jpeg", "pdf"];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    return allowedExtensions.includes(fileExtension);
   };
 
   const handleCertificateNameChange = (e) => {
     setCertificateName(e.target.value);
   };
 
+  const handleCertificateFileChange = (e) => {
+    setCertificateFile(e.target.files[0]);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", certificateName);
-    formData.append("file", certificateFile);
+    let hasError = false;
+
+    // Validate Certificate Name
+    if (!validateCertificateName(certificateName)) {
+      setNameError(
+        "Certificate name must be at least 3 characters long and contain only letters and spaces."
+      );
+      toast.error(
+        "Certificate name must be at least 3 characters long and contain only letters and spaces."
+      );
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+
+    // Validate Certificate File
+    if (!validateFile(certificateFile)) {
+      setFileError("Only PNG, JPG, JPEG, or PDF files are allowed.");
+      toast.error("Only PNG, JPG, JPEG, or PDF files are allowed.");
+      hasError = true;
+    } else {
+      setFileError("");
+    }
+
+    // If there are validation errors, return early
+    if (hasError) {
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
-      const token = localStorage.getItem("token"); 
-      await axios.post("http://localhost:8000/api/v1/certificates", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("Certificate added successfully!");
+      const token = localStorage.getItem("Token");
+      const userData = localStorage.getItem("User");
+      if (!token || !userData) {
+        toast.error("User not authenticated.");
+        setIsLoading(false);
+        return;
+      }
+      const user = JSON.parse(userData);
+
+      const formData = new FormData();
+      formData.append("name", certificateName);
+      formData.append("file", certificateFile);
+
+      await axios.post(
+        `http://localhost:8000/api/v1/certificates/${user._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Certificate added successfully!");
       toggleModal();
-      fetchCertifications(); 
+      fetchCertifications();
     } catch (error) {
       console.error("Error adding certificate:", error);
-      alert("Failed to add certificate.");
+      toast.error("Failed to add certificate.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle Delete Certificate
+  const handleDeleteCertificate = async (certificateId) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const userData = localStorage.getItem("User");
+      if (!token || !userData) {
+        toast.error("User not authenticated.");
+        return;
+      }
+      const user = JSON.parse(userData);
+
+      await axios.delete(
+        `http://localhost:8000/api/v1/certificates/${certificateId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Certificate deleted successfully!");
+      fetchCertifications();
+    } catch (error) {
+      console.error("Error deleting certificate:", error);
+      toast.error("Failed to delete certificate.");
     }
   };
 
@@ -73,24 +182,32 @@ function ProfileCertifications() {
               onClick={toggleModal}
               className="text-amber-500 border ml-3 border-amber-500 rounded-full p-1"
             >
-              <FaPen />
+              <FaPlus />
             </button>
           </div>
           {/* Display list of certifications */}
           <div className="mt-2">
             {certifications.length > 0 ? (
               <ul>
-                {certifications.map((cert, index) => (
-                  <li key={index} className="mb-2">
-                    <span className="text-gray-600">{cert.name}</span>
-                    <a
-                      href={`http://localhost:8000/uploads/${cert.file}`} // Adjust based on how the file is served
-                      className="text-blue-500 ml-2"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                {certifications.map((cert) => (
+                  <li key={cert._id} className="mb-2 flex justify-between items-center">
+                    <div>
+                      <span className="text-gray-600">{cert.name}</span>
+                      <a
+                        href={cert.file} // Adjust based on how the file is served
+                        className="text-blue-500 ml-2"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Certificate
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteCertificate(cert._id)}
+                      className="text-red-500 hover:text-red-700 ml-3"
                     >
-                      View Certificate
-                    </a>
+                      <FaTrash />
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -101,6 +218,7 @@ function ProfileCertifications() {
         </div>
       </div>
 
+      {/* Modal for Adding Certification */}
       {isModalOpen && (
         <div
           id="crud-modal"
@@ -109,7 +227,7 @@ function ProfileCertifications() {
           <div className="relative p-4 w-full max-w-md max-h-full bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Add your certificates
+                Add Your Certificate
               </h3>
               <button
                 onClick={toggleModal}
@@ -149,10 +267,15 @@ function ProfileCertifications() {
                     id="certificateName"
                     value={certificateName}
                     onChange={handleCertificateNameChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className={`bg-gray-50 border ${
+                      nameError ? "border-red-500" : "border-gray-300"
+                    } text-gray-900 text-sm rounded-lg focus:ring-amber-300 focus:border-amber-300 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500`}
                     placeholder="Enter certificate name"
                     required
                   />
+                  {nameError && (
+                    <p className="text-red-500 text-sm mt-1">{nameError}</p>
+                  )}
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
@@ -160,24 +283,33 @@ function ProfileCertifications() {
                     htmlFor="certificateFile"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Upload certificate
+                    Upload Certificate
                   </label>
                   <input
                     type="file"
                     name="certificateFile"
                     id="certificateFile"
                     onChange={handleCertificateFileChange}
-                    className="block w-100% text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className={`block w-full text-sm text-gray-900 border ${
+                      fileError ? "border-red-500" : "border-gray-300"
+                    } rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-amber-300 focus:border-amber-300 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500`}
+                    accept=".png,.jpg,.jpeg,.pdf"
                     required
                   />
+                  {fileError && (
+                    <p className="text-red-500 text-sm mt-1">{fileError}</p>
+                  )}
                 </div>
               </div>
               <button
                 type="submit"
-                className="text-white inline-flex items-center bg-amber-700 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-amber-600 dark:hover:bg-amber-700 dark:focus:ring-amber-800"
+                className={`text-white inline-flex items-center bg-amber-700 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={isLoading}
               >
-                <FaPlus className="me-1 -ms-1 w-5 h-5" />
-                Add Certificates
+                <FaPlus className="mr-1 -ml-1 w-5 h-5" />
+                {isLoading ? "Adding..." : "Add Certificate"}
               </button>
             </form>
           </div>

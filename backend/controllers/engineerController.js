@@ -2,11 +2,21 @@ import { Engineer } from "../model/engineerModel.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import User from "../model/userModel.js";
+import { Certificate } from "../model/certificateModel.js";
+import { Portfolio } from "../model/portofolioModel.js";
+
+const getEducation = catchAsync(async (req, res, next) => {
+  const engineer = await Engineer.findOne({ user: req.params.id });
+
+  res.status(200).json({
+    education: engineer.education,
+  });
+});
 
 const getAllEngineers = catchAsync(async (req, res, next) => {
   const engineers = await Engineer.find().populate({
     path: "user",
-    select: "fullName email role",
+    select: "fullName email role profilePic createdAt",
     match: { role: "engineer" },
   });
 
@@ -29,19 +39,41 @@ const getEngineerById = catchAsync(async (req, res, next) => {
 
   console.log("User ID received:", userId);
 
-  const engineer = await Engineer.findOne({ user: userId }).populate("user");
+  // Find engineer by user ID and populate the user field
 
+  const engineer = await Engineer.findOne({ user: userId }).populate("user");
+  const certificates = await Certificate.find({ engineer: userId });
+  const portfolios = await Portfolio.find({ user: userId });
+  console.log(engineer);
+  console.log(certificates);
+  console.log(portfolios);
+  // If no engineer is found, return a 404 error
   if (!engineer) {
     console.log("Engineer not found for user ID:", userId); // Debugging: Log if no engineer is found
     return next(new AppError("Engineer not found with this user ID", 404));
   }
 
-  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
+  // Set up the base URL, using an environment variable for production, fallback to localhost for development
+  const baseURL = process.env.BASE_URL || "http://localhost:8000";
 
+  // Check if profilePic exists and it's not the default RoboHash URL
+  if (
+    engineer.user.profilePic &&
+    engineer.user.profilePic !== "https://robohash.org/bali"
+  ) {
+    // If the profilePic is not an external URL, prepend the local server path
+    if (!engineer.user.profilePic.startsWith("http")) {
+      engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
+    }
+  }
+
+  // Send the response with the engineer details
   res.status(200).json({
     status: "success",
     data: {
       engineer,
+      portfolios,
+      certificates,
     },
   });
 });
@@ -49,17 +81,20 @@ const getEngineerById = catchAsync(async (req, res, next) => {
 const getEngineerByEngineerId = catchAsync(async (req, res, next) => {
   const { engineerId } = req.params;
 
-  console.log("User ID received:", engineerId);
+  console.log("Engineer ID received:", engineerId);
 
-  const engineer = await Engineer.findOne({ _id: engineerId }).populate("user");
+  // Find the engineer by _id and populate the certificates and portfolios fields
+  const engineer = await Engineer.findOne({ _id: engineerId })
+    .populate("user")
+    .populate("certificates")
+    .populate("portfolios"); // Populate portfolios as well
 
   if (!engineer) {
-    console.log("Engineer not found for user ID:", engineerId); // Debugging: Log if no engineer is found
-    return next(new AppError("Engineer not found with this user ID", 404));
+    console.log("Engineer not found for ID:", engineerId);
+    return next(new AppError("Engineer not found with this ID", 404));
   }
 
-  engineer.user.profilePic = `http://localhost:8000/my-uploads/users/${engineer.user.profilePic}`;
-
+  // Respond with the engineer data, including populated certificates and portfolios
   res.status(200).json({
     status: "success",
     data: {
@@ -88,47 +123,62 @@ const updateEducation = async (req, res, next) => {
 };
 
 const addTitle = async (req, res, next) => {
-  let engineerId = req.user.id;
-  let engineerTitle = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { title: req.body.title },
-    { new: true }
+  let id = req.params.id;
+  const user = await User.findById(id);
+  await Engineer.findOneAndUpdate(
+    { user: user._id },
+    { title: req.body.title }
   );
-  res.status(200).json({ message: "Title added successfully", engineerTitle });
+
+  res.status(200).json({ message: "Title added successfully" });
 };
 
 const addSkill = catchAsync(async (req, res, next) => {
-  let engineerId = req.user.id;
-  let { skillsToAdd } = req.body;
-  const engineerSkill = await Engineer.findByIdAndUpdate(
-    engineerId,
-    { skills: { skillsToAdd } },
-    { new: true }
-  );
+  const engineerId = req.params.id;
+  const { skillsToAdd } = req.body;
 
-  res.json({ message: "Skills:", engineerSkill });
+  // Find the engineer by ID
+  const engineer = await Engineer.findOne({ user: engineerId });
+
+  if (!engineer) {
+    return res.status(404).json({ message: "Engineer not found" });
+  }
+
+  // Merge skills and avoid duplicates
+  const updatedSkills = [...new Set([...engineer.skills, ...skillsToAdd])];
+
+  // Update the engineer's skills
+  engineer.skills = updatedSkills;
+  await engineer.save();
+
+  res.status(200).json({
+    message: "Skills updated successfully",
+    data: { skills: engineer.skills },
+  });
 });
 
 // frontend will update the skills array and save them in the database
 
 const addOverview = async (req, res, next) => {
   let { id } = req.params;
-  console.log(id);
+
   const { profileOverview } = req.body;
 
   if (!profileOverview) {
     return res.status(400).json({ message: "Profile Overview is required." });
   }
-  await Engineer.findByIdAndUpdate(
-    id,
-    { overview: req.body.overview },
-    { new: true }
+  const user = await User.findById(id);
+  await Engineer.findOneAndUpdate(
+    { user: user._id },
+    { overview: profileOverview }
   );
+
   res.status(200).json({ message: "Overview added successfully" });
 };
 
 const addEducation = catchAsync(async (req, res, next) => {
   const { title, startDate, endDate } = req.body;
+  const { id } = req.params;
 
   if (!title || !startDate || !endDate) {
     return res
@@ -136,10 +186,10 @@ const addEducation = catchAsync(async (req, res, next) => {
       .json({ message: "Title, Start Date, and End Date are required." });
   }
 
-  const engineerId = req.user.id;
+  const engineer = await Engineer.findOne({ user: id });
 
   const updatedEngineer = await Engineer.findByIdAndUpdate(
-    id,
+    engineer._id,
     {
       education: {
         title,
@@ -257,7 +307,7 @@ const updateEngineer = catchAsync(async (req, res, next) => {
 
   // Handle profilePic upload, if file exists
   if (req.file) {
-    data.profilePic = req.file.filename;
+    data.profilePic = `http://localhost:8000/my-uploads/users/${req.file.filename}`;
   }
   console.log(data);
   // Update the Engineer document
@@ -288,4 +338,5 @@ export {
   saveJob,
   getEngineerById,
   getEngineerByEngineerId,
+  getEducation,
 };

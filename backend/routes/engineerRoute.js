@@ -11,6 +11,7 @@ import {
   removeSavedJob,
   saveJob,
   updateEngineer,
+  getEducation,
 } from "../controllers/engineerController.js";
 import userProfileUpload from "../middleware/uploads/userProfileUpload.js";
 
@@ -19,6 +20,8 @@ engineerRouters.get("/all", getAllEngineers);
 engineerRouters.get("/:userId", getEngineerById);
 engineerRouters.get("/engineerId/:engineerId", getEngineerByEngineerId);
 engineerRouters.put("/addeducation/:id", addEducation);
+engineerRouters.get("/education/:id", getEducation);
+
 engineerRouters.post("/addskill/:id", addSkill);
 engineerRouters.post("/addtitle/:id", addTitle);
 engineerRouters.post("/addoverview/:id", addOverview);

@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { requestVerification } from "../../redux/slices/requestVerify";
+import {
+  requestVerification,
+  updateVerificationStatus,
+} from "../../redux/slices/requestVerify";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import { jwtDecode } from "jwt-decode";
 
 const Verify = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [country, setCountry] = useState("Egypt");
+  const [docFile, setDocFile] = useState(null);
   const [step, setStep] = useState(1);
   const [isVerificationPending, setIsVerificationPending] = useState(false);
+  const [isVerificationAccepted, setIsVerificationAccepted] = useState(false);
+  const [isVerificationRejected, setIsVerificationRejected] = useState(false);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [fileUploadError, setFileUploadError] = useState(""); // For validation message
+  const [shouldPoll, setShouldPoll] = useState(true); // Control polling effect
   const dispatch = useDispatch();
 
+  // Utility function to extract user ID from token
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("Token");
     if (token) {
@@ -21,33 +30,58 @@ const Verify = () => {
     return null;
   };
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      const userId = getUserIdFromToken();
+  // Function to update user info and handle verification state
+  const updateUserInfo = async () => {
+    if (!shouldPoll) return; // Stop polling if shouldPoll is false
 
-      if (userId) {
-        const userData = await dispatch(fetchUserById(userId));
-        const verifiedStatus = userData.payload.verifiedStatus;
-        const requested = userData.payload.requestVerifiedStatus;
+    const userId = getUserIdFromToken();
+    if (userId) {
+      const userData = await dispatch(fetchUserById(userId));
+      const verifiedStatus = userData.payload?.verifiedStatus;
+      const requested = userData.payload?.requestVerifiedStatus;
 
-        if (verifiedStatus && verifiedStatus.includes("pending") && requested) {
-          setIsVerificationPending(true);
-        }
-        if (
-          verifiedStatus &&
-          verifiedStatus.includes("rejected") &&
-          requested
-        ) {
-          setIsVerificationPending(true);
-        }
-      } else {
-        console.error("No user ID found in the token");
+      // Handle different verification states
+      if (verifiedStatus && verifiedStatus.includes("pending") && requested) {
+        setIsVerificationPending(true);
+        setIsVerificationAccepted(false);
+        setIsVerificationRejected(false);
+      } else if (verifiedStatus && verifiedStatus.includes("rejected")) {
+        setIsVerificationRejected(true);
+        setIsVerificationPending(false);
+        setIsVerificationAccepted(false);
+      } else if (verifiedStatus && verifiedStatus.includes("accepted")) {
+        setIsVerificationAccepted(true);
+        setIsVerificationPending(false);
+        setIsVerificationRejected(false);
       }
+    } else {
+      console.error("No user ID found in the token");
+    }
+  };
+
+  // Polling for localStorage changes and initial loading of user data
+  useEffect(() => {
+    if (!shouldPoll) return; // Do not set up polling if shouldPoll is false
+
+    // Initial call to set the user info when the component mounts
+    updateUserInfo();
+
+    // Polling `localStorage` every second to detect changes within the same tab
+    const intervalId = setInterval(() => {
+      updateUserInfo();
+    }, 3000); // Set to poll every 3 seconds
+
+    // Listen for `localStorage` changes across different tabs
+    window.addEventListener("storage", updateUserInfo);
+
+    // Cleanup the interval and event listener when component unmounts
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener("storage", updateUserInfo);
     };
+  }, [dispatch, shouldPoll]); // Now the effect runs only when `shouldPoll` is true
 
-    loadUserData();
-  }, [dispatch]);
-
+  // Handling ID type selection
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
@@ -56,6 +90,7 @@ const Verify = () => {
     setCountry(e.target.value);
   };
 
+  // Continue to step 2 (file upload)
   const handleContinue = () => {
     if (!selectedOption || !country) {
       alert("Please select a country and ID type.");
@@ -64,42 +99,70 @@ const Verify = () => {
     setStep(2);
   };
 
+  // Handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    console.log("Uploaded file:", file);
+    setDocFile(file);
+
+    // Remove error message when file is uploaded
+    if (file) {
+      setFileUploadError("");
+    }
   };
 
+  // Handle document submission for verification
   const handleRequestVerification = () => {
+    // Validation to ensure the document is uploaded
+    if (!docFile) {
+      setFileUploadError("Please upload a document before proceeding.");
+      return;
+    }
+
     const userId = getUserIdFromToken();
     if (userId) {
-      dispatch(requestVerification(userId)).then((res) => {
+      dispatch(requestVerification(userId, docFile)).then((res) => {
         if (res.error) {
           console.error("Error requesting verification:", res.error);
         } else {
+          // Set verifiedStatus to pending immediately after the request
+
+          setIsVerificationAccepted(false);
+          setIsVerificationRejected(false);
+
+          // Dispatch action to update the status to 'pending'
+          dispatch(updateVerificationStatus(userId, "pending"));
+
+          setShouldPoll(true);
           setIsSuccessModalVisible(true);
+          setTimeout(() => {
+            setIsVerificationPending(true);
+          }, 1500);
         }
       });
     }
   };
 
+  // Success modal handling
   const handleSuccessModalOkClick = () => {
     setIsSuccessModalVisible(false);
+
     setIsVerificationPending(true);
   };
 
+  // Back to ID selection step
   const handleBack = () => {
     setStep(1);
+    setIsVerificationRejected(false); // Reset rejection state when going back
+    setShouldPoll(false); // Stop polling when user clicks "Upload New Document"
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-2xl mx-auto my-16 p-8 bg-white rounded-lg z-30 shadow-md min-h-[60vh]">
       {isSuccessModalVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-35">
           <div
             className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
-            style={{
-              animation: "fadeInScale 0.3s ease-out",
-            }}
+            style={{ animation: "fadeInScale 0.3s ease-out" }}
           >
             <div className="flex justify-center mb-4">
               <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
@@ -121,14 +184,40 @@ const Verify = () => {
       )}
 
       {isVerificationPending ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center justify-center z-0 h-[60vh] ">
           <p className="text-lg font-semibold mb-4">
             Your verification process is pending...
           </p>
-          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 z-0 animate-spin"></div>
           <p className="text-gray-600 mt-4">
             Please wait while we complete the review and verification process.
           </p>
+        </div>
+      ) : isVerificationAccepted ? (
+        <div className="flex flex-col items-center h-[60vh] justify-center">
+          <div className="flex justify-center mb-4">
+            <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
+          </div>
+          <p className="text-2xl font-semibold mb-2">Success</p>
+          <p className="text-gray-600 mb-4">
+            Congratulations! Your account has been successfully verified.
+          </p>
+        </div>
+      ) : isVerificationRejected ? (
+        <div className="flex flex-col items-center h-[60vh] justify-center">
+          <div className="flex justify-center mb-4">
+            <i className="text-4xl text-red-500 fa-solid fa-times-circle"></i>
+          </div>
+          <p className="text-2xl font-semibold mb-2">Rejected</p>
+          <p className="text-gray-600 mb-4">
+            Your document was rejected. Please try uploading another document.
+          </p>
+          <button
+            onClick={handleBack}
+            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+          >
+            Upload New Document
+          </button>
         </div>
       ) : (
         <>
@@ -265,6 +354,10 @@ const Verify = () => {
                   onChange={handleFileUpload}
                   className="w-full border-2 p-2 rounded-xl border-gray-300 cursor-pointer file:rounded-lg file:bg-amber-300 file:text-black file:py-2 file:px-4 file:border-none file:cursor-pointer file:pl-22"
                 />
+                {/* Validation message for file upload */}
+                {fileUploadError && (
+                  <p className="text-red-500 text-sm mt-2">{fileUploadError}</p>
+                )}
               </div>
 
               <div className="flex justify-center">

@@ -10,6 +10,20 @@ import { Engineer } from "../model/engineerModel.js";
 import { Client } from "../model/clientModel.js";
 
 export const signup = catchAsync(async (req, res, next) => {
+  const { email, username } = req.body;
+
+  // Check if email already exists
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
+    return next(new AppError("Email already exists", 400));
+  }
+
+  // Check if username already exists
+  const existingUsername = await User.findOne({ username });
+  if (existingUsername) {
+    return next(new AppError("Username already exists", 400));
+  }
+
   // Step 1: Create the user
   const newUser = await createUser(req.body);
   console.log(newUser);
@@ -28,7 +42,8 @@ export const signup = catchAsync(async (req, res, next) => {
       },
       overview: req.body.overview || "An engineer overview",
       skills: req.body.skills || [],
-      profilePic: req.body.profilePic || "", // Set profilePic if available
+      profilePic:
+        req.body.profilePic || "../../frontend/public/images/unknown.jpg", // Set profilePic if available
     });
   } else if (newUser.role === "client") {
     client = await Client.create({

@@ -13,6 +13,7 @@ const AUTH_REQUEST = "auth/AUTH_REQUEST";
 const AUTH_SUCCESS = "auth/AUTH_SUCCESS";
 const AUTH_FAILURE = "auth/AUTH_FAILURE";
 const LOGOUT = "auth/LOGOUT";
+const CLEAR_ERROR = "auth/CLEAR_ERROR"; // Add CLEAR_ERROR action type
 
 // Reducer
 const authReducer = (state = initialState, action) => {
@@ -30,7 +31,9 @@ const authReducer = (state = initialState, action) => {
     case AUTH_FAILURE:
       return { ...state, loading: false, error: action.payload };
     case LOGOUT:
-      return { ...state, token: null, user: null };
+      return { ...state, token: null, user: null, error: null };
+    case CLEAR_ERROR: // Handle CLEAR_ERROR action
+      return { ...state, error: null };
     default:
       return state;
   }
@@ -77,7 +80,7 @@ export const signIn = (formData) => async (dispatch) => {
     // Save token and user to localStorage
     localStorage.setItem("Token", token);
     localStorage.setItem("User", JSON.stringify(user));
-
+    console.log(response.data);
     // Dispatch success action
     dispatch({
       type: AUTH_SUCCESS,
@@ -109,6 +112,11 @@ export const logout = () => (dispatch) => {
   // Dispatch the logout action to clear Redux state
   dispatch({ type: LOGOUT });
   console.log("logged out");
+};
+
+// Action to clear error
+export const clearError = () => (dispatch) => {
+  dispatch({ type: CLEAR_ERROR }); // Dispatch the CLEAR_ERROR action
 };
 
 export default authReducer;

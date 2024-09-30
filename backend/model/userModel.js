@@ -3,72 +3,75 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-const userSchema = mongoose.Schema({
-  fullName: {
-    type: String,
-    required: [true, "Please Prodive your Fullname!"],
-  },
-  username: {
-    type: String,
-    required: [true, "Please Prodive your username!"],
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: [true, "Please Prodive your email!"],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, "Please Provide a valid email"],
-  },
-  docID: {
-    type: String,
-  },
-  verifiedStatus: {
-    type: ["pending", "rejected", "accepted"],
-    default: "pending",
-  },
-  requestVerifiedStatus: {
-    type: Boolean,
-    default: false,
-  },
-  gender: {
-    type: String,
-    required: [true, "Please Prodive your gender!"],
-    enum: ["male", "female"],
-  },
-  profilePic: {
-    type: String,
-    default: "",
-  },
-  role: {
-    type: String,
-    enum: ["client", "engineer", "admin"],
-    default: "client",
-  },
-  password: {
-    type: String,
-    required: [true, "Please Provide Password"],
-    minlength: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    validate: {
-      validator: function (el) {
-        return el === this.password;
+const userSchema = mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: [true, "Please Prodive your Fullname!"],
+    },
+    username: {
+      type: String,
+      required: [true, "Please Prodive your username!"],
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Please Prodive your email!"],
+      unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, "Please Provide a valid email"],
+    },
+    docID: {
+      type: String,
+    },
+    verifiedStatus: {
+      type: ["pending", "rejected", "accepted"],
+      default: "pending",
+    },
+    requestVerifiedStatus: {
+      type: Boolean,
+      default: false,
+    },
+    gender: {
+      type: String,
+      required: [true, "Please Prodive your gender!"],
+      enum: ["male", "female"],
+    },
+    profilePic: {
+      type: String,
+      default: "",
+    },
+    role: {
+      type: String,
+      enum: ["client", "engineer", "admin"],
+      default: "client",
+    },
+    password: {
+      type: String,
+      required: [true, "Please Provide Password"],
+      minlength: 8,
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      validate: {
+        validator: function (el) {
+          return el === this.password;
+        },
+        message: "Passwords are not the same!",
       },
-      message: "Passwords are not the same!",
+    },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: {
-    type: Boolean,
-    default: true,
-    select: false,
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
