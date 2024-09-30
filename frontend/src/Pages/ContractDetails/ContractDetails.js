@@ -54,7 +54,7 @@ const ContractDetails = () => {
         // const userResponse = await dispatch(fetchUserById(id)).unwrap();
         // setUserRole(userResponse.role); // Make sure to set role here
 
-        ///////////////////////////
+        ///////////////////////////t commit
       } catch (err) {
         setError(err.message || "Failed to load contract details");
       } finally {
@@ -129,10 +129,6 @@ const ContractDetails = () => {
           {/* Conditional "user Role" for client or engineer */}
           {userRole === "client" ? (
             <>
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-                Edit Contract
-              </button>
-
               <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
                 Delete Contract
               </button>

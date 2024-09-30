@@ -247,7 +247,7 @@ export default function SignUpClient() {
               </select>
               <label
                 htmlFor="gender"
-                className="absolute left-4 top-0 -translate-y-6 text-gray-500 scale-75 text-gray-500 transition-all transform origin-left pointer-events-none"
+                className="absolute left-4 top-0 -translate-y-6  scale-75 text-gray-500 transition-all transform origin-left pointer-events-none"
               >
                 Gender
               </label>
