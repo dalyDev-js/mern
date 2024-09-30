@@ -14,6 +14,8 @@ const ContractDetails = () => {
   const [engineerName, setEngineerName] = useState("Loading...");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // role
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -37,6 +39,16 @@ const ContractDetails = () => {
           ).unwrap();
           setEngineerName(engineerResponse.fullName || "N/A");
         }
+        // Fetch user role
+        // const user = await dispatch(fetchUserById(id));
+        // // Set user role
+        // setUserRole(role);
+
+        // Fetch user role based on the logged-in user or contract details
+        const userResponse = await dispatch(fetchUserById(id)).unwrap();
+        setUserRole(userResponse.role); // Make sure to set role here
+
+        ///////////////////////////
       } catch (err) {
         setError(err.message || "Failed to load contract details");
       } finally {
@@ -100,6 +112,38 @@ const ContractDetails = () => {
           <p>
             <strong>Engineer:</strong> {engineerName}
           </p>
+
+          {/* Role  */}
+          {userRole && (
+            <p>
+              <strong>Role:</strong> {userRole}
+            </p>
+          )}
+
+          {/* Conditional "user Role" for client or engineer */}
+          {userRole === "client" ? (
+            <>
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+                Edit Contract
+              </button>
+
+              <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+                Delete Contract
+              </button>
+              <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded">
+                Add Payment
+              </button>
+            </>
+          ) : userRole === "engineer" ? (
+            <>
+              <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded">
+                accepte Contract
+              </button>
+              <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+                Reject Contract
+              </button>
+            </>
+          ) : null}
         </>
       )}
     </div>
