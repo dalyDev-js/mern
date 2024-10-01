@@ -1,10 +1,14 @@
 import React, { useState, useContext } from "react";
 import { useDispatch } from "react-redux";
-import { sendMessage, receiveMessage } from "../../redux/slices/chatSlice";
+import { sendMessage } from "../../redux/slices/chatSlice";
 import { SocketContext } from "../../context/SocketContext";
 import { jwtDecode } from "jwt-decode";
 import { FiSend } from "react-icons/fi";
-const MessageInput = ({ conversationId, receiverId }) => {
+
+// Load send sound
+const sendSound = new Audio("/sounds/pop.mp3");
+
+const MessageInput = ({ conversationId, receiverId, playSendSound }) => {
   const dispatch = useDispatch();
   const socket = useContext(SocketContext);
   const [message, setMessage] = useState("");
@@ -33,8 +37,9 @@ const MessageInput = ({ conversationId, receiverId }) => {
       });
     }
 
-    // Clear the input field
+    // Clear the input field and play send sound
     setMessage("");
+    // sendSound.play(); // Play sound when sending a message
 
     // Dispatch the backend call
     dispatch(sendMessage({ senderId: userId, receiverId, content: message }))
@@ -43,6 +48,7 @@ const MessageInput = ({ conversationId, receiverId }) => {
         console.error("Failed to send message:", err);
       });
   };
+
   return (
     <form
       onSubmit={handleSubmit}

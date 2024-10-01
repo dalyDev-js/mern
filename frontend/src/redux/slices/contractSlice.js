@@ -168,6 +168,27 @@ export const checkIfContractExists = createAsyncThunk(
   }
 );
 
+export const updateContractStatus = createAsyncThunk(
+  "contract/updateContractStatus",
+  async ({ contractId, status }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("Token");
+      const response = await axios.patch(
+        `${baseURL}/${contractId}`,
+        { status }, // Only update the status field
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return response.data.data.contract; // Return the updated contract
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to update contract status"
+      );
+    }
+  }
+);
+
 // Contract slice
 const contractSlice = createSlice({
   name: "contract",
@@ -249,6 +270,23 @@ const contractSlice = createSlice({
         );
       })
       .addCase(deleteContract.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateContractStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateContractStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.contracts.findIndex(
+          (contract) => contract._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.contracts[index] = action.payload; // Update the contract in the state
+        }
+      })
+      .addCase(updateContractStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

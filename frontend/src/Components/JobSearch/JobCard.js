@@ -26,8 +26,7 @@ function JobCard({
   return (
     <Link
       to={`/job-details/${jobId}`}
-      state={{ title, description, budget, skills, level, createdAt }}
-    >
+      state={{ title, description, budget, skills, level, createdAt }}>
       {/* border border-solid */}
       <article className="flex justify-between items-start p-5 bg-white hover:bg-slate-100 rounded-md  border-neutral-300">
         <div className="grow-[2]">
@@ -41,8 +40,7 @@ function JobCard({
                   ? "fa-solid fa-heart cursor-pointer text-red-300"
                   : "fa-regular fa-heart text-amber-300 cursor-pointer"
               }`}
-              onClick={handleToggle}
-            ></i>
+              onClick={handleToggle}></i>
           </div>
           <div className="mx-2 mb-12">
             <span className="flex  gap-2 mb-2">
@@ -53,8 +51,7 @@ function JobCard({
                 width="24"
                 height="24"
                 fill="none"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
@@ -68,7 +65,7 @@ function JobCard({
             <p className="job-description mb-2.5 text-gray-500">
               {description}
             </p>
-            <sapan className="flex gap-2 ">
+            <span className="flex gap-2 ">
               {/* text-gray-800 */}
               <svg
                 class="w-6 h-6 text-amber-300 dark:text-white"
@@ -77,8 +74,7 @@ function JobCard({
                 width="24"
                 height="24"
                 fill="none"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
@@ -91,13 +87,12 @@ function JobCard({
                 Fixed-price - {level} - Est. Budget:
                 <span className="job-price "> {budget} $</span>
               </p>
-            </sapan>
+            </span>
             <div className="skills flex gap-3">
               {skills.map((skill, index) => (
                 <div
                   key={index}
-                  className="skill p-1 px-3 text-sm rounded-xl bg-gray-100"
-                >
+                  className="skill p-1 px-3 text-sm rounded-xl bg-gray-100">
                   {skill}
                 </div>
               ))}

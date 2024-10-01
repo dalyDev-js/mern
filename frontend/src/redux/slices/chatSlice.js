@@ -74,7 +74,7 @@ export const fetchMessages = createAsyncThunk(
       const response = await axios.post(
         `http://localhost:8000/api/v1/chat/messages/${conversationId}`,
         {
-          userId, // Send userId explicitly in the body
+          userId,
         }
       );
       return response.data.data.messages;
@@ -86,13 +86,30 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
-// Slice
+// Async thunk to fetch unread messages count
+export const fetchUnreadMessages = createAsyncThunk(
+  "chat/fetchUnreadMessages",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/chat/unread/${userId}`
+      );
+      return response.data.data.unreadCount;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch unread messages count"
+      );
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: "chat",
   initialState: {
     conversations: [],
     messages: {},
     selectedConversation: null,
+    unreadMessagesCount: 0, // Track the unread messages
     loading: false,
     loadingConversations: false,
     error: null,
@@ -119,7 +136,7 @@ const chatSlice = createSlice({
         });
       }
 
-      // If messages for this conversation are loaded, append the new message if it doesn't exist
+      // If messages for this conversation are loaded, append the new message
       if (state.messages[conversationId]) {
         const exists = state.messages[conversationId].some(
           (msg) => msg._id === message._id
@@ -130,13 +147,36 @@ const chatSlice = createSlice({
       } else {
         state.messages[conversationId] = [message];
       }
+
+      // Increment unread messages count if message is from another user
+      if (message.sender._id !== state.selectedConversation?._id) {
+        state.unreadMessagesCount += 1;
+      }
     },
     // Reducer to select a conversation
     selectConversation: (state, action) => {
       state.selectedConversation = action.payload;
+
+      // Reset unread messages count for the selected conversation
+      state.unreadMessagesCount = 0;
     },
   },
   extraReducers: (builder) => {
+    // Handle fetchUnreadMessages
+    builder
+      .addCase(fetchUnreadMessages.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUnreadMessages.fulfilled, (state, action) => {
+        state.loading = false;
+        state.unreadMessagesCount = action.payload;
+      })
+      .addCase(fetchUnreadMessages.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
     // Handle sendMessage
     builder
       .addCase(sendMessage.pending, (state) => {

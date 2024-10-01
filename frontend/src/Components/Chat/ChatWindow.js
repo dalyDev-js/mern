@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import MessageInput from "./MessageInput";
 import { SocketContext } from "../../context/SocketContext";
@@ -9,6 +9,9 @@ import {
 } from "../../redux/slices/chatSlice";
 import { jwtDecode } from "jwt-decode";
 import { useParams } from "react-router-dom";
+
+// Load sound for notifications
+const notificationSound = new Audio("/sounds/pop.mp3");
 
 const ChatWindow = () => {
   const dispatch = useDispatch();
@@ -22,6 +25,26 @@ const ChatWindow = () => {
 
   const token = localStorage.getItem("Token");
   let userId = "";
+  const [isUserInteracted, setIsUserInteracted] = useState(false);
+
+  // Function to handle user interaction (like click or scroll)
+  const handleUserInteraction = () => {
+    setIsUserInteracted(true);
+    window.removeEventListener("click", handleUserInteraction);
+    window.removeEventListener("keydown", handleUserInteraction);
+  };
+
+  useEffect(() => {
+    // Listen for a user interaction (once) to enable sound playing
+    window.addEventListener("click", handleUserInteraction);
+    window.addEventListener("keydown", handleUserInteraction);
+
+    return () => {
+      window.removeEventListener("click", handleUserInteraction);
+      window.removeEventListener("keydown", handleUserInteraction);
+    };
+  }, []);
+
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
@@ -48,16 +71,26 @@ const ChatWindow = () => {
     }
   }, [dispatch, selectedConversation, userId]);
 
-  // Listen for new messages via Socket.IO
+  // Play notification sound when receiving a new message
+  const playReceiveSound = () => {
+    if (isUserInteracted) {
+      notificationSound.play().catch((error) => {
+        console.error("Error playing notification sound:", error);
+      });
+    }
+  };
+
+  // Listen for new messages via Socket.IO and play receive sound
   useEffect(() => {
-    if (socket) {
+    if (socket && selectedConversation) {
       socket.on("newMessage", (message) => {
         if (message.conversation === selectedConversation._id) {
-          // Ensure message.sender is an object with _id
-          if (typeof message.sender === "string") {
-            message.sender = { _id: message.sender };
-          }
           dispatch(receiveMessage(message));
+
+          // Play sound only for receiving messages
+          if (message.sender._id !== userId) {
+            playReceiveSound(); // Play sound when receiving a message
+          }
         }
       });
     }
@@ -67,11 +100,12 @@ const ChatWindow = () => {
         socket.off("newMessage");
       }
     };
-  }, [socket, dispatch, selectedConversation]);
+  }, [socket, dispatch, selectedConversation, userId, isUserInteracted]);
+
   // Scroll to the bottom when new messages are added
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView();
     }
   }, [messages]);
 
@@ -107,18 +141,18 @@ const ChatWindow = () => {
       <div className="flex-1 px-4 py-4 overflow-y-auto bg-gray-50">
         {error ? (
           <div>Error loading messages: {error}</div>
-        ) : messages[selectedConversation._id]?.length === 0 ? (
+        ) : messages[selectedConversation?._id]?.length === 0 ? (
           <div className="text-center text-gray-500 mt-4">
             No messages yet. Start the conversation!
           </div>
         ) : (
-          messages[selectedConversation._id]?.map((msg) => {
-            const senderId = msg.sender._id || msg.sender;
+          messages[selectedConversation?._id]?.map((msg) => {
+            const senderId = msg.sender?._id || msg?.sender;
             const isSender = senderId === userId;
 
             return (
               <div
-                key={msg._id}
+                key={msg?._id}
                 className={`flex ${
                   isSender ? "justify-end" : "justify-start"
                 } mb-2`}>

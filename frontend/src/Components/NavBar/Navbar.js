@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { fetchUserById } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import { fetchUnreadMessages } from "../../redux/slices/chatSlice";
 
 export default function Navbar() {
   const [subNavContent, setSubNavContent] = useState("");
@@ -17,7 +18,8 @@ export default function Navbar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const notificationSound = new Audio("/sounds/notification.mp3");
   useEffect(() => {
     const updateUserInfo = async () => {
       const token = localStorage.getItem("Token");
@@ -28,6 +30,9 @@ export default function Navbar() {
         const id = decodedToken.id;
 
         const user = await dispatch(fetchUserById(id));
+        const unreadMessages = await dispatch(fetchUnreadMessages(id)); // Fetch unread messages count
+
+        setUnreadMessagesCount(unreadMessages.payload || 0);
         setUserName(fullName);
         setUserRole(role);
         setUserId(id);
@@ -76,7 +81,13 @@ export default function Navbar() {
   const closeMenu = () => {
     setIsOpen(false);
   };
-
+  useEffect(() => {
+    if (unreadMessagesCount > 0) {
+      notificationSound.play().catch((error) => {
+        console.error("Error playing notification sound:", error);
+      });
+    }
+  }, [unreadMessagesCount]);
   return (
     <>
       <div className="bg-white w-full relative">
@@ -232,6 +243,36 @@ export default function Navbar() {
                     </NavLink>
                   </li>
                 )}
+                {userRole === "client" && (
+                  <li>
+                    <NavLink
+                      to={`/client`}
+                      onClick={closeMenu}
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
+                      Dashboard
+                    </NavLink>
+                  </li>
+                )}
+
+                <li>
+                  <NavLink
+                    to={`/contracts`}
+                    onClick={closeMenu}
+                    className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
+                    Contracts
+                  </NavLink>
+                </li>
+
+                {userRole === "engineer" && (
+                  <li>
+                    <NavLink
+                      to={`/jobs`}
+                      onClick={closeMenu}
+                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100">
+                      Jobs
+                    </NavLink>
+                  </li>
+                )}
                 <li>
                   <NavLink
                     to={"/contact"}
@@ -316,8 +357,13 @@ export default function Navbar() {
                   <li>
                     <NavLink
                       to={"/chat"}
-                      className="block py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
+                      className="block relative py-2 pl-3 pr-4 text-black border-b hover:scale-105 duration-200 border-gray-100 hover:bg-gray-50 xl:hover:bg-transparent xl:border-0 xl:hover:text-amber-300 xl:p-0">
                       Messages
+                      {unreadMessagesCount > 0 && (
+                        <span className="absolute -top-2 -right-2 h-5 w-5 text-white bg-red-500 rounded-full text-xs flex items-center justify-center">
+                          {unreadMessagesCount}
+                        </span>
+                      )}
                     </NavLink>
                   </li>
                 )}

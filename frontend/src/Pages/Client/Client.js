@@ -258,7 +258,6 @@ export default function Client() {
                         className="w-full my-3 rounded-md border  p-2 outline-none border-gray-700  focus:ring-amber-400  focus:border-amber-400 "
                         value={jobData.title}
                         onChange={handleChange}
-                        required
                       />
                       {errors.title && (
                         <p className="text-red-500">{errors.title}</p>
@@ -273,7 +272,6 @@ export default function Client() {
                         placeholder="$20/hr"
                         value={jobData.budget}
                         onChange={handleChange}
-                        required
                       />
                       {errors.budget && (
                         <p className="text-red-500">{errors.budget}</p>
@@ -289,7 +287,6 @@ export default function Client() {
                       className="w-full my-3 rounded-md border p-2 outline-none border-gray-700 focus:ring-amber-400 focus:border-amber-400"
                       value={jobData.description}
                       onChange={handleChange}
-                      required
                     />
                     {errors.description && (
                       <p className="text-red-500">{errors.description}</p>

@@ -76,96 +76,60 @@ const Contract = () => {
   }
 
   return (
-    <div className="contracts-page p-6 h-screen my-12">
-      <h1 className="text-3xl font-bold mb-6 text-center">Your Contracts</h1>
+    <div className="contracts-page p-6 my-12 min-h-screen bg-gray-50">
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+        Your Contracts
+      </h1>
 
       {/* Filter buttons */}
-      <div className="filter-tabs mb-6 flex justify-center">
-        <button
-          onClick={() => setStatusFilter("all")}
-          className={`px-4 py-2 mx-2 rounded ${
-            statusFilter === "all" ? "bg-amber-300 text-black" : "bg-gray-200"
-          } hover:bg-amber-400`}
-        >
-          All
-        </button>
-        <button
-          onClick={() => setStatusFilter("pending")}
-          className={`px-4 py-2 mx-2 rounded ${
-            statusFilter === "pending"
-              ? "bg-amber-300 text-black"
-              : "bg-gray-200"
-          } hover:bg-amber-400`}
-        >
-          Pending
-        </button>
-        <button
-          onClick={() => setStatusFilter("active")}
-          className={`px-4 py-2 mx-2 rounded ${
-            statusFilter === "active"
-              ? "bg-amber-300 text-black"
-              : "bg-gray-200"
-          } hover:bg-amber-400`}
-        >
-          Active
-        </button>
-        <button
-          onClick={() => setStatusFilter("completed")}
-          className={`px-4 py-2 mx-2 rounded ${
-            statusFilter === "completed"
-              ? "bg-amber-300 text-black"
-              : "bg-gray-200"
-          } hover:bg-amber-400`}
-        >
-          Completed
-        </button>
+      <div className="filter-tabs mb-8 flex justify-center space-x-4">
+        {["all", "pending", "active", "completed", "canceled"].map((status) => (
+          <button
+            key={status}
+            onClick={() => setStatusFilter(status)}
+            className={`px-4 py-2 rounded-md text-lg transition ${
+              statusFilter === status
+                ? "bg-amber-400 text-white"
+                : "bg-gray-200 hover:bg-amber-400 hover:text-white"
+            }`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </button>
+        ))}
       </div>
-      {/*                          ????????????????????????????                          */}
-      {/* Contracts list */}
-      {/* <div className="contract-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> */}
-      {filteredContracts.length === 0 ? (
-        // div center
-        <div className=" w-full flex items-center justify-center my-52  ">
-          <div className="text-center ">
-            <span className="flex">
-              <svg
-                class="w-8 h-8 text-gray-800 mr-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
 
-              <p className="text-2xl md:text-3xl font-medium   mb-4">
-                No contracts found
-              </p>
-            </span>
+      {/* Contracts list */}
+      {filteredContracts.length === 0 ? (
+        <div className="flex justify-center items-center my-20">
+          <div className="text-center">
+            <svg
+              className="w-12 h-12 text-gray-600 mx-auto mb-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9 12h6"></path>
+              <path d="M12 9v6"></path>
+            </svg>
+            <p className="text-xl md:text-2xl font-semibold text-gray-700">
+              No contracts found
+            </p>
           </div>
         </div>
       ) : (
-        filteredContracts.map((contract) => (
-          <>
-            <div className="contract-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <ContractCard
-                key={contract._id}
-                contract={contract} // Pass the inner contract object
-                role={userRole}
-              />
-            </div>
-          </>
-        ))
+        <div className="contract-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredContracts.map((contract) => (
+            <ContractCard
+              key={contract._id}
+              contract={contract} // Pass the inner contract object
+              role={userRole}
+            />
+          ))}
+        </div>
       )}
-      {/* </div> */}
     </div>
   );
 };

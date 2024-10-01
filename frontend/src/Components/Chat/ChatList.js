@@ -1,5 +1,3 @@
-// src/components/Chat/ChatList.js
-
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,19 +6,18 @@ import {
 } from "../../redux/slices/chatSlice";
 import { useContext } from "react";
 import { SocketContext } from "../../context/SocketContext";
-import { useNavigate } from "react-router-dom"; // Import useNavigate to change the URL
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams for receiverId from the URL
 import { jwtDecode } from "jwt-decode";
 
 const ChatList = () => {
   const dispatch = useDispatch();
   const socket = useContext(SocketContext);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
+  const { receiverId } = useParams(); // Get receiverId from the URL
 
-  // Access conversations and loading state from Redux store
   const { conversations, loadingConversations, error, selectedConversation } =
     useSelector((state) => state.chat);
 
-  // Get current user ID from localStorage (decoded token)
   const token = localStorage.getItem("Token");
   let userId = "";
   if (token) {
@@ -37,20 +34,35 @@ const ChatList = () => {
     dispatch(fetchConversations({ userId }));
   }, [dispatch, userId]);
 
+  useEffect(() => {
+    if (receiverId && conversations.length > 0) {
+      const conversationWithReceiver = conversations.find((conv) =>
+        conv.participants.some((user) => user._id === receiverId)
+      );
+      if (conversationWithReceiver) {
+        dispatch(selectConversation(conversationWithReceiver));
+
+        // Optionally, join the conversation room via Socket.IO
+        if (socket) {
+          socket.emit("joinRoom", {
+            conversationId: conversationWithReceiver._id,
+          });
+        }
+      }
+    }
+  }, [receiverId, conversations, dispatch, socket]);
+
   const handleSelectConversation = (conversation) => {
     dispatch(selectConversation(conversation));
 
-    // Get the receiverId (the other participant in the conversation)
     const otherParticipant = conversation.participants.find(
       (user) => user._id !== userId
     );
 
-    // Navigate to the chat page with the receiverId
     if (otherParticipant && otherParticipant._id) {
       navigate(`/chat/${otherParticipant._id}`);
     }
 
-    // Optionally, join the conversation room via Socket.IO
     if (socket) {
       socket.emit("joinRoom", { conversationId: conversation._id });
     }

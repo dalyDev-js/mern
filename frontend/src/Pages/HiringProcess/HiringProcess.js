@@ -224,8 +224,7 @@ const HiringProcess = () => {
               <select
                 className="block w-full p-2 border focus:border-amber-300 focus:ring-amber-300 border-gray-300 rounded"
                 value={engineerFullName}
-                disabled
-              >
+                disabled>
                 <option className="bg-white text-amber-300">
                   {engineerFullName}
                 </option>
@@ -254,8 +253,9 @@ const HiringProcess = () => {
                 placeholder="Describe the work"
                 className="block w-full h-32 p-2 border border-gray-300 rounded focus:border-amber-300 focus:ring-amber-300"
                 value={contractDescription}
-                onChange={(e) => setContractDescription(e.target.value)}
-              ></textarea>
+                onChange={(e) =>
+                  setContractDescription(e.target.value)
+                }></textarea>
               {descriptionError && (
                 <p className="text-red-500 text-sm">{descriptionError}</p>
               )}
@@ -274,8 +274,7 @@ const HiringProcess = () => {
                     ? "border-amber-300"
                     : "border-gray-300"
                 }`}
-                onClick={() => setPaymentOption("weekly")}
-              >
+                onClick={() => setPaymentOption("weekly")}>
                 <input
                   type="radio"
                   name="paymentOption"
@@ -294,8 +293,7 @@ const HiringProcess = () => {
                     ? "border-amber-300"
                     : "border-gray-300"
                 }`}
-                onClick={() => setPaymentOption("fixed")}
-              >
+                onClick={() => setPaymentOption("fixed")}>
                 <input
                   type="radio"
                   name="paymentOption"
@@ -393,14 +391,12 @@ const HiringProcess = () => {
             <button
               type="button"
               className="px-4 py-2 border hover:bg-gray-100 border-gray-300 rounded text-black"
-              onClick={() => navigate(-1)}
-            >
+              onClick={() => navigate(-1)}>
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded"
-            >
+              className="px-4 py-2 bg-amber-300 hover:bg-amber-400 text-black rounded">
               Send Offer
             </button>
           </div>
@@ -412,8 +408,7 @@ const HiringProcess = () => {
             className="bg-white p-6 w-1/3 rounded-lg shadow-md text-center transition-all duration-300 ease-out transform scale-100 opacity-100"
             style={{
               animation: "fadeInScale 0.3s ease-out",
-            }}
-          >
+            }}>
             <div className="flex justify-center mb-4">
               <i className="text-4xl text-green-500 fa-solid fa-check-circle"></i>
             </div>
@@ -421,8 +416,7 @@ const HiringProcess = () => {
             <p className="text-gray-600 mb-4">Offer sent successfully.</p>
             <button
               onClick={handleSuccessModalOkClick}
-              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
-            >
+              className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
               OK
             </button>
           </div>

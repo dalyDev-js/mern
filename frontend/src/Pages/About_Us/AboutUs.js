@@ -49,19 +49,19 @@ function AboutUs() {
             <div className="grid grid-cols-1  items-center md:grid-cols-3 gap-10">
               {/* Card 2 */}
 
-              <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
-                <div className="flex flex-col mb-6">
+              <div className="p-2  bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-3">
+                <div className="flex flex-col mb-6 justify-center items-center">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="  description"
+                      className="h-[62vh] max-w-full rounded-lg object-contain"
+                      src="/images/hosni.jpg"
+                      alt="asd asd"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Mohamed Hosni
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Fullstack Developer
                     </figcaption>
                   </figure>
                 </div>
@@ -71,8 +71,8 @@ function AboutUs() {
                 <div className="flex flex-col mb-6">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="/images/don.jpg"
+                      className="h-[62vh] max-w-full rounded-lg"
+                      src="/images/don3.jpg"
                       alt="asd asd"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
@@ -89,15 +89,15 @@ function AboutUs() {
                 <div className="flex flex-col mb-6">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      className="h-[62vh] max-w-full rounded-lg"
+                      src="/images/hassan.jpg"
+                      alt="  description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Ahmed Hassan
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Fullstack Developer
                     </figcaption>
                   </figure>
                 </div>
@@ -105,18 +105,18 @@ function AboutUs() {
 
               {/* Card 4 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
-                <div className="flex flex-col mb-2">
+                <div className="flex flex-col mb-2 items-center">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      className="h-[62vh] max-w-full rounded-lg"
+                      src="/images/nadaw.jpg"
+                      alt="  nada"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Nada Ali
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Front-end Developer
                     </figcaption>
                   </figure>
                 </div>
@@ -124,18 +124,18 @@ function AboutUs() {
 
               {/* Card 5 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
-                <div className="flex flex-col mb-2">
+                <div className="flex flex-col mb-2 items-center">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      className="h-[62vh] max-w-full rounded-lg"
+                      src="/images/saif.jpg"
+                      alt="  description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Mohamed Abosaif
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Frontend Developer
                     </figcaption>
                   </figure>
                 </div>
@@ -143,18 +143,18 @@ function AboutUs() {
 
               {/* Card 6 */}
               <div className="p-2 bg-gray-50 rounded-lg shadow-inner  dark:bg-gray-800 dark:border-gray-700 mb-6">
-                <div className="flex flex-col mb-2">
+                <div className="flex flex-col mb-2 items-center">
                   <figure className="max-w-lg">
                     <img
-                      className="h-auto max-w-full rounded-lg"
-                      src="https://www.perfocal.com/blog/content/images/size/w1140/2021/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg"
-                      alt="image description"
+                      className="h-[62vh] max-w-full rounded-lg"
+                      src="/images/nadam.jpg"
+                      alt="  description"
                     />
                     <h2 className="mb-1 mt-2 text-xl text-center font-medium  text-gray-900 dark:text-white">
-                      Bonnie Green
+                      Nada Atef
                     </h2>
                     <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Image caption Bonnie Green
+                      Frontend Developer
                     </figcaption>
                   </figure>
                 </div>
